@@ -3,11 +3,18 @@
 
 class Wall {
 public:
-    Wall(double x1, double y1, double x2, double y2);
+    Wall(float x1, float y1, float x2, float y2);
+
+    float getX1() const;
+    float getY1() const;
+    float getX2() const;
+    float getY2() const;
+
+    float getAngle() const; // Useful for calculating bounce angles
 
 private:
-    double x1, y1;
-    double x2, y2; 
+    float x1, y1; // First endpoint of the wall
+    float x2, y2; // Second endpoint of the wall
 };
 
-#endif
+#endif // WALL_H
