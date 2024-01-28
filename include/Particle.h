@@ -3,17 +3,20 @@
 
 class Particle {
 public:
-    Particle(double x, double y, double angle, double velocity);
-    void updatePosition(double timeDelta);
-    // Add other necessary methods and member variables here
+    Particle(float x, float y, float angle, float velocity);
+
+    void update(float deltaTime);
+    void bounceOffWall(float wallAngle);
+
+    float getX() const;
+    float getY() const;
 
 private:
-    double x, y;      // Position of the particle
-    double angle;     // Angle in degrees (0 is east, increases anticlockwise)
-    double velocity;  // Velocity in pixels per second
+    float x, y; // Position of the particle
+    float angle; // Angle in degrees, 0 is east
+    float velocity; // Velocity in pixels per second
 
-    // Method to handle collision, might need more parameters based on canvas and walls
-    void handleCollision();
+    void move(float deltaTime);
 };
 
-#endif
+#endif // PARTICLE_H

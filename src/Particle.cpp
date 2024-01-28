@@ -1,22 +1,35 @@
-#include "../include/Particle.h"
+#include "Particle.h"
 #include <cmath>
 
-Particle::Particle(double x, double y, double angle, double velocity)
+// Helper function to convert degrees to radians
+constexpr float degToRad(float degrees) {
+    return degrees * M_PI / 180.0f;
+}
+
+Particle::Particle(float x, float y, float angle, float velocity)
     : x(x), y(y), angle(angle), velocity(velocity) {}
 
-void Particle::updatePosition(double timeDelta) {
-    // Update the position based on the velocity and angle
-    x += velocity * timeDelta * cos(angle * M_PI / 180.0);
-    y += velocity * timeDelta * sin(angle * M_PI / 180.0);
-
-    // Handle potential collisions after the position update
-    handleCollision();
+void Particle::update(float deltaTime) {
+    move(deltaTime);
 }
 
-void Particle::handleCollision() {
-    // Collision logic goes here
-    // This will involve checking the particle's position against the walls and canvas boundaries
-    // and adjusting its angle accordingly
+void Particle::move(float deltaTime) {
+    // Calculate movement based on velocity and angle
+    x += std::cos(degToRad(angle)) * velocity * deltaTime;
+    y += std::sin(degToRad(angle)) * velocity * deltaTime;
 }
 
-// Implement other necessary methods
+void Particle::bounceOffWall(float wallAngle) {
+    // Reflect the movement angle based on the wall's angle
+    angle = 2 * wallAngle - angle;
+}
+
+float Particle::getX() const {
+    return x;
+}
+
+float Particle::getY() const {
+    return y;
+}
+
+// ... (Any additional implementation details)
