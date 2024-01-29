@@ -1,13 +1,17 @@
 #include "Particle.h"
 #include <cmath>
 
-// Helper function to convert degrees to radians
 constexpr float degToRad(float degrees) {
     return degrees * M_PI / 180.0f;
 }
 
+// Function to Normalize the angle to be within [0, 360)
+float normalizeAngle(float angle) {
+    return fmod(fmod(angle, 360.0f) + 360.0f, 360.0f);
+}
+
 Particle::Particle(float x, float y, float angle, float velocity)
-    : x(x), y(y), angle(angle), velocity(velocity) {}
+    : x(x), y(y), angle(normalizeAngle(angle)), velocity(velocity) {}
 
 void Particle::update(float deltaTime) {
     move(deltaTime);
@@ -22,6 +26,7 @@ void Particle::move(float deltaTime) {
 void Particle::bounceOffWall(float wallAngle) {
     // Reflect the movement angle based on the wall's angle
     angle = 2 * wallAngle - angle;
+    angle = normalizeAngle(angle);
 }
 
 float Particle::getX() const {
@@ -32,4 +37,6 @@ float Particle::getY() const {
     return y;
 }
 
-// ... (Any additional implementation details)
+float Particle::getAngle() const {
+    return angle;
+}

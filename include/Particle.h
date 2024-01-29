@@ -10,6 +10,7 @@ public:
 
     float getX() const;
     float getY() const;
+    float getAngle() const;
 
 private:
     float x, y; // Position of the particle
@@ -19,4 +20,4 @@ private:
     void move(float deltaTime);
 };
 
-#endif // PARTICLE_H
+#endif
