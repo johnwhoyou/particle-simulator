@@ -8,8 +8,11 @@ include_directories(include)
 
 set(SOURCES
     src/Particle.cpp
+    src/Wall.cpp
     # Add other source files here
 )
+
+#file(GLOB SOURCES "src/*.cpp")
 
 add_library(ParticleSimulator STATIC ${SOURCES})
 
