@@ -13,18 +13,18 @@ constexpr float normalizeAngle(float angle) {
     return fmod(fmod(angle, 360.0f) + 360.0f, 360.0f);
 }
 
-// TEST(ParticleTest, ConstructorTest) {
-//     Particle particle(100.0f, 150.0f, 90.0f, 10.0f);
-//     EXPECT_FLOAT_EQ(particle.getX(), 100.0f);
-//     EXPECT_FLOAT_EQ(particle.getY(), 150.0f);
-// }
+TEST(ParticleTest, ConstructorTest) {
+    Particle particle(100.0f, 150.0f, 90.0f, 10.0f);
+    EXPECT_FLOAT_EQ(particle.getX(), 100.0f);
+    EXPECT_FLOAT_EQ(particle.getY(), 150.0f);
+}
 
-// TEST(ParticleTest, UpdateTest) {
-//     Particle particle(100.0f, 150.0f, 0.0f, 100.0f);
-//     particle.update(1.0f); // Update for 1 second
-//     EXPECT_FLOAT_EQ(particle.getX(), 200.0f);
-//     EXPECT_FLOAT_EQ(particle.getY(), 150.0f);
-// }
+TEST(ParticleTest, UpdateTest) {
+    Particle particle(100.0f, 150.0f, 0.0f, 100.0f);
+    particle.update(1.0f); // Update for 1 second
+    EXPECT_FLOAT_EQ(particle.getX(), 200.0f);
+    EXPECT_FLOAT_EQ(particle.getY(), 150.0f);
+}
 
 TEST(ParticleTest, BounceOffWallTest) {
     // a particle coming from south-west at 225 degrees
@@ -35,9 +35,9 @@ TEST(ParticleTest, BounceOffWallTest) {
     float expectedAngleAfterBounce = 135.0f;  // particle should bounce off to north-west at 135deg
     EXPECT_NEAR(particle.getAngle(), expectedAngleAfterBounce, epsilon);
 
-    // a user-generated wall with a 30 degrees angle
+    // a user-generated wall with a 30 degrees angle.
     Wall customWall(0.0f, 0.0f, cos(degToRad(30.0f)), sin(degToRad(30.0f)));
-    particle.bounceOffWall(customWall);
-    expectedAngleAfterBounce = 105.0f;
+    particle.bounceOffWall(customWall); // particle coming at the custom wall at 135degree angle
+    expectedAngleAfterBounce = 105.0f; 
     EXPECT_NEAR(particle.getAngle(), expectedAngleAfterBounce, epsilon);
 }
