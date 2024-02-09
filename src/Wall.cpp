@@ -1,4 +1,5 @@
 #include "Wall.h"
+#define _USE_MATH_DEFINES
 #include <cmath>
 
 Wall::Wall(float x1, float y1, float x2, float y2)

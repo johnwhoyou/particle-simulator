@@ -1,0 +1,10 @@
+{
+  "name": "particle-simulator",
+  "version": "1.0",
+  "dependencies": [
+    {
+      "name": "imgui",
+      "features": [ "opengl3-binding", "sdl2-binding", "sdl2-renderer-binding", "glfw-binding" ]
+    }, "glad", "sdl2", "glfw3"
+  ]
+}

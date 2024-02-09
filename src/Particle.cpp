@@ -1,4 +1,5 @@
 #include "Particle.h"
+#define _USE_MATH_DEFINES
 #include <cmath>
 
 constexpr float degToRad(float degrees) {
