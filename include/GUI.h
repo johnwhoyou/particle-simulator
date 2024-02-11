@@ -11,4 +11,11 @@ public:
 	virtual void Update();
 	void Render();
 	void Shutdown();
+	void showAddParticle();
+	void showBatchAddParticle();
+	void showBatchAddMethod1();
+	void showBatchAddMethod2();
+	void showBatchAddMethod3();
+	void showAddWall();
+	void centerElement(float width);
 };
