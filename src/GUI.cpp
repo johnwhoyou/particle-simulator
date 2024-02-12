@@ -17,27 +17,81 @@ void MainGUI::NewFrame(SDL_Window* window) {
 }
 
 void MainGUI::Update() {
-	static bool batchAdd = false;
-	float panelWidthPercentage = 0.25f;
-	float panelWidth = ImGui::GetIO().DisplaySize.x * panelWidthPercentage;
+	displayCanvas();
+	displayBottomDetails();
+	displayParamsWindow();
+}
 
-	ImVec2 panelSize(panelWidth, ImGui::GetIO().DisplaySize.y);
+void MainGUI::Render() {
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
 
-	ImVec2 panelPosition(ImGui::GetIO().DisplaySize.x - panelWidth, 0);
+void MainGUI::Shutdown() {
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplSDL2_Shutdown();
+	ImGui::DestroyContext();
+}
 
-	ImGui::SetNextWindowSize(panelSize, ImGuiCond_Always);
-	ImGui::SetNextWindowPos(panelPosition, ImGuiCond_Always);
+void MainGUI::displayCanvas() {
+	ImGui::SetNextWindowSize(ImVec2(1280, 720), ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
 
-	ImGui::Begin("STDISCM Particle Simulator", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+	ImGui::Begin("Simulation Canvas", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar);
 
+	// TODO: render the particles and walls
+	
+	ImGui::End();
+}
+
+void MainGUI::displayBottomDetails() {
+	ImGui::SetNextWindowPos(ImVec2(0, 720), ImGuiCond_Always);
+
+	ImGui::Begin("Frame Rate", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar |
+										ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
+
+	ImGui::SetWindowFontScale(2.0f);
+	ImGui::TextColored(ImVec4(0.7f, 0.7f, 1, 1), "FRAME RATE:");
+	ImGui::SameLine();
+	ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
+	ImGui::SameLine();
+	ImGui::Dummy(ImVec2(16, 0));
 	ImGui::SetWindowFontScale(1.5f);
 
+	ImGui::SameLine();
+	if (ImGui::Button("Clear Particles")) {
+		// TODO: clear all particles
+	}
+
+	ImGui::SameLine();
+	if (ImGui::Button("Clear Walls")) {
+		// TODO: clear all walls
+	}
+
+	ImGui::SameLine();
+	if (ImGui::Button("Clear All")) {
+		// TODO: clear all particles and walls
+	}
+
 	ImGui::Text("P1: Alessandra Pauleen Gomez");
+	ImGui::SameLine();
+	ImGui::Dummy(ImVec2(16, 0));
+	ImGui::SameLine();
 	ImGui::Text("P2: John Carlo Joyo");
 
-	ImGui::Dummy(ImVec2(0, 8));
-	ImGui::Separator();
-	ImGui::Dummy(ImVec2(0, 8));
+	ImGui::End();
+}
+
+void MainGUI::displayParamsWindow() {
+	static bool batchAdd = false;
+
+	ImGui::SetNextWindowSize(ImVec2(ImGui::GetIO().DisplaySize.x - 1280, 0), ImGuiCond_Always);
+	ImGui::SetNextWindowPos(ImVec2(1280, 0), ImGuiCond_Always);
+
+	ImGui::Begin("Simulation Parameters", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse | 
+	ImGuiWindowFlags_NoBackground);
+
+	ImGui::SetWindowFontScale(1.3f);
 
 	centerElement(150.0f);
 	ImGui::TextColored(ImVec4(0.7f, 0.7f, 1, 1), "ADD PARTICLE/S");
@@ -59,28 +113,8 @@ void MainGUI::Update() {
 	ImGui::Dummy(ImVec2(0, 8));
 	showAddWall();
 
-	ImGui::Dummy(ImVec2(0, 8));
-	ImGui::Separator();
-	ImGui::Dummy(ImVec2(0, 8));
-
-	ImGui::SetWindowFontScale(2.0f);
-	centerElement(150.0f);
-	ImGui::TextColored(ImVec4(0.7f, 0.7f, 1, 1), "FRAME RATE");
-	centerElement(140.0f);
-	ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
-	ImGui::SetWindowFontScale(1.5f);
+	ImGui::SetWindowFontScale(1.0f);
 	ImGui::End();
-}
-
-void MainGUI::Render() {
-	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-}
-
-void MainGUI::Shutdown() {
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplSDL2_Shutdown();
-	ImGui::DestroyContext();
 }
 
 void MainGUI::showAddParticle() {
@@ -94,28 +128,28 @@ void MainGUI::showAddParticle() {
 
 	ImGui::Text("X");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##x", &x, 0.1f, 1.0f, "%.2f");
+	ImGui::InputFloat("##x", &x, 0, 0, "%.2f");
 	ImGui::NextColumn();
 
 	ImGui::Text("Y");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##y", &y, 0.1f, 1.0f, "%.2f");
+	ImGui::InputFloat("##y", &y, 0, 0, "%.2f");
 	ImGui::NextColumn();
 
 	ImGui::Text("Angle");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##angle", &angle, 0.1f, 1.0f, "%.2f");
+	ImGui::InputFloat("##angle", &angle, 0, 0, "%.2f");
 	ImGui::NextColumn();
 
 	ImGui::Text("Velocity");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##velocity", &velocity, 0.1f, 1.0f, "%.2f");
+	ImGui::InputFloat("##velocity", &velocity, 0, 0, "%.2f");
 	ImGui::Columns(1);
 	ImGui::Dummy(ImVec2(0, 8));
 
 	centerElement(150.0f);
 	if (ImGui::Button("Add Particle")) {
-		// render particle to the simulation
+		// TODO: add particle to the simulation
 	}
 }
 
@@ -147,47 +181,47 @@ void MainGUI::showBatchAddMethod1() {
 	static float velocity = 0.0f;
 
 	ImGui::Columns(2, "Particle Parameters", false);
-	ImGui::SetColumnWidth(0, 150.0f);
+	ImGui::SetColumnWidth(0, 120.0f);
 
 	ImGui::Text("Value of n");
 	ImGui::NextColumn();
-	ImGui::InputInt("##numParticles", &numParticles, 1, 100);
+	ImGui::InputInt("##numParticles", &numParticles, 0, 0);
 	ImGui::NextColumn();
 
 	ImGui::Text("Start X");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##startX", &startX, 0.1f, 1.0f, "%.2f");
+	ImGui::InputFloat("##startX", &startX, 0, 0, "%.2f");
 	ImGui::NextColumn();
 
 	ImGui::Text("Start Y");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##startY", &startY, 0.1f, 1.0f, "%.2f");
+	ImGui::InputFloat("##startY", &startY, 0, 0, "%.2f");
 	ImGui::NextColumn();
 
 	ImGui::Text("End X");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##endX", &endX, 0.1f, 1.0f, "%.2f");
+	ImGui::InputFloat("##endX", &endX, 0, 0, "%.2f");
 	ImGui::NextColumn();
 
 	ImGui::Text("End Y");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##endY", &endY, 0.1f, 1.0f, "%.2f");
+	ImGui::InputFloat("##endY", &endY, 0, 0, "%.2f");
 	ImGui::NextColumn();
 
 	ImGui::Text("Angle");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##angle", &angle, 0.1f, 1.0f, "%.2f");
+	ImGui::InputFloat("##angle", &angle, 0, 0, "%.2f");
 	ImGui::NextColumn();
 
 	ImGui::Text("Velocity");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##velocity", &velocity, 0.1f, 1.0f, "%.2f");
+	ImGui::InputFloat("##velocity", &velocity, 0, 0, "%.2f");
 	ImGui::Columns(1);
 	ImGui::Dummy(ImVec2(0, 8));
 
 	centerElement(150.0f);
 	if (ImGui::Button("Add Particles")) {
-		// render particles to the simulation
+		// TODO: add particles to the simulation
 	}
 }
 
@@ -200,42 +234,42 @@ void MainGUI::showBatchAddMethod2() {
 	static float velocity = 0.0f;
 
 	ImGui::Columns(2, "Particle Parameters", false);
-	ImGui::SetColumnWidth(0, 150.0f);
+	ImGui::SetColumnWidth(0, 120.0f);
 
 	ImGui::Text("Value of n");
 	ImGui::NextColumn();
-	ImGui::InputInt("##numParticles", &numParticles, 1, 100);
+	ImGui::InputInt("##numParticles", &numParticles, 0, 0);
 	ImGui::NextColumn();
 
 	ImGui::Text("X");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##x", &x, 0.1f, 1.0f, "%.2f");
+	ImGui::InputFloat("##x", &x, 0, 0, "%.2f");
 	ImGui::NextColumn();
 
 	ImGui::Text("Y");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##y", &y, 0.1f, 1.0f, "%.2f");
+	ImGui::InputFloat("##y", &y, 0, 0, "%.2f");
 	ImGui::NextColumn();
 
 	ImGui::Text("Start Angle");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##startAngle", &startAngle, 0.1f, 1.0f, "%.2f");
+	ImGui::InputFloat("##startAngle", &startAngle, 0, 0, "%.2f");
 	ImGui::NextColumn();
 
 	ImGui::Text("End Angle");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##endAngle", &endAngle, 0.1f, 1.0f, "%.2f");
+	ImGui::InputFloat("##endAngle", &endAngle, 0, 0, "%.2f");
 	ImGui::NextColumn();
 
 	ImGui::Text("Velocity");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##velocity", &velocity, 0.1f, 1.0f, "%.2f");
+	ImGui::InputFloat("##velocity", &velocity, 0, 0, "%.2f");
 	ImGui::Columns(1);
 	ImGui::Dummy(ImVec2(0, 8));
 
 	centerElement(150.0f);
 	if (ImGui::Button("Add Particles")) {
-		// render particles to the simulation
+		// TODO: add particles to the simulation
 	}
 }
 
@@ -248,42 +282,42 @@ void MainGUI::showBatchAddMethod3() {
 	static float endVelocity = 0.0f;
 
 	ImGui::Columns(2, "Particle Parameters", false);
-	ImGui::SetColumnWidth(0, 170.0f);
+	ImGui::SetColumnWidth(0, 150.0f);
 
 	ImGui::Text("Value of n");
 	ImGui::NextColumn();
-	ImGui::InputInt("##numParticles", &numParticles, 1, 100);
+	ImGui::InputInt("##numParticles", &numParticles, 0, 0);
 	ImGui::NextColumn();
 
 	ImGui::Text("X");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##x", &x, 0.1f, 1.0f, "%.2f");
+	ImGui::InputFloat("##x", &x, 0, 0, "%.2f");
 	ImGui::NextColumn();
 
 	ImGui::Text("Y");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##y", &y, 0.1f, 1.0f, "%.2f");
+	ImGui::InputFloat("##y", &y, 0, 0, "%.2f");
 	ImGui::NextColumn();
 
 	ImGui::Text("Angle");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##angle", &angle, 0.1f, 1.0f, "%.2f");
+	ImGui::InputFloat("##angle", &angle, 0, 0, "%.2f");
 	ImGui::NextColumn();
 
 	ImGui::Text("Start Velocity");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##startVelocity", &startVelocity, 0.1f, 1.0f, "%.2f");
+	ImGui::InputFloat("##startVelocity", &startVelocity, 0, 0, "%.2f");
 	ImGui::NextColumn();
 
 	ImGui::Text("End Velocity");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##endVelocity", &endVelocity, 0.1f, 1.0f, "%.2f");
+	ImGui::InputFloat("##endVelocity", &endVelocity, 0, 0, "%.2f");
 	ImGui::Columns(1);
 	ImGui::Dummy(ImVec2(0, 8));
 
 	centerElement(150.0f);
 	if (ImGui::Button("Add Particles")) {
-		// render particles to the simulation
+		// TODO: add particles to the simulation
 	}
 }
 
@@ -294,32 +328,32 @@ void MainGUI::showAddWall() {
 	static float y2 = 0.0f;
 
 	ImGui::Columns(2, "Wall Parameters", false);
-	ImGui::SetColumnWidth(0, 100.0f);
+	ImGui::SetColumnWidth(0, 50.0f);
 
 	ImGui::Text("X1");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##x1", &x1, 0.1f, 1.0f, "%.2f");
+	ImGui::InputFloat("##x1", &x1, 0, 0, "%.2f");
 	ImGui::NextColumn();
 
 	ImGui::Text("Y1");
 	ImGui::NextColumn();
-	ImGui::InputFloat("####y1", &y1, 0.1f, 1.0f, "%.2f");
+	ImGui::InputFloat("####y1", &y1, 0, 0, "%.2f");
 	ImGui::NextColumn();
 
 	ImGui::Text("X2");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##x2", &x2, 0.1f, 1.0f, "%.2f");
+	ImGui::InputFloat("##x2", &x2, 0, 0, "%.2f");
 	ImGui::NextColumn();
 
 	ImGui::Text("Y2");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##y2", &y2, 0.1f, 1.0f, "%.2f");
+	ImGui::InputFloat("##y2", &y2, 0, 0, "%.2f");
 	ImGui::Columns(1);
 	ImGui::Dummy(ImVec2(0, 8));
 
 	centerElement(100.0f);
 	if (ImGui::Button("Add Wall")) {
-		// render wall to the simulation
+		// TODO: add wall to the simulation
 	}
 }
 

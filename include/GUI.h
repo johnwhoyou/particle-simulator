@@ -12,11 +12,18 @@ public:
 	void Update();
 	void Render();
 	void Shutdown();
+
+private:
+	void displayCanvas();
+	void displayBottomDetails();
+	void displayParamsWindow();
+
 	void showAddParticle();
 	void showBatchAddParticle();
 	void showBatchAddMethod1();
 	void showBatchAddMethod2();
 	void showBatchAddMethod3();
 	void showAddWall();
+
 	void centerElement(float width);
 };

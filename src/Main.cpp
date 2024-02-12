@@ -18,6 +18,8 @@ int main()
     if (window == NULL)
         return 1;
 
+    SDL_SetWindowResizable(window, SDL_FALSE);
+
     // Create OpenGL context
     SDL_GLContext glContext = SDL_GL_CreateContext(window);
     if (!glContext)
