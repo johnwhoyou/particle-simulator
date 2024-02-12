@@ -10,6 +10,7 @@ set(SOURCES
     src/Particle.cpp
     src/Wall.cpp
     # Add other source files here
+    src/GUI.cpp
 )
 
 #file(GLOB SOURCES "src/*.cpp")
@@ -22,7 +23,7 @@ target_include_directories(ParticleSimulator PUBLIC include)
 #enable_testing()
 #add_subdirectory(tests)
 
-add_executable(ParticleSimulatorApp "src/GUI.cpp" "src/Main.cpp")
+add_executable(ParticleSimulatorApp "src/Main.cpp")
 target_link_libraries(ParticleSimulatorApp PRIVATE ParticleSimulator)
 
 # Add installation prefix of vcpkg to CMAKE_PREFIX_PATH
@@ -32,9 +33,6 @@ list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg_installed/x64-wi
 find_package(glad CONFIG REQUIRED)
 target_link_libraries(ParticleSimulatorApp PRIVATE glad::glad)
 
-find_package(glfw3 CONFIG REQUIRED)
-target_link_libraries(ParticleSimulatorApp PRIVATE glfw)
-
 find_package(SDL2 CONFIG REQUIRED)
 target_link_libraries(ParticleSimulatorApp PRIVATE
 	$<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
@@ -42,15 +40,10 @@ target_link_libraries(ParticleSimulatorApp PRIVATE
 )
 
 find_package(imgui CONFIG REQUIRED)
-target_link_libraries(ParticleSimulatorApp PRIVATE imgui::imgui)
+target_link_libraries(ParticleSimulator PRIVATE imgui::imgui)
 
 # Copy DLLs to the output directory
-#add_custom_command(TARGET ParticleSimulatorApp POST_BUILD
+#add_custom_command(TARGET ParticleSimulator POST_BUILD
 #	COMMAND ${CMAKE_COMMAND} -E copy_if_different
 #		"${CMAKE_CURRENT_SOURCE_DIR}/vcpkg_installed/vcpkg/blds/sdl2/x64-windows-dbg/SDL2d.dll"
-#		$<TARGET_FILE_DIR:ParticleSimulatorApp>)
-
-#add_custom_command(TARGET ParticleSimulatorApp POST_BUILD
-#	COMMAND ${CMAKE_COMMAND} -E copy_if_different
-#		"${CMAKE_CURRENT_SOURCE_DIR}/vcpkg_installed/vcpkg/blds/glfw3/x64-windows-dbg/src/glfw3.dll"
-#		$<TARGET_FILE_DIR:ParticleSimulatorApp>)
+#		$<TARGET_FILE_DIR:ParticleSimulator>)

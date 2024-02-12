@@ -1,18 +1,18 @@
 #include "GUI.h"
 
-void MainGUI::Init(GLFWwindow* window, const char* glsl_version) {
+void MainGUI::Init(SDL_Window* window, const char* glsl_version) {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
 	
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplSDL2_InitForOpenGL(window, nullptr);
 	ImGui_ImplOpenGL3_Init(glsl_version);
 	ImGui::StyleColorsDark();
 }
 
-void MainGUI::NewFrame() {
+void MainGUI::NewFrame(SDL_Window* window) {
 	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplGlfw_NewFrame();
+	ImGui_ImplSDL2_NewFrame(window);
 	ImGui::NewFrame();
 }
 
@@ -79,7 +79,7 @@ void MainGUI::Render() {
 
 void MainGUI::Shutdown() {
 	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
+	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
 }
 

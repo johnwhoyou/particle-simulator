@@ -1,49 +1,58 @@
 #include "GUI.h"
 #include "glad/glad.h"
-#include "GLFW/glfw3.h"
-
-using namespace std;
+#include "SDL.h"
+#undef main
 
 int main()
 {
-	if (!glfwInit())
-		return 1;
+    if (SDL_Init(SDL_INIT_VIDEO) != 0)
+        return 1;
 
-	// GL 3.0 + GLSL 130
-	const char* glsl_version = "#version 130";
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
-	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
+    // Set OpenGL attributes
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-	// Create window with graphics context
-	GLFWwindow* window = glfwCreateWindow(1280, 720, "Dear ImGui - Example", NULL, NULL);
-	if (window == NULL)
-		return 1;
-	glfwMakeContextCurrent(window);
-	glfwSwapInterval(1); // Enable vsync
+    // Create SDL window
+    SDL_Window* window = SDL_CreateWindow("STDISCM Particle Simulator", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
+    if (window == NULL)
+        return 1;
 
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))  // tie window context to glad's opengl funcs
-		throw("Unable to context to OpenGL");
+    // Create OpenGL context
+    SDL_GLContext glContext = SDL_GL_CreateContext(window);
+    if (!glContext)
+        return 1;
 
-	/*int screen_width, screen_height;
-	glfwGetFramebufferSize(window, &screen_width, &screen_height);
-	glViewport(0, 0, screen_width, screen_height);*/
+    // Initialize GLAD
+    if (gladLoadGLLoader(SDL_GL_GetProcAddress) == 0)
+        return 1;
 
-	glfwMaximizeWindow(window);
+    SDL_GL_SetSwapInterval(1); // Enable vsync
 
-	MainGUI simulatorGUI;
-	simulatorGUI.Init(window, glsl_version);
+    MainGUI simulatorGUI;
+    simulatorGUI.Init(window, "#version 130");
 
-	while (!glfwWindowShouldClose(window)) {
-		glfwPollEvents();
-		glClear(GL_COLOR_BUFFER_BIT);
-		simulatorGUI.NewFrame();
-		simulatorGUI.Update();
-		simulatorGUI.Render();
-		glfwSwapBuffers(window);
-	}
-	simulatorGUI.Shutdown();
+    bool isRunning = true;
+    while (isRunning) {
+        SDL_Event event;
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT)
+                isRunning = false;
 
-	return 0;
+            ImGui_ImplSDL2_ProcessEvent(&event);
+        }
+
+        glClear(GL_COLOR_BUFFER_BIT);
+        simulatorGUI.NewFrame(window);
+        simulatorGUI.Update();
+        simulatorGUI.Render();
+        SDL_GL_SwapWindow(window);
+    }
+
+    simulatorGUI.Shutdown();
+    SDL_GL_DeleteContext(glContext);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+
+    return 0;
 }

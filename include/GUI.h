@@ -1,14 +1,15 @@
 #pragma once
 
 #include <imgui.h>
-#include <imgui_impl_glfw.h>
+#include <SDL.h>
+#include <imgui_impl_sdl2.h>
 #include <imgui_impl_opengl3.h>
 
 class MainGUI {
 public:
-	void Init(GLFWwindow* window, const char* glsl_version);
-	void NewFrame();
-	virtual void Update();
+	void Init(SDL_Window* window, const char* glsl_version);
+	void NewFrame(SDL_Window* window);
+	void Update();
 	void Render();
 	void Shutdown();
 	void showAddParticle();
