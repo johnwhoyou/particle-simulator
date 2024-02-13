@@ -36,6 +36,8 @@ int main()
     simulatorGUI.Init(window, "#version 130");
     simulatorGUI.setSimulation(&simulation);
 
+    auto lastFrameTime = std::chrono::high_resolution_clock::now();
+
     bool isRunning = true;
     while (isRunning) {
         SDL_Event event;
@@ -45,6 +47,14 @@ int main()
 
             ImGui_ImplSDL2_ProcessEvent(&event);
         }
+        
+        // Calculate delta time
+        auto now = std::chrono::high_resolution_clock::now();
+        auto deltaTime = std::chrono::duration_cast<std::chrono::duration<double>>(now - lastFrameTime).count();
+        lastFrameTime = now;
+
+        // Update the simulation with the calculated delta time
+        simulation.update(deltaTime);
 
         glClear(GL_COLOR_BUFFER_BIT);
         simulatorGUI.NewFrame(window);
