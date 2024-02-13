@@ -11,11 +11,11 @@ void Simulation::addWall(int x1, int y1, int x2, int y2) {
     walls.emplace_back(x1, y1, x2, y2);
 }
 
-void Simulation::addParticle(int x, int y, double angle, double velocity) {
+void Simulation::addParticle(double x, double y, double angle, double velocity) {
     particles.emplace_back(x, y, angle, velocity);
 }
 
-void Simulation::addParticleByBatchMethod1(int x1, int y1, int x2, int y2, double angle, double velocity, int n) {
+void Simulation::addParticleByBatchMethod1(double x1, double y1, double x2, double y2, double angle, double velocity, int n) {
     if (n <= 1) {
         // If only one particle is to be added, add it at the start point
         addParticle(x1, y1, angle, velocity);
@@ -33,12 +33,12 @@ void Simulation::addParticleByBatchMethod1(int x1, int y1, int x2, int y2, doubl
         for (int i = 0; i < n; ++i) {
             double newX = x1 + stepX * i;
             double newY = y1 + stepY * i;
-            addParticle(static_cast<int>(newX), static_cast<int>(newY), angle, velocity);
+            addParticle(newX, newY, angle, velocity);
         }
     }
 }
 
-void Simulation::addParticleByBatchMethod2(int x, int y, double startAngle, double endAngle, double velocity, int n) {
+void Simulation::addParticleByBatchMethod2(double x, double y, double startAngle, double endAngle, double velocity, int n) {
     if (n <= 1) {
         // If only one particle is to be added, add it at the start point with the startAngle
         addParticle(x, y, startAngle, velocity);
@@ -55,7 +55,7 @@ void Simulation::addParticleByBatchMethod2(int x, int y, double startAngle, doub
     }
 }
 
-void Simulation::addParticleByBatchMethod3(int x, int y, double angle, double startVelocity, double endVelocity, int n) {
+void Simulation::addParticleByBatchMethod3(double x, double y, double angle, double startVelocity, double endVelocity, int n) {
     if (n <= 1) {
         // If only one particle is to be added, add it with the startVelocity
         addParticle(x, y, angle, startVelocity);

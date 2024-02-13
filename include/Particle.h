@@ -5,17 +5,17 @@
 
 class Particle {
 public:
-    Particle(int x, int y, double angle, double velocity);
+    Particle(double x, double y, double angle, double velocity);
 
     void update(double deltaTime);
     void bounceOffWall(const Wall& wall);
 
-    int getX() const;
-    int getY() const;
+    double getX() const;
+    double getY() const;
     double getAngle() const;
 
 private:
-    int x, y; // Position of the particle
+    double x, y; // Position of the particle
     double angle; // Angle in degrees, 0 is east
     double velocity; // Velocity in pixels per second
     

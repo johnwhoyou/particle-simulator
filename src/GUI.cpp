@@ -49,8 +49,8 @@ void MainGUI::displayCanvas() {
 	auto particles = simulation->getParticles();
 	float particleRadius = 5.0f; // Radius of the particle
 	for (const auto& particle : particles) {
-		// Invert y-coordinate to match the specified coordinate system
-		float posY = static_cast<float>(canvas_sz.y) - particle.getY() - particleRadius; // Subtract radius to prevent cut-off
+		// Adjust posY correctly map simulation Y-coordinate to ImGui's coordinate system
+		float posY = canvas_sz.y - (static_cast<float>(particle.getY()) + particleRadius);
 
 		// Map particle position to ImGui canvas coordinates
 		float posX = static_cast<float>(particle.getX()) - particleRadius; // Subtract radius to prevent cut-off
@@ -142,8 +142,8 @@ void MainGUI::displayParamsWindow() {
 }
 
 void MainGUI::showAddParticle() {
-	static int x = 0;
-	static int y = 0;
+	static double x = 0;
+	static double y = 0;
 	static double angle = 0.0;
 	static double velocity = 0.0;
 
@@ -152,12 +152,12 @@ void MainGUI::showAddParticle() {
 
 	ImGui::Text("X");
 	ImGui::NextColumn();
-	ImGui::InputInt("##x", &x);
+	ImGui::InputDouble("##x", &x, 0, 0, "%.f");
 	ImGui::NextColumn();
 
 	ImGui::Text("Y");
 	ImGui::NextColumn();
-	ImGui::InputInt("##y", &y);
+	ImGui::InputDouble("##y", &y, 0, 0, "%.f");
 	ImGui::NextColumn();
 
 	ImGui::Text("Angle");
@@ -197,10 +197,10 @@ void MainGUI::showBatchAddParticle() {
 
 void MainGUI::showBatchAddMethod1() {
 	static int numParticles = 0;
-	static int startX = 0;
-	static int startY = 0;
-	static int endX = 0;
-	static int endY = 0;
+	static double startX = 0;
+	static double startY = 0;
+	static double endX = 0;
+	static double endY = 0;
 	static double angle = 0.0;
 	static double velocity = 0.0;
 
@@ -214,22 +214,22 @@ void MainGUI::showBatchAddMethod1() {
 
 	ImGui::Text("Start X");
 	ImGui::NextColumn();
-	ImGui::InputInt("##startX", &startX, 0, 0);
+	ImGui::InputDouble("##startX", &startX, 0, 0, "%.f");
 	ImGui::NextColumn();
 
 	ImGui::Text("Start Y");
 	ImGui::NextColumn();
-	ImGui::InputInt("##startY", &startY, 0, 0);
+	ImGui::InputDouble("##startY", &startY, 0, 0, "%.f");
 	ImGui::NextColumn();
 
 	ImGui::Text("End X");
 	ImGui::NextColumn();
-	ImGui::InputInt("##endX", &endX, 0, 0);
+	ImGui::InputDouble("##endX", &endX, 0, 0, "%.f");
 	ImGui::NextColumn();
 
 	ImGui::Text("End Y");
 	ImGui::NextColumn();
-	ImGui::InputInt("##endY", &endY, 0, 0);
+	ImGui::InputDouble("##endY", &endY, 0, 0, "%.f");
 	ImGui::NextColumn();
 
 	ImGui::Text("Angle");
@@ -251,8 +251,8 @@ void MainGUI::showBatchAddMethod1() {
 
 void MainGUI::showBatchAddMethod2() {
 	static int numParticles = 0;
-	static int x = 0;
-	static int y = 0;
+	static double x = 0;
+	static double y = 0;
 	static double startAngle = 0.0;
 	static double endAngle = 0.0;
 	static double velocity = 0.0;
@@ -267,12 +267,12 @@ void MainGUI::showBatchAddMethod2() {
 
 	ImGui::Text("X");
 	ImGui::NextColumn();
-	ImGui::InputInt("##x", &x, 0, 0);
+	ImGui::InputDouble("##x", &x, 0, 0, "%.f");
 	ImGui::NextColumn();
 
 	ImGui::Text("Y");
 	ImGui::NextColumn();
-	ImGui::InputInt("##y", &y, 0, 0);
+	ImGui::InputDouble("##y", &y, 0, 0, "%.f");
 	ImGui::NextColumn();
 
 	ImGui::Text("Start Angle");

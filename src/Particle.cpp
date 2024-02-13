@@ -11,7 +11,7 @@ double normalizeAngle(double angle) {
     return fmod(fmod(angle, 360.0) + 360.0, 360.0);
 }
 
-Particle::Particle(int x, int y, double angle, double velocity)
+Particle::Particle(double x, double y, double angle, double velocity)
     : x(x), y(y), angle(normalizeAngle(angle)), velocity(velocity) {}
 
 void Particle::update(double deltaTime) {
@@ -67,11 +67,11 @@ bool Particle::isParticleOnRightSideOfWall(const Wall& wall) const {
     return crossProduct > 0; // if cross product is positive, particle is on right side
 }
 
-int Particle::getX() const {
+double Particle::getX() const {
     return x;
 }
 
-int Particle::getY() const {
+double Particle::getY() const {
     return y;
 }
 
