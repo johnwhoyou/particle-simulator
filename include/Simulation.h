@@ -18,8 +18,9 @@ private:
 
 public:
     void update(double deltaTime);
-    void addParticle(int x, int y, double angle, double velocity);
     void addWall(int x1, int y1, int x2, int y2);
+    void addParticle(int x, int y, double angle, double velocity);
+    void addParticleByBatchMethod1(int x1, int y1, int x2, int y2, double angle, double velocity, int n);
     std::vector<Particle> getParticles();
 
 };

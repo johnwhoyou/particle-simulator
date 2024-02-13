@@ -244,8 +244,8 @@ void MainGUI::showBatchAddMethod1() {
 	ImGui::Dummy(ImVec2(0, 8));
 
 	centerElement(150.0f);
-	if (ImGui::Button("Add Particles")) {
-		// TODO: add particles to the simulation
+	if (ImGui::Button("Add Particles") && simulation) {
+		simulation->addParticleByBatchMethod1(startX, startY, endX, endY, angle, velocity, numParticles);
 	}
 }
 

@@ -7,13 +7,37 @@ void Simulation::update(double deltaTime) {
     }
 }
 
+void Simulation::addWall(int x1, int y1, int x2, int y2) {
+    walls.emplace_back(x1, y1, x2, y2);
+}
+
 void Simulation::addParticle(int x, int y, double angle, double velocity) {
     particles.emplace_back(x, y, angle, velocity);
 }
 
-void Simulation::addWall(int x1, int y1, int x2, int y2) {
-    walls.emplace_back(x1, y1, x2, y2);
+void Simulation::addParticleByBatchMethod1(int x1, int y1, int x2, int y2, double angle, double velocity, int n) {
+    if (n <= 1) {
+        // If only one particle is to be added, add it at the start point
+        addParticle(x1, y1, angle, velocity);
+    }
+    else {
+        // Calculate the vector from the start to the end point
+        double dx = x2 - x1;
+        double dy = y2 - y1;
+
+        // Calculate the distance between particles
+        double stepX = dx / (n - 1);
+        double stepY = dy / (n - 1);
+
+        // Add particles along the line
+        for (int i = 0; i < n; ++i) {
+            double newX = x1 + stepX * i;
+            double newY = y1 + stepY * i;
+            addParticle(static_cast<int>(newX), static_cast<int>(newY), angle, velocity);
+        }
+    }
 }
+
 
 std::vector<Particle> Simulation::getParticles() {
     return particles;
