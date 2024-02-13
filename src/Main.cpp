@@ -3,17 +3,16 @@
 #include "SDL.h"
 #undef main
 
-void drawCircle(SDL_Renderer* renderer, int32_t centerX, int32_t centerY, int32_t radius) {
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // Red
-    for (int w = 0; w < radius * 2; w++) {
-        for (int h = 0; h < radius * 2; h++) {
-            int dx = radius - w; // horizontal offset
-            int dy = radius - h; // vertical offset
-            if ((dx*dx + dy*dy) <= (radius * radius)) {
-                SDL_RenderDrawPoint(renderer, centerX + dx, centerY + dy);
-            }
-        }
+void drawCircleOpenGL(float cx, float cy, float r, int num_segments) {
+    glBegin(GL_LINE_LOOP);
+    glColor3f(1.0f, 0.0f, 0.0f); // Red color
+    for(int i = 0; i < num_segments; i++) {
+        float theta = 2.0f * 3.1415926f * float(i) / float(num_segments); // Current angle
+        float x = r * cosf(theta); // Calculate the x component
+        float y = r * sinf(theta); // Calculate the y component
+        glVertex2f(x + cx, y + cy); // Output vertex
     }
+    glEnd();
 }
 
 int main()
@@ -64,21 +63,22 @@ int main()
             ImGui_ImplSDL2_ProcessEvent(&event);
         }
 
-        glClear(GL_COLOR_BUFFER_BIT);
+        // Make sure to set up an appropriate OpenGL projection matrix if needed
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glOrtho(0.0f, 1280.0f, 720.0f, 0.0f, -1.0f, 1.0f);
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+
+        // Clear the screen
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // Draw the circle
+        drawCircleOpenGL(640.0f, 360.0f, 100.0f, 32); // Example: Draw a circle at the center
+
         simulatorGUI.NewFrame(window);
         simulatorGUI.Update();
         simulatorGUI.Render();
-
-        // Clear the renderer
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black background
-        SDL_RenderClear(renderer);
-
-        // Draw the red circle
-        drawCircle(renderer, 640, 360, 100); // Drawing at the center of the 1280x720 canvas
-
-        // Present the renderer
-        SDL_RenderPresent(renderer);
-
         SDL_GL_SwapWindow(window);
     }
 
