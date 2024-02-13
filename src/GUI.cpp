@@ -34,25 +34,32 @@ void MainGUI::Shutdown() {
 }
 
 void MainGUI::displayCanvas() {
-    ImGui::SetNextWindowSize(ImVec2(1280, 720), ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
+	ImGui::SetNextWindowSize(ImVec2(1280, 720), ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
 
-    ImGui::Begin("Simulation Canvas", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar);
+	ImGui::Begin("Simulation Canvas", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar);
 
-    // Drawing a simple rectangle
-    ImDrawList* draw_list = ImGui::GetWindowDrawList();
-    ImVec2 canvas_p0 = ImGui::GetCursorScreenPos(); // Top-left corner of the canvas
-    ImVec2 canvas_p1 = ImVec2(canvas_p0.x + 1280, canvas_p0.y + 720); // Bottom-right corner of the canvas
+	// Drawing a rectangle centered in the canvas
+	ImDrawList* draw_list = ImGui::GetWindowDrawList();
+	ImVec2 canvas_size = ImGui::GetWindowSize(); // Get the size of the current window/canvas
 
-    // Coordinates for the rectangle
-    ImVec2 rect_p0 = ImVec2(canvas_p0.x + 100, canvas_p0.y + 100);
-    ImVec2 rect_p1 = ImVec2(canvas_p0.x + 200, canvas_p0.y + 200);
+	// Calculate the center of the canvas
+	ImVec2 center = ImVec2(canvas_size.x * 0.5f, canvas_size.y * 0.5f);
 
-    // Draw rectangle
-    draw_list->AddRectFilled(rect_p0, rect_p1, IM_COL32(255, 0, 0, 255)); // Red rectangle
+	// Define the rectangle size
+	float rect_width = 100.0f;
+	float rect_height = 50.0f;
 
-    ImGui::End();
+	// Calculate the rectangle's top-left and bottom-right points
+	ImVec2 rect_p0 = ImVec2(center.x - rect_width / 2, center.y - rect_height / 2);
+	ImVec2 rect_p1 = ImVec2(center.x + rect_width / 2, center.y + rect_height / 2);
+
+	// Draw the centered rectangle
+	draw_list->AddRectFilled(rect_p0, rect_p1, IM_COL32(255, 0, 0, 255)); // Red rectangle
+
+	ImGui::End();
 }
+
 
 void MainGUI::displayBottomDetails() {
 	ImGui::SetNextWindowPos(ImVec2(0, 720), ImGuiCond_Always);
@@ -128,32 +135,32 @@ void MainGUI::displayParamsWindow() {
 }
 
 void MainGUI::showAddParticle() {
-	static float x = 0.0f;
-	static float y = 0.0f;
-	static float angle = 0.0f;
-	static float velocity = 0.0f;
-	
+	static int x = 0;
+	static int y = 0;
+	static double angle = 0.0;
+	static double velocity = 0.0;
+
 	ImGui::Columns(2, "Particle Parameters", false);
 	ImGui::SetColumnWidth(0, 100.0f);
 
 	ImGui::Text("X");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##x", &x, 0, 0, "%.2f");
+	ImGui::InputInt("##x", &x);
 	ImGui::NextColumn();
 
 	ImGui::Text("Y");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##y", &y, 0, 0, "%.2f");
+	ImGui::InputInt("##y", &y);
 	ImGui::NextColumn();
 
 	ImGui::Text("Angle");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##angle", &angle, 0, 0, "%.2f");
+	ImGui::InputDouble("##angle", &angle, 0, 0, "%.1f");
 	ImGui::NextColumn();
 
 	ImGui::Text("Velocity");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##velocity", &velocity, 0, 0, "%.2f");
+	ImGui::InputDouble("##velocity", &velocity, 0, 0, "%.1f");
 	ImGui::Columns(1);
 	ImGui::Dummy(ImVec2(0, 8));
 
@@ -183,12 +190,12 @@ void MainGUI::showBatchAddParticle() {
 
 void MainGUI::showBatchAddMethod1() {
 	static int numParticles = 0;
-	static float startX = 0.0f;
-	static float startY = 0.0f;
-	static float endX = 0.0f;
-	static float endY = 0.0f;
-	static float angle = 0.0f;
-	static float velocity = 0.0f;
+	static int startX = 0;
+	static int startY = 0;
+	static int endX = 0;
+	static int endY = 0;
+	static double angle = 0.0;
+	static double velocity = 0.0;
 
 	ImGui::Columns(2, "Particle Parameters", false);
 	ImGui::SetColumnWidth(0, 120.0f);
@@ -200,32 +207,32 @@ void MainGUI::showBatchAddMethod1() {
 
 	ImGui::Text("Start X");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##startX", &startX, 0, 0, "%.2f");
+	ImGui::InputInt("##startX", &startX, 0, 0);
 	ImGui::NextColumn();
 
 	ImGui::Text("Start Y");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##startY", &startY, 0, 0, "%.2f");
+	ImGui::InputInt("##startY", &startY, 0, 0);
 	ImGui::NextColumn();
 
 	ImGui::Text("End X");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##endX", &endX, 0, 0, "%.2f");
+	ImGui::InputInt("##endX", &endX, 0, 0);
 	ImGui::NextColumn();
 
 	ImGui::Text("End Y");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##endY", &endY, 0, 0, "%.2f");
+	ImGui::InputInt("##endY", &endY, 0, 0);
 	ImGui::NextColumn();
 
 	ImGui::Text("Angle");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##angle", &angle, 0, 0, "%.2f");
+	ImGui::InputDouble("##angle", &angle, 0, 0, "%.1f");
 	ImGui::NextColumn();
 
 	ImGui::Text("Velocity");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##velocity", &velocity, 0, 0, "%.2f");
+	ImGui::InputDouble("##velocity", &velocity, 0, 0, "%.1f");
 	ImGui::Columns(1);
 	ImGui::Dummy(ImVec2(0, 8));
 
@@ -237,11 +244,11 @@ void MainGUI::showBatchAddMethod1() {
 
 void MainGUI::showBatchAddMethod2() {
 	static int numParticles = 0;
-	static float x = 0.0f;
-	static float y = 0.0f;
-	static float startAngle = 0.0f;
-	static float endAngle = 0.0f;
-	static float velocity = 0.0f;
+	static int x = 0;
+	static int y = 0;
+	static double startAngle = 0.0;
+	static double endAngle = 0.0;
+	static double velocity = 0.0;
 
 	ImGui::Columns(2, "Particle Parameters", false);
 	ImGui::SetColumnWidth(0, 120.0f);
@@ -253,27 +260,27 @@ void MainGUI::showBatchAddMethod2() {
 
 	ImGui::Text("X");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##x", &x, 0, 0, "%.2f");
+	ImGui::InputInt("##x", &x, 0, 0);
 	ImGui::NextColumn();
 
 	ImGui::Text("Y");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##y", &y, 0, 0, "%.2f");
+	ImGui::InputInt("##y", &y, 0, 0);
 	ImGui::NextColumn();
 
 	ImGui::Text("Start Angle");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##startAngle", &startAngle, 0, 0, "%.2f");
+	ImGui::InputDouble("##startAngle", &startAngle, 0, 0, "%.1f");
 	ImGui::NextColumn();
 
 	ImGui::Text("End Angle");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##endAngle", &endAngle, 0, 0, "%.2f");
+	ImGui::InputDouble("##endAngle", &endAngle, 0, 0, "%.1f");
 	ImGui::NextColumn();
 
 	ImGui::Text("Velocity");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##velocity", &velocity, 0, 0, "%.2f");
+	ImGui::InputDouble("##velocity", &velocity, 0, 0, "%.1f");
 	ImGui::Columns(1);
 	ImGui::Dummy(ImVec2(0, 8));
 
@@ -285,11 +292,11 @@ void MainGUI::showBatchAddMethod2() {
 
 void MainGUI::showBatchAddMethod3() {
 	static int numParticles = 0;
-	static float x = 0.0f;
-	static float y = 0.0f;
-	static float angle = 0.0f;
-	static float startVelocity = 0.0f;
-	static float endVelocity = 0.0f;
+	static int x = 0.0;
+	static int y = 0.0;
+	static double angle = 0.0;
+	static double startVelocity = 0.0;
+	static double endVelocity = 0.0;
 
 	ImGui::Columns(2, "Particle Parameters", false);
 	ImGui::SetColumnWidth(0, 150.0f);
@@ -301,27 +308,27 @@ void MainGUI::showBatchAddMethod3() {
 
 	ImGui::Text("X");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##x", &x, 0, 0, "%.2f");
+	ImGui::InputInt("##x", &x, 0, 0);
 	ImGui::NextColumn();
 
 	ImGui::Text("Y");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##y", &y, 0, 0, "%.2f");
+	ImGui::InputInt("##y", &y, 0, 0);
 	ImGui::NextColumn();
 
 	ImGui::Text("Angle");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##angle", &angle, 0, 0, "%.2f");
+	ImGui::InputDouble("##angle", &angle, 0, 0);
 	ImGui::NextColumn();
 
 	ImGui::Text("Start Velocity");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##startVelocity", &startVelocity, 0, 0, "%.2f");
+	ImGui::InputDouble("##startVelocity", &startVelocity, 0, 0, "%.1f");
 	ImGui::NextColumn();
 
 	ImGui::Text("End Velocity");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##endVelocity", &endVelocity, 0, 0, "%.2f");
+	ImGui::InputDouble("##endVelocity", &endVelocity, 0, 0, "%.1f");
 	ImGui::Columns(1);
 	ImGui::Dummy(ImVec2(0, 8));
 
@@ -332,32 +339,32 @@ void MainGUI::showBatchAddMethod3() {
 }
 
 void MainGUI::showAddWall() {
-	static float x1 = 0.0f;
-	static float y1 = 0.0f;
-	static float x2 = 0.0f;
-	static float y2 = 0.0f;
+	static int x1 = 0.0;
+	static int y1 = 0.0;
+	static int x2 = 0.0;
+	static int y2 = 0.0;
 
 	ImGui::Columns(2, "Wall Parameters", false);
 	ImGui::SetColumnWidth(0, 50.0f);
 
 	ImGui::Text("X1");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##x1", &x1, 0, 0, "%.2f");
+	ImGui::InputInt("##x1", &x1, 0, 0);
 	ImGui::NextColumn();
 
 	ImGui::Text("Y1");
 	ImGui::NextColumn();
-	ImGui::InputFloat("####y1", &y1, 0, 0, "%.2f");
+	ImGui::InputInt("####y1", &y1, 0, 0);
 	ImGui::NextColumn();
 
 	ImGui::Text("X2");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##x2", &x2, 0, 0, "%.2f");
+	ImGui::InputInt("##x2", &x2, 0, 0);
 	ImGui::NextColumn();
 
 	ImGui::Text("Y2");
 	ImGui::NextColumn();
-	ImGui::InputFloat("##y2", &y2, 0, 0, "%.2f");
+	ImGui::InputInt("##y2", &y2, 0, 0);
 	ImGui::Columns(1);
 	ImGui::Dummy(ImVec2(0, 8));
 
