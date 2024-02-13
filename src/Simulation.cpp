@@ -72,6 +72,19 @@ void Simulation::addParticleByBatchMethod3(double x, double y, double angle, dou
     }
 }
 
+void Simulation::clearParticles() {
+    particles.clear();
+}
+
+void Simulation::clearWalls() {
+    walls.clear();
+}
+
+void Simulation::clearParticles() {
+    clearParticles();
+    clearWalls();
+}
+
 std::vector<Particle> Simulation::getParticles() {
     return particles;
 }

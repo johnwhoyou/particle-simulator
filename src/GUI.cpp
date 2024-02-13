@@ -83,18 +83,18 @@ void MainGUI::displayBottomDetails() {
 	ImGui::SetWindowFontScale(1.5f);
 
 	ImGui::SameLine();
-	if (ImGui::Button("Clear Particles")) {
-		// TODO: clear all particles
+	if (ImGui::Button("Clear Particles") && simulation) {
+		simulation->clearParticles();
 	}
 
 	ImGui::SameLine();
-	if (ImGui::Button("Clear Walls")) {
-		// TODO: clear all walls
+	if (ImGui::Button("Clear Walls") && simulation) {
+		simulation->clearWalls();
 	}
 
 	ImGui::SameLine();
-	if (ImGui::Button("Clear All")) {
-		// TODO: clear all particles and walls
+	if (ImGui::Button("Clear All") && simulation) {
+		simulation->clearAll();
 	}
 
 	ImGui::Text("P1: Alessandra Pauleen Gomez");
@@ -292,7 +292,7 @@ void MainGUI::showBatchAddMethod2() {
 	ImGui::Dummy(ImVec2(0, 8));
 
 	centerElement(150.0f);
-	if (ImGui::Button("Add Particles")) {
+	if (ImGui::Button("Add Particles") && simulation) {
 		simulation->addParticleByBatchMethod2(x, y, startAngle, endAngle, velocity, numParticles);
 	}
 }
@@ -340,7 +340,7 @@ void MainGUI::showBatchAddMethod3() {
 	ImGui::Dummy(ImVec2(0, 8));
 
 	centerElement(150.0f);
-	if (ImGui::Button("Add Particles")) {
+	if (ImGui::Button("Add Particles") && simulation) {
 		simulation->addParticleByBatchMethod3(x, y, angle, startVelocity, endVelocity, numParticles);
 	}
 }
@@ -376,7 +376,7 @@ void MainGUI::showAddWall() {
 	ImGui::Dummy(ImVec2(0, 8));
 
 	centerElement(100.0f);
-	if (ImGui::Button("Add Wall")) {
+	if (ImGui::Button("Add Wall") && simulation) {
 		// TODO: add wall to the simulation
 	}
 }

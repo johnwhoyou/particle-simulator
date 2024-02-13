@@ -23,6 +23,9 @@ public:
     void addParticleByBatchMethod1(double x1, double y1, double x2, double y2, double angle, double velocity, int n);
     void addParticleByBatchMethod2(double x, double y, double startAngle, double endAngle, double velocity, int n);
     void addParticleByBatchMethod3(double x, double y, double angle, double startVelocity, double endVelocity, int n);
+    void clearParticles();
+    void clearWalls();
+    void clearAll();
     std::vector<Particle> getParticles();
 
 };
