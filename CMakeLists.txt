@@ -6,15 +6,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 include_directories(include)
 
-set(SOURCES
-    src/Particle.cpp
-    src/Wall.cpp
-    # Add other source files here
-    src/GUI.cpp
-    src/Simulation.cpp
-)
-
-#file(GLOB SOURCES "src/*.cpp")
+file(GLOB SOURCES "src/*.cpp")
 
 add_library(ParticleSimulator STATIC ${SOURCES})
 
