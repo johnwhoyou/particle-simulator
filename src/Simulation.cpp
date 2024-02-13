@@ -38,6 +38,39 @@ void Simulation::addParticleByBatchMethod1(int x1, int y1, int x2, int y2, doubl
     }
 }
 
+void Simulation::addParticleByBatchMethod2(int x, int y, double startAngle, double endAngle, double velocity, int n) {
+    if (n <= 1) {
+        // If only one particle is to be added, add it at the start point with the startAngle
+        addParticle(x, y, startAngle, velocity);
+    }
+    else {
+        // Calculate the angle step for each particle
+        double angleStep = (endAngle - startAngle) / (n - 1);
+
+        // Add particles with angles evenly distributed between startAngle and endAngle
+        for (int i = 0; i < n; ++i) {
+            double angle = startAngle + angleStep * i;
+            addParticle(x, y, angle, velocity);
+        }
+    }
+}
+
+void Simulation::addParticleByBatchMethod3(int x, int y, double angle, double startVelocity, double endVelocity, int n) {
+    if (n <= 1) {
+        // If only one particle is to be added, add it with the startVelocity
+        addParticle(x, y, angle, startVelocity);
+    }
+    else {
+        // Calculate the velocity step for each particle
+        double velocityStep = (endVelocity - startVelocity) / (n - 1);
+
+        // Add particles with velocities evenly distributed between startVelocity and endVelocity
+        for (int i = 0; i < n; ++i) {
+            double velocity = startVelocity + velocityStep * i;
+            addParticle(x, y, angle, velocity);
+        }
+    }
+}
 
 std::vector<Particle> Simulation::getParticles() {
     return particles;
@@ -53,7 +86,7 @@ void Simulation::resolveCollisions(Particle& particle) {
 
 bool Simulation::checkCollision(const Particle& particle, const Wall& wall) const {
     // Fixed radius for all particles
-    double radius = 10.0;
+    double radius = 5.0;
 
     // Extract the circle (particle) center
     double circleX = particle.getX();

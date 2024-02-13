@@ -47,7 +47,7 @@ void MainGUI::displayCanvas() {
 
 	// Retrieve and draw particles from the simulation
 	auto particles = simulation->getParticles();
-	float particleRadius = 10.0f; // Radius of the particle
+	float particleRadius = 5.0f; // Radius of the particle
 	for (const auto& particle : particles) {
 		// Invert y-coordinate to match the specified coordinate system
 		float posY = static_cast<float>(canvas_sz.y) - particle.getY() - particleRadius; // Subtract radius to prevent cut-off
@@ -293,7 +293,7 @@ void MainGUI::showBatchAddMethod2() {
 
 	centerElement(150.0f);
 	if (ImGui::Button("Add Particles")) {
-		// TODO: add particles to the simulation
+		simulation->addParticleByBatchMethod2(x, y, startAngle, endAngle, velocity, numParticles);
 	}
 }
 
@@ -325,7 +325,7 @@ void MainGUI::showBatchAddMethod3() {
 
 	ImGui::Text("Angle");
 	ImGui::NextColumn();
-	ImGui::InputDouble("##angle", &angle, 0, 0);
+	ImGui::InputDouble("##angle", &angle, 0, 0, "%.1f");
 	ImGui::NextColumn();
 
 	ImGui::Text("Start Velocity");
@@ -341,7 +341,7 @@ void MainGUI::showBatchAddMethod3() {
 
 	centerElement(150.0f);
 	if (ImGui::Button("Add Particles")) {
-		// TODO: add particles to the simulation
+		simulation->addParticleByBatchMethod3(x, y, angle, startVelocity, endVelocity, numParticles);
 	}
 }
 
