@@ -1,7 +1,7 @@
 1. support all input methods (DONE)
-2. fix collision logic (IN PROGRESS)
+2. fix collision logic (DONE)
 3. render walls
-4. implement clear particles, walls, all
+4. implement clear particles, walls, all (DONE)
 5. implement multithreading
 6. optimization
 

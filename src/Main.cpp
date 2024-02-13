@@ -31,7 +31,8 @@ int main()
 
     SDL_GL_SetSwapInterval(1); // Enable vsync
 
-    Simulation simulation; 
+    Simulation simulation;
+    simulation.initializeCanvasBoundaries();
     MainGUI simulatorGUI;
     simulatorGUI.Init(window, "#version 130");
     simulatorGUI.setSimulation(&simulation);

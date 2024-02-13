@@ -18,6 +18,7 @@ private:
 
 public:
     void update(double deltaTime);
+    void initializeCanvasBoundaries();
     void addWall(int x1, int y1, int x2, int y2);
     void addParticle(double x, double y, double angle, double velocity);
     void addParticleByBatchMethod1(double x1, double y1, double x2, double y2, double angle, double velocity, int n);

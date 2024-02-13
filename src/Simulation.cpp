@@ -7,6 +7,14 @@ void Simulation::update(double deltaTime) {
     }
 }
 
+void Simulation::initializeCanvasBoundaries() {
+    // Initialize canvas boundary walls
+    addWall(0, 0, 0, 720); // Left
+    addWall(0, 720, 1280, 720); // Top
+    addWall(1280, 0, 1280, 720); // Right
+    addWall(0, 0, 1280, 0); // Bottom
+}
+
 void Simulation::addWall(int x1, int y1, int x2, int y2) {
     walls.emplace_back(x1, y1, x2, y2);
 }
@@ -80,7 +88,7 @@ void Simulation::clearWalls() {
     walls.clear();
 }
 
-void Simulation::clearParticles() {
+void Simulation::clearAll() {
     clearParticles();
     clearWalls();
 }
