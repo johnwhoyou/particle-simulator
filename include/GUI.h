@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <imgui_impl_sdl2.h>
 #include <imgui_impl_opengl3.h>
+#include "Simulation.h"
 
 class MainGUI {
 public:
@@ -12,6 +13,10 @@ public:
 	void Update();
 	void Render();
 	void Shutdown();
+
+	void setSimulation(Simulation* sim) {
+		simulation = sim;
+	}
 
 private:
 	void displayCanvas();
@@ -26,4 +31,6 @@ private:
 	void showAddWall();
 
 	void centerElement(float width);
+
+	Simulation* simulation;
 };

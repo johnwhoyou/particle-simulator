@@ -35,34 +35,41 @@ void MainGUI::Shutdown() {
 
 void MainGUI::displayCanvas() {
 	ImGui::SetNextWindowSize(ImVec2(1280, 720), ImGuiCond_FirstUseEver);
-	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
+	ImGui::Begin("Simulation Canvas", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
-	ImGui::Begin("Simulation Canvas", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar);
+	ImVec2 canvas_p0 = ImGui::GetCursorScreenPos(); // Top-left corner of the canvas area
+	ImVec2 canvas_sz = ImVec2(1280.0f, 720.0f); // Canvas size: 1280x720 pixels + 10pixels for 5 circle radius
 
-	// Drawing a rectangle centered in the canvas
+	// Draw background and border for the canvas
 	ImDrawList* draw_list = ImGui::GetWindowDrawList();
-	ImVec2 canvas_size = ImGui::GetWindowSize(); // Get the size of the current window/canvas
+	draw_list->AddRectFilled(canvas_p0, ImVec2(canvas_p0.x + canvas_sz.x, canvas_p0.y + canvas_sz.y), IM_COL32(50, 50, 50, 255)); // Dark background
+	draw_list->AddRect(canvas_p0, ImVec2(canvas_p0.x + canvas_sz.x, canvas_p0.y + canvas_sz.y), IM_COL32(255, 255, 255, 255)); // White border
 
-	// Calculate the center of the canvas
-	ImVec2 center = ImVec2(canvas_size.x * 0.5f, canvas_size.y * 0.5f);
+	// Retrieve and draw particles from the simulation
+	auto particles = simulation->getParticles();
+	float particleRadius = 10.0f; // Radius of the particle
+	for (const auto& particle : particles) {
+		// Invert y-coordinate to match the specified coordinate system
+		float posY = static_cast<float>(canvas_sz.y) - particle.getY() - particleRadius; // Subtract radius to prevent cut-off
 
-	// Define the rectangle size
-	float rect_width = 100.0f;
-	float rect_height = 50.0f;
+		// Map particle position to ImGui canvas coordinates
+		float posX = static_cast<float>(particle.getX()) - particleRadius; // Subtract radius to prevent cut-off
 
-	// Calculate the rectangle's top-left and bottom-right points
-	ImVec2 rect_p0 = ImVec2(center.x - rect_width / 2, center.y - rect_height / 2);
-	ImVec2 rect_p1 = ImVec2(center.x + rect_width / 2, center.y + rect_height / 2);
+		// Ensure the particle is drawn within the bounds of the canvas
+		posX = (posX < 0) ? particleRadius : posX; // Prevent negative coordinates
+		posY = (posY < 0) ? particleRadius : posY; // Prevent negative coordinates
 
-	// Draw the centered rectangle
-	draw_list->AddRectFilled(rect_p0, rect_p1, IM_COL32(255, 0, 0, 255)); // Red rectangle
+		ImVec2 pos = ImVec2(canvas_p0.x + posX, canvas_p0.y + posY);
+
+		// Draw particle as a small circle
+		draw_list->AddCircleFilled(pos, particleRadius, IM_COL32(255, 255, 0, 255)); // Yellow circle for particles
+	}
 
 	ImGui::End();
 }
 
-
 void MainGUI::displayBottomDetails() {
-	ImGui::SetNextWindowPos(ImVec2(0, 720), ImGuiCond_Always);
+	ImGui::SetNextWindowPos(ImVec2(0, 720+50), ImGuiCond_Always);
 
 	ImGui::Begin("Frame Rate", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar |
 										ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
@@ -103,7 +110,7 @@ void MainGUI::displayParamsWindow() {
 	static bool batchAdd = false;
 
 	ImGui::SetNextWindowSize(ImVec2(ImGui::GetIO().DisplaySize.x - 1280, 0), ImGuiCond_Always);
-	ImGui::SetNextWindowPos(ImVec2(1280, 0), ImGuiCond_Always);
+	ImGui::SetNextWindowPos(ImVec2(1280+50, 0), ImGuiCond_Always);
 
 	ImGui::Begin("Simulation Parameters", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse | 
 	ImGuiWindowFlags_NoBackground);
@@ -165,8 +172,8 @@ void MainGUI::showAddParticle() {
 	ImGui::Dummy(ImVec2(0, 8));
 
 	centerElement(150.0f);
-	if (ImGui::Button("Add Particle")) {
-		// TODO: add particle to the simulation
+	if (ImGui::Button("Add Particle") && simulation) {
+		simulation->addParticle(x, y, angle, velocity);
 	}
 }
 

@@ -2,30 +2,30 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 
-constexpr float degToRad(float degrees) {
+constexpr double degToRad(double degrees) {
     return degrees * M_PI / 180.0f;
 }
 
 // Function to Normalize the angle to be within [0, 360)
-float normalizeAngle(float angle) {
+double normalizeAngle(double angle) {
     return fmod(fmod(angle, 360.0f) + 360.0f, 360.0f);
 }
 
-Particle::Particle(float x, float y, float angle, float velocity)
+Particle::Particle(int x, int y, double angle, double velocity)
     : x(x), y(y), angle(normalizeAngle(angle)), velocity(velocity) {}
 
-void Particle::update(float deltaTime) {
+void Particle::update(double deltaTime) {
     move(deltaTime);
 }
 
-void Particle::move(float deltaTime) {
+void Particle::move(double deltaTime) {
     // Calculate movement based on velocity and angle
     x += std::cos(degToRad(angle)) * velocity * deltaTime;
     y += std::sin(degToRad(angle)) * velocity * deltaTime;
 }
 
 void Particle::bounceOffWall(const Wall& wall) {
-    float wallAngle = wall.getAngle();  // angle of the wall with respect to the positive x-axis
+    double wallAngle = wall.getAngle();  // angle of the wall with respect to the positive x-axis
 
     // check if the wall is vertical (east or west wall)
     if (wallAngle == 0.0f || wallAngle == 180.0f) {
@@ -36,13 +36,13 @@ void Particle::bounceOffWall(const Wall& wall) {
         angle = 180.0f - angle;
     } else {
         // for walls with arbitrary angles, use the previous reflection logic
-        float normalAngle;
+        double normalAngle;
         if (isParticleOnRightSideOfWall(wall)) {
             normalAngle = normalizeAngle(wallAngle + 90.0f);
         } else {
             normalAngle = normalizeAngle(wallAngle - 90.0f);
         }
-        float angleOfIncidence = normalizeAngle(angle - normalAngle);
+        double angleOfIncidence = normalizeAngle(angle - normalAngle);
         angle = normalizeAngle(normalAngle - angleOfIncidence);
     }
 
@@ -53,25 +53,25 @@ void Particle::bounceOffWall(const Wall& wall) {
 bool Particle::isParticleOnRightSideOfWall(const Wall& wall) const {
     // use the cross product to determine the relative position
     // compute wall vector
-    float wallVecX = wall.getX2() - wall.getX1();
-    float wallVecY = wall.getY2() - wall.getY1();
+    double wallVecX = wall.getX2() - wall.getX1();
+    double wallVecY = wall.getY2() - wall.getY1();
     // compute particle vector
-    float particleVecX = x - wall.getX1();
-    float particleVecY = y - wall.getY1();
+    int particleVecX = x - wall.getX1();
+    int particleVecY = y - wall.getY1();
     // cross product to determine the side
-    float crossProduct = (wallVecX * particleVecY) - (wallVecY * particleVecX);
+    int crossProduct = (wallVecX * particleVecY) - (wallVecY * particleVecX);
     
     return crossProduct > 0; // if cross product is positive, particle is on right side
 }
 
-float Particle::getX() const {
+int Particle::getX() const {
     return x;
 }
 
-float Particle::getY() const {
+int Particle::getY() const {
     return y;
 }
 
-float Particle::getAngle() const {
+double Particle::getAngle() const {
     return angle;
 }

@@ -11,6 +11,7 @@ set(SOURCES
     src/Wall.cpp
     # Add other source files here
     src/GUI.cpp
+    src/Simulation.cpp
 )
 
 #file(GLOB SOURCES "src/*.cpp")

@@ -5,21 +5,21 @@
 
 class Particle {
 public:
-    Particle(float x, float y, float angle, float velocity);
+    Particle(int x, int y, double angle, double velocity);
 
-    void update(float deltaTime);
+    void update(double deltaTime);
     void bounceOffWall(const Wall& wall);
 
-    float getX() const;
-    float getY() const;
-    float getAngle() const;
+    int getX() const;
+    int getY() const;
+    double getAngle() const;
 
 private:
-    float x, y; // Position of the particle
-    float angle; // Angle in degrees, 0 is east
-    float velocity; // Velocity in pixels per second
+    int x, y; // Position of the particle
+    double angle; // Angle in degrees, 0 is east
+    double velocity; // Velocity in pixels per second
     
-    void move(float deltaTime);
+    void move(double deltaTime);
     bool isParticleOnRightSideOfWall(const Wall& wall) const;
 };
 
