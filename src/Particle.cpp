@@ -3,12 +3,12 @@
 #include <cmath>
 
 constexpr double degToRad(double degrees) {
-    return degrees * M_PI / 180.0f;
+    return degrees * M_PI / 180.0;
 }
 
 // Function to Normalize the angle to be within [0, 360)
 double normalizeAngle(double angle) {
-    return fmod(fmod(angle, 360.0f) + 360.0f, 360.0f);
+    return fmod(fmod(angle, 360.0) + 360.0, 360.0);
 }
 
 Particle::Particle(int x, int y, double angle, double velocity)
@@ -28,19 +28,22 @@ void Particle::bounceOffWall(const Wall& wall) {
     double wallAngle = wall.getAngle();  // angle of the wall with respect to the positive x-axis
 
     // check if the wall is vertical (east or west wall)
-    if (wallAngle == 0.0f || wallAngle == 180.0f) {
+    if (wallAngle == 0.0 || wallAngle == 180.0) {
         // if vertical wall, simply mirror the horizontal component of the angle
-        angle = 360.0f - angle;
-    } else if (wallAngle == 90.0f || wallAngle == 270.0f) {
+        angle = 360.0 - angle;
+    }
+    else if (wallAngle == 90.0 || wallAngle == 270.0) {
         // if horizontal wall (north or south wall), mirror the vertical component
-        angle = 180.0f - angle;
-    } else {
-        // for walls with arbitrary angles, use the previous reflection logic
+        angle = 180.0 - angle;
+    }
+    else {
+        // for walls with arbitrary angles
         double normalAngle;
         if (isParticleOnRightSideOfWall(wall)) {
-            normalAngle = normalizeAngle(wallAngle + 90.0f);
-        } else {
-            normalAngle = normalizeAngle(wallAngle - 90.0f);
+            normalAngle = normalizeAngle(wallAngle + 90.0);
+        }
+        else {
+            normalAngle = normalizeAngle(wallAngle - 90.0);
         }
         double angleOfIncidence = normalizeAngle(angle - normalAngle);
         angle = normalizeAngle(normalAngle - angleOfIncidence);
@@ -60,7 +63,7 @@ bool Particle::isParticleOnRightSideOfWall(const Wall& wall) const {
     int particleVecY = y - wall.getY1();
     // cross product to determine the side
     int crossProduct = (wallVecX * particleVecY) - (wallVecY * particleVecX);
-    
+
     return crossProduct > 0; // if cross product is positive, particle is on right side
 }
 
