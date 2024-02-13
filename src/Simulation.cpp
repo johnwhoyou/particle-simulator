@@ -97,6 +97,10 @@ std::vector<Particle> Simulation::getParticles() {
     return particles;
 }
 
+std::vector<Wall> Simulation::getWalls() {
+    return walls;
+}
+
 void Simulation::resolveCollisions(Particle& particle) {
     for (const auto& wall : walls) {
         if (checkCollision(particle, wall)) {

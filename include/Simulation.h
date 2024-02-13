@@ -28,6 +28,7 @@ public:
     void clearWalls();
     void clearAll();
     std::vector<Particle> getParticles();
+    std::vector<Wall> getWalls();
 
 };
 

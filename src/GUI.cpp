@@ -65,6 +65,14 @@ void MainGUI::displayCanvas() {
 		draw_list->AddCircleFilled(pos, particleRadius, IM_COL32(255, 255, 0, 255)); // Yellow circle for particles
 	}
 
+	// Retrieve and draw walls from the simulation
+	auto walls = simulation->getWalls();
+	for (const auto& wall : walls) {
+		ImVec2 wallStart = ImVec2(canvas_p0.x + wall.getX1(), canvas_p0.y + canvas_sz.y - wall.getY1());
+		ImVec2 wallEnd = ImVec2(canvas_p0.x + wall.getX2(), canvas_p0.y + canvas_sz.y - wall.getY2());
+		draw_list->AddLine(wallStart, wallEnd, IM_COL32(255, 255, 255, 255), 2.0f); // Draw walls as white lines
+	}
+
 	ImGui::End();
 }
 
@@ -377,7 +385,7 @@ void MainGUI::showAddWall() {
 
 	centerElement(100.0f);
 	if (ImGui::Button("Add Wall") && simulation) {
-		// TODO: add wall to the simulation
+		simulation->addWall(x1, y1, x2, y2);
 	}
 }
 
