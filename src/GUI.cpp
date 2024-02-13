@@ -40,6 +40,28 @@ void MainGUI::displayCanvas() {
 	ImGui::Begin("Simulation Canvas", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar);
 
 	// TODO: render the particles and walls
+
+	// OpenGL code to draw a red border
+    float borderThickness = 2.0f; // Thickness of the border
+    ImVec2 canvas_pos = ImGui::GetCursorScreenPos(); // Top-left corner of the canvas
+    ImVec2 canvas_size = ImGui::GetContentRegionAvail(); // Size of the canvas available for rendering
+
+    // Set up OpenGL to draw the border
+    glLineWidth(borderThickness);
+    glColor3f(1.0f, 0.0f, 0.0f); // Set draw color to red
+
+    glBegin(GL_LINE_LOOP); // Start drawing lines
+    glVertex2f(canvas_pos.x, canvas_pos.y); // Top-left
+    glVertex2f(canvas_pos.x + canvas_size.x, canvas_pos.y); // Top-right
+    glVertex2f(canvas_pos.x + canvas_size.x, canvas_pos.y + canvas_size.y); // Bottom-right
+    glVertex2f(canvas_pos.x, canvas_pos.y + canvas_size.y); // Bottom-left
+    glEnd(); // End drawing
+
+    // Make sure ImGui can render on top of the OpenGL drawings
+    ImGui::GetWindowDrawList()->AddCallback(ImDrawCallback_ResetRenderState, nullptr);
+
+    // Existing ImGui content
+    // TODO: render the particles and walls
 	
 	ImGui::End();
 }
