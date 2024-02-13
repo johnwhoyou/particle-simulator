@@ -38,7 +38,7 @@ void MainGUI::displayCanvas() {
 	ImGui::Begin("Simulation Canvas", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 	ImVec2 canvas_p0 = ImGui::GetCursorScreenPos(); // Top-left corner of the canvas area
-	ImVec2 canvas_sz = ImVec2(1280.0f, 720.0f); // Canvas size: 1280x720 pixels + 10pixels for 5 circle radius
+	ImVec2 canvas_sz = ImVec2(1280.0f, 720.0f); // Canvas size: 1280x720
 
 	// Draw background and border for the canvas
 	ImDrawList* draw_list = ImGui::GetWindowDrawList();
