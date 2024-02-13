@@ -34,36 +34,24 @@ void MainGUI::Shutdown() {
 }
 
 void MainGUI::displayCanvas() {
-	ImGui::SetNextWindowSize(ImVec2(1280, 720), ImGuiCond_FirstUseEver);
-	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(1280, 720), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
 
-	ImGui::Begin("Simulation Canvas", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar);
+    ImGui::Begin("Simulation Canvas", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar);
 
-	// TODO: render the particles and walls
+    // Drawing a simple rectangle
+    ImDrawList* draw_list = ImGui::GetWindowDrawList();
+    ImVec2 canvas_p0 = ImGui::GetCursorScreenPos(); // Top-left corner of the canvas
+    ImVec2 canvas_p1 = ImVec2(canvas_p0.x + 1280, canvas_p0.y + 720); // Bottom-right corner of the canvas
 
-	// OpenGL code to draw a red border
-    float borderThickness = 2.0f; // Thickness of the border
-    ImVec2 canvas_pos = ImGui::GetCursorScreenPos(); // Top-left corner of the canvas
-    ImVec2 canvas_size = ImGui::GetContentRegionAvail(); // Size of the canvas available for rendering
+    // Coordinates for the rectangle
+    ImVec2 rect_p0 = ImVec2(canvas_p0.x + 100, canvas_p0.y + 100);
+    ImVec2 rect_p1 = ImVec2(canvas_p0.x + 200, canvas_p0.y + 200);
 
-    // Set up OpenGL to draw the border
-    glLineWidth(borderThickness);
-    glColor3f(1.0f, 0.0f, 0.0f); // Set draw color to red
+    // Draw rectangle
+    draw_list->AddRectFilled(rect_p0, rect_p1, IM_COL32(255, 0, 0, 255)); // Red rectangle
 
-    glBegin(GL_LINE_LOOP); // Start drawing lines
-    glVertex2f(canvas_pos.x, canvas_pos.y); // Top-left
-    glVertex2f(canvas_pos.x + canvas_size.x, canvas_pos.y); // Top-right
-    glVertex2f(canvas_pos.x + canvas_size.x, canvas_pos.y + canvas_size.y); // Bottom-right
-    glVertex2f(canvas_pos.x, canvas_pos.y + canvas_size.y); // Bottom-left
-    glEnd(); // End drawing
-
-    // Make sure ImGui can render on top of the OpenGL drawings
-    ImGui::GetWindowDrawList()->AddCallback(ImDrawCallback_ResetRenderState, nullptr);
-
-    // Existing ImGui content
-    // TODO: render the particles and walls
-	
-	ImGui::End();
+    ImGui::End();
 }
 
 void MainGUI::displayBottomDetails() {
