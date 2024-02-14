@@ -66,10 +66,10 @@ void MainGUI::displayCanvas() {
 		float posX = static_cast<float>(particle.getX()) - particleRadius; // Subtract radius to prevent cut-off
 
 		// Ensure the particle is drawn within the bounds of the canvas
-		posX = (posX < 0) ? particleRadius : posX; // Prevent negative coordinates
-		posY = (posY < 0) ? particleRadius : posY; // Prevent negative coordinates
+		float adjustedPosX = std::max(particleRadius, std::min(posX, canvas_sz.x - particleRadius)); // Adjust to prevent overlap
+		float adjustedPosY = std::max(particleRadius, std::min(posY, canvas_sz.y - particleRadius)); // Adjust to prevent overlap
 
-		ImVec2 pos = ImVec2(canvas_p0.x + posX, canvas_p0.y + posY);
+		ImVec2 pos = ImVec2(canvas_p0.x + adjustedPosX, canvas_p0.y + adjustedPosY);
 
 		// Draw particle as a small circle
 		draw_list->AddCircleFilled(pos, particleRadius, IM_COL32(255, 255, 0, 255)); // Yellow circle for particles
