@@ -358,6 +358,10 @@ void MainGUI::showAddWall() {
 	static int y1 = 0.0;
 	static int x2 = 0.0;
 	static int y2 = 0.0;
+	static std::random_device rd;  // Obtain a random number from hardware
+	static std::mt19937 eng(rd()); // Seed the generator
+	static std::uniform_int_distribution<> distrX(0, 1280); // Define the range for x-coordinates
+	static std::uniform_int_distribution<> distrY(0, 720);  // Define the range for y-coordinates
 
 	ImGui::Columns(2, "Wall Parameters", false);
 	ImGui::SetColumnWidth(0, 50.0f);
@@ -386,6 +390,15 @@ void MainGUI::showAddWall() {
 	centerElement(100.0f);
 	if (ImGui::Button("Add Wall") && simulation) {
 		simulation->addWall(x1, y1, x2, y2);
+	}
+
+	ImGui::SameLine();
+	if (ImGui::Button("Random")) {
+		// Generate random values within the canvas bounds
+		x1 = distrX(eng);
+		y1 = distrY(eng);
+		x2 = distrX(eng);
+		y2 = distrY(eng);
 	}
 }
 

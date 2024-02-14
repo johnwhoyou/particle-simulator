@@ -14,7 +14,6 @@ issues:
 4. user-gen wall with arbitrary angles or diagonal walls have tunneling problem.
 
 extra features:
-1. add a value randomizer for wall generation (DONE)
-2. add a value randomizer for particle generation
-3. add a particle counter as display
-4. input validation
+1. add a value randomizer for wall and particle generation
+2. add a particle counter as display
+3. input validation
