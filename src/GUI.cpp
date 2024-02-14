@@ -98,6 +98,10 @@ void MainGUI::displayBottomDetails(double frameRate) {
 	ImGui::Text("%.1f FPS", frameRate);
 	ImGui::SameLine();
 	ImGui::Dummy(ImVec2(16, 0));
+	ImGui::SameLine();
+	ImGui::Text("Particle Count: %zu", simulation->getParticles().size());
+	ImGui::SameLine();
+	ImGui::Dummy(ImVec2(16, 0));
 	ImGui::SetWindowFontScale(1.5f);
 
 
@@ -116,7 +120,6 @@ void MainGUI::displayBottomDetails(double frameRate) {
 		simulation->clearAll();
 	}
 
-	ImGui::Text("Particle Count: %zu", simulation->getParticles().size());
 	ImGui::Text("P1: Alessandra Pauleen Gomez");
 	ImGui::SameLine();
 	ImGui::Dummy(ImVec2(16, 0));
@@ -132,7 +135,7 @@ void MainGUI::displayParamsWindow() {
 	ImGui::SetNextWindowSize(ImVec2(ImGui::GetIO().DisplaySize.x - 1280, 0), ImGuiCond_Always);
 	ImGui::SetNextWindowPos(ImVec2(1280+50, 0), ImGuiCond_Always);
 
-	ImGui::Begin("Simulation Parameters", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse | 
+	ImGui::Begin("Simulation Parameters", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse | 
 	ImGuiWindowFlags_NoBackground);
 
 	ImGui::SetWindowFontScale(1.3f);
@@ -191,7 +194,7 @@ void MainGUI::showAddParticle() {
 	ImGui::Columns(1);
 	ImGui::Dummy(ImVec2(0, 8));
 
-	centerElement(150.0f);
+	centerElement(250.0f);
 	if (ImGui::Button("Add Particle") && simulation) {
 		simulation->addParticle(x, y, angle, velocity);
 	}
@@ -403,7 +406,7 @@ void MainGUI::showAddWall() {
 	ImGui::Columns(1);
 	ImGui::Dummy(ImVec2(0, 8));
 
-	centerElement(100.0f);
+	centerElement(200.0f);
 	if (ImGui::Button("Add Wall") && simulation) {
 		simulation->addWall(x1, y1, x2, y2);
 	}
