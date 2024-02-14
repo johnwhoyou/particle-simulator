@@ -26,9 +26,9 @@ void MainGUI::NewFrame(SDL_Window* window) {
 	ImGui::NewFrame();
 }
 
-void MainGUI::Update() {
+void MainGUI::Update(double frameRate) {
 	displayCanvas();
-	displayBottomDetails();
+	displayBottomDetails(frameRate);
 	displayParamsWindow();
 }
 
@@ -86,7 +86,7 @@ void MainGUI::displayCanvas() {
 	ImGui::End();
 }
 
-void MainGUI::displayBottomDetails() {
+void MainGUI::displayBottomDetails(double frameRate) {
 	ImGui::SetNextWindowPos(ImVec2(0, 720+50), ImGuiCond_Always);
 
 	ImGui::Begin("Frame Rate", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar |
@@ -95,7 +95,7 @@ void MainGUI::displayBottomDetails() {
 	ImGui::SetWindowFontScale(2.0f);
 	ImGui::TextColored(ImVec4(0.7f, 0.7f, 1, 1), "FRAME RATE:");
 	ImGui::SameLine();
-	ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
+	ImGui::Text("%.1f FPS", frameRate);
 	ImGui::SameLine();
 	ImGui::Dummy(ImVec2(16, 0));
 	ImGui::SetWindowFontScale(1.5f);

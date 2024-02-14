@@ -12,7 +12,7 @@ class MainGUI {
 public:
 	void Init(SDL_Window* window, const char* glsl_version);
 	void NewFrame(SDL_Window* window);
-	void Update();
+	void Update(double frameRate);
 	void Render();
 	void Shutdown();
 
@@ -22,7 +22,7 @@ public:
 
 private:
 	void displayCanvas();
-	void displayBottomDetails();
+	void displayBottomDetails(double frameRate);
 	void displayParamsWindow();
 
 	void showAddParticle();

@@ -37,7 +37,11 @@ int main()
     simulatorGUI.Init(window, "#version 130");
     simulatorGUI.setSimulation(&simulation);
 
-    auto lastFrameTime = std::chrono::high_resolution_clock::now();
+    auto lastFrameTime = std::chrono::high_resolution_clock::now(); // For the simulation
+    auto startTime = std::chrono::high_resolution_clock::now(); // For the FPS counter (every 0.5 seconds)
+    int frameCount = 0;
+    const double targetInterval = 0.5;
+    double frameRate = 0.0;
 
     bool isRunning = true;
     while (isRunning) {
@@ -57,9 +61,19 @@ int main()
         // Update the simulation with the calculated delta time
         simulation.update(deltaTime);
 
+        // Update FPS counter after 0.5 seconds
+        auto elapsedSeconds = std::chrono::duration<double>(now - startTime).count();
+
+        if (elapsedSeconds >= targetInterval) {
+            frameRate = static_cast<double>(frameCount) / elapsedSeconds;
+            startTime = now;
+            frameCount = 0;
+        }
+        frameCount++;
+
         glClear(GL_COLOR_BUFFER_BIT);
         simulatorGUI.NewFrame(window);
-        simulatorGUI.Update();
+        simulatorGUI.Update(frameRate);
         simulatorGUI.Render();
         SDL_GL_SwapWindow(window);
     }
