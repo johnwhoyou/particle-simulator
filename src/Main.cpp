@@ -40,7 +40,6 @@ int main()
     auto lastFrameTime = std::chrono::high_resolution_clock::now(); // For the simulation
     auto startTime = std::chrono::high_resolution_clock::now(); // For the FPS counter (every 0.5 seconds)
     int frameCount = 0;
-    const double targetInterval = 0.5;
     double frameRate = 0.0;
 
     bool isRunning = true;
@@ -64,7 +63,7 @@ int main()
         // Update FPS counter after 0.5 seconds
         auto elapsedSeconds = std::chrono::duration<double>(now - startTime).count();
 
-        if (elapsedSeconds >= targetInterval) {
+        if (elapsedSeconds >= 0.5) {
             frameRate = static_cast<double>(frameCount) / elapsedSeconds;
             startTime = now;
             frameCount = 0;
