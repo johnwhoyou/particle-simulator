@@ -1,33 +1,20 @@
 #include "Simulation.h"
 
-Simulation::Simulation() : threadPool(std::thread::hardware_concurrency()) {
-    initializeCanvasBoundaries();
-}
-
-Simulation::~Simulation() {
-    isRunning = false;
-}
-
 void Simulation::update(double deltaTime) {
+    size_t totalParticles = particles.size();
+    size_t numThreads = threadPool.size();
+    size_t chunkSize = (totalParticles + numThreads - 1) / numThreads;
+
     std::vector<std::future<void>> futures;
 
-    // dynamically determine workload based on hardware capabilities
-    size_t numParticlesPerThread = particles.size() / threadPool.size() % threadPool.size() != 0 ? 1 : 0;
+    for (size_t i = 0; i < numThreads && (i * chunkSize) < totalParticles; ++i) {
+        size_t startIdx = i * chunkSize;
+        size_t endIdx = std::min((i + 1) * chunkSize, totalParticles);
 
-    for (size_t i = 0; i < particles.size(); i += numParticlesPerThread) {
-        // Capture the current chunk of particles to update
-        auto begin = particles.begin() + i;
-        auto end = (i + numParticlesPerThread < particles.size()) ? begin + numParticlesPerThread : particles.end();
-
-        // Enqueue the update task
-        futures.emplace_back(
-            threadPool.enqueue([begin, end, deltaTime, this]() {
-                for (auto it = begin; it != end; ++it) {
-                    it->update(deltaTime);
-                    this->resolveCollisions(*it);
-                }
-                })
-        );
+        // Lambda to update particles in range
+        futures.emplace_back(threadPool.push([this, startIdx, endIdx, deltaTime](int) {
+            this->updateParticlesInRange(startIdx, endIdx, deltaTime);
+            }));
     }
 
     // Wait for all tasks to complete
@@ -36,6 +23,12 @@ void Simulation::update(double deltaTime) {
     }
 }
 
+void Simulation::updateParticlesInRange(size_t startIdx, size_t endIdx, double deltaTime) {
+    for (size_t i = startIdx; i < endIdx; ++i) {
+        particles[i].update(deltaTime); // Update particle position based on its velocity
+        resolveCollisions(particles[i]); // Resolve collisions with walls for this particle
+    }
+}
 
 void Simulation::initializeCanvasBoundaries() {
     // Initialize canvas boundary walls
