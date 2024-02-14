@@ -15,6 +15,6 @@ issues:
 
 extra features:
 1. add a value randomizer for wall generation (DONE)
-2. add a value randomizer for particle generation
-3. add a particle counter as display
+2. add a value randomizer for particle generation (DONE)
+3. add a particle counter as display (DONE)
 4. input validation

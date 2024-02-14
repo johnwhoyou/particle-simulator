@@ -6,6 +6,7 @@
 #include <imgui_impl_opengl3.h>
 #include "Simulation.h"
 #include <random>
+#include <iostream>
 
 class MainGUI {
 public:

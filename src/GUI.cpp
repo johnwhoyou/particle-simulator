@@ -1,5 +1,15 @@
 #include "GUI.h"
 
+// Global RNG components
+std::random_device rd;  // Non-deterministic random device for seeding
+std::mt19937 eng(rd()); // Seed the Mersenne Twister generator
+
+// Optional: Define global distributions if there are common ranges used across functions
+std::uniform_int_distribution<> distrX(0, 1280); // Define the range for x-coordinates
+std::uniform_int_distribution<> distrY(0, 720);  // Define the range for y-coordinates
+std::uniform_real_distribution<> distrAngle(0, 360); // Define range for angle [0, 360]
+std::uniform_real_distribution<> distrVelocity(100, 500); // Define range for velocity [100, 500]
+
 void MainGUI::Init(SDL_Window* window, const char* glsl_version) {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -90,6 +100,7 @@ void MainGUI::displayBottomDetails() {
 	ImGui::Dummy(ImVec2(16, 0));
 	ImGui::SetWindowFontScale(1.5f);
 
+
 	ImGui::SameLine();
 	if (ImGui::Button("Clear Particles") && simulation) {
 		simulation->clearParticles();
@@ -105,6 +116,7 @@ void MainGUI::displayBottomDetails() {
 		simulation->clearAll();
 	}
 
+	ImGui::Text("Particle Count: %zu", simulation->getParticles().size());
 	ImGui::Text("P1: Alessandra Pauleen Gomez");
 	ImGui::SameLine();
 	ImGui::Dummy(ImVec2(16, 0));
@@ -182,6 +194,14 @@ void MainGUI::showAddParticle() {
 	centerElement(150.0f);
 	if (ImGui::Button("Add Particle") && simulation) {
 		simulation->addParticle(x, y, angle, velocity);
+	}
+
+	ImGui::SameLine();
+	if (ImGui::Button("Random Particle")) {
+		x = distrX(eng);
+		y = distrY(eng);
+		angle = distrAngle(eng);
+		velocity = distrVelocity(eng);
 	}
 }
 
@@ -358,10 +378,6 @@ void MainGUI::showAddWall() {
 	static int y1 = 0.0;
 	static int x2 = 0.0;
 	static int y2 = 0.0;
-	static std::random_device rd;  // Obtain a random number from hardware
-	static std::mt19937 eng(rd()); // Seed the generator
-	static std::uniform_int_distribution<> distrX(0, 1280); // Define the range for x-coordinates
-	static std::uniform_int_distribution<> distrY(0, 720);  // Define the range for y-coordinates
 
 	ImGui::Columns(2, "Wall Parameters", false);
 	ImGui::SetColumnWidth(0, 50.0f);
@@ -393,8 +409,7 @@ void MainGUI::showAddWall() {
 	}
 
 	ImGui::SameLine();
-	if (ImGui::Button("Random")) {
-		// Generate random values within the canvas bounds
+	if (ImGui::Button("Random Wall")) {
 		x1 = distrX(eng);
 		y1 = distrY(eng);
 		x2 = distrX(eng);
