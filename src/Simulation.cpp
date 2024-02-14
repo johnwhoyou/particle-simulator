@@ -1,11 +1,41 @@
 #include "Simulation.h"
 
+Simulation::Simulation() : threadPool(std::thread::hardware_concurrency()) {
+    initializeCanvasBoundaries();
+}
+
+Simulation::~Simulation() {
+    isRunning = false;
+}
+
 void Simulation::update(double deltaTime) {
-    for (auto& particle : particles) {
-        particle.update(deltaTime);
-        resolveCollisions(particle);
+    std::vector<std::future<void>> futures;
+
+    // dynamically determine workload based on hardware capabilities
+    size_t numParticlesPerThread = particles.size() / threadPool.size() % threadPool.size() != 0 ? 1 : 0;
+
+    for (size_t i = 0; i < particles.size(); i += numParticlesPerThread) {
+        // Capture the current chunk of particles to update
+        auto begin = particles.begin() + i;
+        auto end = (i + numParticlesPerThread < particles.size()) ? begin + numParticlesPerThread : particles.end();
+
+        // Enqueue the update task
+        futures.emplace_back(
+            threadPool.enqueue([begin, end, deltaTime, this]() {
+                for (auto it = begin; it != end; ++it) {
+                    it->update(deltaTime);
+                    this->resolveCollisions(*it);
+                }
+                })
+        );
+    }
+
+    // Wait for all tasks to complete
+    for (auto& future : futures) {
+        future.get();
     }
 }
+
 
 void Simulation::initializeCanvasBoundaries() {
     // Initialize canvas boundary walls

@@ -3,6 +3,7 @@
 #define _USE_MATH_DEFINES
 
 #include "Particle.h"
+#include "ThreadPool.h"
 #include <thread>
 #include <atomic>
 #include <mutex>
@@ -15,12 +16,16 @@ class Simulation {
 private:
     std::vector<Particle> particles;
     std::vector<Wall> walls;
+    ThreadPool threadPool;
+    std::atomic<bool> isRunning{ true };
 
     void resolveCollisions(Particle& particle);
     bool checkCollision(const Particle& particle, const Wall& wall) const;
     void handleCollision(Particle& particle, const Wall& wall);
 
 public:
+    Simulation();
+    ~Simulation();
     void update(double deltaTime);
     void initializeCanvasBoundaries();
     void addWall(int x1, int y1, int x2, int y2);
