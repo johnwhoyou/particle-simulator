@@ -85,7 +85,10 @@ void Simulation::clearParticles() {
 }
 
 void Simulation::clearWalls() {
-    walls.clear();
+    if (walls.size() > 4) {
+        // Erase elements starting from the fifth element to the end of the vector since the first four are the canvas boundaries
+        walls.erase(walls.begin() + 4, walls.end());
+    }
 }
 
 void Simulation::clearAll() {

@@ -1,11 +1,15 @@
 #ifndef SIMULATION_H
 #define SIMULATION_H
+#define _USE_MATH_DEFINES
 
 #include "Particle.h"
 #include <thread>
 #include <atomic>
 #include <mutex>
 #include <vector>
+#include <optional>
+#include <tuple>
+#include <cmath>
 
 class Simulation {
 private:

@@ -1,6 +1,4 @@
 #include "Particle.h"
-#define _USE_MATH_DEFINES
-#include <cmath>
 
 constexpr double degToRad(double degrees) {
     return degrees * M_PI / 180.0;
@@ -25,46 +23,32 @@ void Particle::move(double deltaTime) {
 }
 
 void Particle::bounceOffWall(const Wall& wall) {
-    double wallAngle = wall.getAngle();  // angle of the wall with respect to the positive x-axis
+    // Calculate the wall's normal vector
+    double dx = wall.getX2() - wall.getX1();
+    double dy = wall.getY2() - wall.getY1();
 
-    // check if the wall is vertical (east or west wall)
-    if (wallAngle == 0.0 || wallAngle == 180.0) {
-        // if vertical wall, simply mirror the horizontal component of the angle
-        angle = 360.0 - angle;
-    }
-    else if (wallAngle == 90.0 || wallAngle == 270.0) {
-        // if horizontal wall (north or south wall), mirror the vertical component
-        angle = 180.0 - angle;
-    }
-    else {
-        // for walls with arbitrary angles
-        double normalAngle;
-        if (isParticleOnRightSideOfWall(wall)) {
-            normalAngle = normalizeAngle(wallAngle + 90.0);
-        }
-        else {
-            normalAngle = normalizeAngle(wallAngle - 90.0);
-        }
-        double angleOfIncidence = normalizeAngle(angle - normalAngle);
-        angle = normalizeAngle(normalAngle - angleOfIncidence);
-    }
+    // Assuming the normal points to the right of the wall direction (rotate clockwise)
+    double nx = dy;
+    double ny = -dx;
 
-    // normalize the final angle
+    // Normalize the normal vector
+    double length = std::sqrt(nx * nx + ny * ny);
+    nx /= length;
+    ny /= length;
+
+    // Convert the particle's velocity and angle to a vector
+    double radians = degToRad(angle);
+    double vx = std::cos(radians) * velocity;
+    double vy = std::sin(radians) * velocity;
+
+    // Reflect the velocity vector across the normal
+    double dotProduct = vx * nx + vy * ny;
+    double reflected_vx = vx - 2 * dotProduct * nx;
+    double reflected_vy = vy - 2 * dotProduct * ny;
+
+    // Convert the reflected velocity vector back to speed and direction
+    angle = std::atan2(reflected_vy, reflected_vx) * 180.0 / M_PI;
     angle = normalizeAngle(angle);
-}
-
-bool Particle::isParticleOnRightSideOfWall(const Wall& wall) const {
-    // use the cross product to determine the relative position
-    // compute wall vector
-    double wallVecX = wall.getX2() - wall.getX1();
-    double wallVecY = wall.getY2() - wall.getY1();
-    // compute particle vector
-    int particleVecX = x - wall.getX1();
-    int particleVecY = y - wall.getY1();
-    // cross product to determine the side
-    int crossProduct = (wallVecX * particleVecY) - (wallVecY * particleVecX);
-
-    return crossProduct > 0; // if cross product is positive, particle is on right side
 }
 
 double Particle::getX() const {
@@ -77,4 +61,8 @@ double Particle::getY() const {
 
 double Particle::getAngle() const {
     return angle;
+}
+
+double Particle::getVelocity() const {
+	return velocity;
 }

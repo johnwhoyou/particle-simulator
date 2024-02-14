@@ -1,6 +1,8 @@
 #ifndef PARTICLE_H
 #define PARTICLE_H
+#define _USE_MATH_DEFINES
 
+#include <cmath>
 #include "Wall.h"
 
 class Particle {
@@ -13,6 +15,7 @@ public:
     double getX() const;
     double getY() const;
     double getAngle() const;
+    double getVelocity() const;
 
 private:
     double x, y; // Position of the particle
@@ -20,7 +23,6 @@ private:
     double velocity; // Velocity in pixels per second
     
     void move(double deltaTime);
-    bool isParticleOnRightSideOfWall(const Wall& wall) const;
 };
 
 #endif
