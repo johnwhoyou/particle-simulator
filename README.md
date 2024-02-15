@@ -2,7 +2,7 @@
 2. fix collision logic (DONE)
 3. render walls (DONE)
 4. implement clear particles, walls, all (DONE)
-5. implement multithreading
+5. implement multithreading (DONE) //multithreaded branch
 6. optimization
 
 
