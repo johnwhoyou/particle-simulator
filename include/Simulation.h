@@ -16,8 +16,8 @@ private:
     std::vector<Particle> particles;
     std::vector<Wall> walls;
 
-    void resolveCollisions(Particle& particle);
-    bool checkCollision(const Particle& particle, const Wall& wall) const;
+    void resolveCollisions(Particle& particle, double deltaTime);
+    bool checkCollision(const Particle& particle, const Wall& wall, double deltaTime) const;
     void handleCollision(Particle& particle, const Wall& wall);
 
 public:

@@ -3,7 +3,7 @@
 void Simulation::update(double deltaTime) {
     for (auto& particle : particles) {
         particle.update(deltaTime);
-        resolveCollisions(particle);
+        resolveCollisions(particle, deltaTime);
     }
 }
 
@@ -104,21 +104,21 @@ std::vector<Wall> Simulation::getWalls() {
     return walls;
 }
 
-void Simulation::resolveCollisions(Particle& particle) {
+void Simulation::resolveCollisions(Particle& particle, double deltaTime) {
     for (const auto& wall : walls) {
-        if (checkCollision(particle, wall)) {
+        if (checkCollision(particle, wall, deltaTime)) {
             handleCollision(particle, wall);
         }
     }
 }
 
-bool Simulation::checkCollision(const Particle& particle, const Wall& wall) const {
-    // Fixed radius for all particles
-    double radius = 5.0;
+bool Simulation::checkCollision(const Particle& particle, const Wall& wall, double deltaTime) const {
+    double radians = particle.getAngle() * M_PI / 180.0;
+    double radius = 5.0; // Fixed radius for all particles
 
-    // Extract the circle (particle) center
-    double circleX = particle.getX();
-    double circleY = particle.getY();
+    // Predict the particle's next position based on its current velocity and direction
+    double predictedX = particle.getX() + std::cos(radians) * particle.getVelocity() * deltaTime;
+    double predictedY = particle.getY() + std::sin(radians) * particle.getVelocity() * deltaTime;
 
     // Extract line segment (wall) endpoints
     double wallStartX = wall.getX1();
@@ -130,9 +130,9 @@ bool Simulation::checkCollision(const Particle& particle, const Wall& wall) cons
     double wallVecX = wallEndX - wallStartX;
     double wallVecY = wallEndY - wallStartY;
 
-    // Calculate the vector from the wall start to the circle center
-    double startToCircleX = circleX - wallStartX;
-    double startToCircleY = circleY - wallStartY;
+    // Calculate the vector from the wall start to the predicted circle center
+    double startToCircleX = predictedX - wallStartX;
+    double startToCircleY = predictedY - wallStartY;
 
     // Project the startToCircle vector onto the wall vector to find the closest point
     double wallLengthSquared = wallVecX * wallVecX + wallVecY * wallVecY;
@@ -146,9 +146,9 @@ bool Simulation::checkCollision(const Particle& particle, const Wall& wall) cons
     double closestX = wallStartX + projection * wallVecX;
     double closestY = wallStartY + projection * wallVecY;
 
-    // Calculate the distance from the circle center to the closest point
-    double distanceX = closestX - circleX;
-    double distanceY = closestY - circleY;
+    // Calculate the distance from the predicted circle center to the closest point
+    double distanceX = closestX - predictedX;
+    double distanceY = closestY - predictedY;
     double distanceSquared = distanceX * distanceX + distanceY * distanceY;
 
     // Check if the distance is less than the radius squared
