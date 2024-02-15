@@ -10,18 +10,17 @@ std::uniform_int_distribution<> distrY(0, 720);  // Define the range for y-coord
 std::uniform_real_distribution<> distrAngle(0, 360); // Define range for angle [0, 360]
 std::uniform_real_distribution<> distrVelocity(100, 500); // Define range for velocity [100, 500]
 
-void MainGUI::Init(SDL_Window* window, const char* glsl_version) {
+void MainGUI::Init(SDL_Window* window, SDL_Renderer* renderer) {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
-	
-	ImGui_ImplSDL2_InitForOpenGL(window, nullptr);
-	ImGui_ImplOpenGL3_Init(glsl_version);
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGui_ImplSDL2_InitForSDLRenderer(window, renderer);
+	ImGui_ImplSDLRenderer2_Init(renderer);
 	ImGui::StyleColorsDark();
 }
 
 void MainGUI::NewFrame(SDL_Window* window) {
-	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplSDLRenderer2_NewFrame();
 	ImGui_ImplSDL2_NewFrame(window);
 	ImGui::NewFrame();
 }
@@ -34,11 +33,14 @@ void MainGUI::Update(double frameRate) {
 
 void MainGUI::Render() {
 	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void MainGUI::GetDrawData() {
+	ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
 }
 
 void MainGUI::Shutdown() {
-	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplSDLRenderer2_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
 }
