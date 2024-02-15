@@ -19,8 +19,8 @@ private:
     std::vector<Wall> walls;
     ctpl::thread_pool threadPool;
 
-    void resolveCollisions(Particle& particle);
-    bool checkCollision(const Particle& particle, const Wall& wall) const;
+    void resolveCollisions(Particle& particle, double deltaTime);
+    bool checkCollision(const Particle& particle, const Wall& wall, double deltaTime) const;
     void handleCollision(Particle& particle, const Wall& wall);
     void updateParticlesInRange(size_t startIdx, size_t endIdx, double deltaTime);
 
