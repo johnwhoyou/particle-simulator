@@ -77,7 +77,6 @@ int main()
         simulatorGUI.NewFrame(window);
         simulatorGUI.Update(frameRate);
         simulatorGUI.Render();
-        SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
         SDL_RenderClear(renderer);
         simulatorGUI.GetDrawData();
         SDL_RenderPresent(renderer);
