@@ -22,8 +22,5 @@ float Wall::getY2() const {
 }
 
 float Wall::getAngle() const {
-    // Calculate the angle of the wall in degrees
     return std::atan2(y2 - y1, x2 - x1) * 180.0f / M_PI;
 }
-
-// ... (Any additional implementation details)

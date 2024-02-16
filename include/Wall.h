@@ -10,11 +10,11 @@ public:
     float getX2() const;
     float getY2() const;
 
-    float getAngle() const; // Useful for calculating bounce angles
+    float getAngle() const;
 
 private:
-    float x1, y1; // First endpoint of the wall
-    float x2, y2; // Second endpoint of the wall
+    float x1, y1;
+    float x2, y2;
 };
 
-#endif // WALL_H
+#endif
