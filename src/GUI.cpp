@@ -47,7 +47,8 @@ void MainGUI::Shutdown() {
 
 void MainGUI::displayCanvas() {
 	ImGui::SetNextWindowSize(ImVec2(1280, 720), ImGuiCond_FirstUseEver);
-	ImGui::Begin("Simulation Canvas", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+	ImGui::Begin("Simulation Canvas", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse |
+												ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
 
 	ImVec2 canvas_p0 = ImGui::GetCursorScreenPos(); // Top-left corner of the canvas area
 	ImVec2 canvas_sz = ImVec2(1280.0f, 720.0f); // Canvas size: 1280x720
@@ -135,7 +136,7 @@ void MainGUI::displayParamsWindow() {
 	static bool batchAdd = false;
 
 	ImGui::SetNextWindowSize(ImVec2(ImGui::GetIO().DisplaySize.x - 1280, 0), ImGuiCond_Always);
-	ImGui::SetNextWindowPos(ImVec2(1280+50, 0), ImGuiCond_Always);
+	ImGui::SetNextWindowPos(ImVec2(1280+35, 0), ImGuiCond_Always);
 
 	ImGui::Begin("Simulation Parameters", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse | 
 	ImGuiWindowFlags_NoBackground);
