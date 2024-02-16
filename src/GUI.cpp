@@ -1,14 +1,12 @@
 #include "GUI.h"
 
-// Global RNG components
-std::random_device rd;  // Non-deterministic random device for seeding
-std::mt19937 eng(rd()); // Seed the Mersenne Twister generator
+std::random_device rd;
+std::mt19937 eng(rd());
 
-// Optional: Define global distributions if there are common ranges used across functions
-std::uniform_int_distribution<> distrX(0, 1280); // Define the range for x-coordinates
-std::uniform_int_distribution<> distrY(0, 720);  // Define the range for y-coordinates
-std::uniform_real_distribution<> distrAngle(0, 360); // Define range for angle [0, 360]
-std::uniform_real_distribution<> distrVelocity(100, 500); // Define range for velocity [100, 500]
+std::uniform_int_distribution<> distrX(0, 1280);
+std::uniform_int_distribution<> distrY(0, 720);
+std::uniform_real_distribution<> distrAngle(0, 360);
+std::uniform_real_distribution<> distrVelocity(100, 500);
 
 void MainGUI::Init(SDL_Window* window, SDL_Renderer* renderer) {
 	IMGUI_CHECKVERSION();
@@ -47,43 +45,35 @@ void MainGUI::Shutdown() {
 
 void MainGUI::displayCanvas() {
 	ImGui::SetNextWindowSize(ImVec2(1280, 720), ImGuiCond_FirstUseEver);
-	ImGui::Begin("Simulation Canvas", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse |
-												ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+	ImGui::Begin("Simulation Canvas", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse);
 
-	ImVec2 canvas_p0 = ImGui::GetCursorScreenPos(); // Top-left corner of the canvas area
-	ImVec2 canvas_sz = ImVec2(1280.0f, 720.0f); // Canvas size: 1280x720
+	ImVec2 canvas_p0 = ImGui::GetCursorScreenPos();
+	ImVec2 canvas_sz = ImVec2(1280.0f, 720.0f);
 
-	// Draw background and border for the canvas
 	ImDrawList* draw_list = ImGui::GetWindowDrawList();
-	draw_list->AddRectFilled(canvas_p0, ImVec2(canvas_p0.x + canvas_sz.x, canvas_p0.y + canvas_sz.y), IM_COL32(50, 50, 50, 255)); // Dark background
-	draw_list->AddRect(canvas_p0, ImVec2(canvas_p0.x + canvas_sz.x, canvas_p0.y + canvas_sz.y), IM_COL32(255, 255, 255, 255)); // White border
+	draw_list->AddRectFilled(canvas_p0, ImVec2(canvas_p0.x + canvas_sz.x, canvas_p0.y + canvas_sz.y), IM_COL32(50, 50, 50, 255));
+	draw_list->AddRect(canvas_p0, ImVec2(canvas_p0.x + canvas_sz.x, canvas_p0.y + canvas_sz.y), IM_COL32(255, 255, 255, 255));
 
-	// Retrieve and draw particles from the simulation
 	auto particles = simulation->getParticles();
-	float particleRadius = 5.0f; // Radius of the particle
+	float particleRadius = 5.0f;
 	for (const auto& particle : particles) {
-		// Adjust posY correctly map simulation Y-coordinate to ImGui's coordinate system
 		float posY = canvas_sz.y - (static_cast<float>(particle.getY()) + particleRadius);
 
-		// Map particle position to ImGui canvas coordinates
-		float posX = static_cast<float>(particle.getX()) - particleRadius; // Subtract radius to prevent cut-off
+		float posX = static_cast<float>(particle.getX()) - particleRadius;
 
-		// Ensure the particle is drawn within the bounds of the canvas
-		float adjustedPosX = std::max(particleRadius, std::min(posX, canvas_sz.x - particleRadius)); // Adjust to prevent overlap
-		float adjustedPosY = std::max(particleRadius, std::min(posY, canvas_sz.y - particleRadius)); // Adjust to prevent overlap
+		float adjustedPosX = std::max(particleRadius, std::min(posX, canvas_sz.x - particleRadius));
+		float adjustedPosY = std::max(particleRadius, std::min(posY, canvas_sz.y - particleRadius));
 
 		ImVec2 pos = ImVec2(canvas_p0.x + adjustedPosX, canvas_p0.y + adjustedPosY);
 
-		// Draw particle as a small circle
-		draw_list->AddCircleFilled(pos, particleRadius, IM_COL32(255, 255, 0, 255)); // Yellow circle for particles
+		draw_list->AddCircleFilled(pos, particleRadius, IM_COL32(255, 255, 0, 255));
 	}
 
-	// Retrieve and draw walls from the simulation
 	auto walls = simulation->getWalls();
 	for (const auto& wall : walls) {
 		ImVec2 wallStart = ImVec2(canvas_p0.x + wall.getX1(), canvas_p0.y + canvas_sz.y - wall.getY1());
 		ImVec2 wallEnd = ImVec2(canvas_p0.x + wall.getX2(), canvas_p0.y + canvas_sz.y - wall.getY2());
-		draw_list->AddLine(wallStart, wallEnd, IM_COL32(255, 255, 255, 255), 2.0f); // Draw walls as white lines
+		draw_list->AddLine(wallStart, wallEnd, IM_COL32(255, 255, 255, 255), 2.0f);
 	}
 
 	ImGui::End();

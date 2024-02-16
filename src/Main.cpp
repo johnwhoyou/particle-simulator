@@ -42,8 +42,8 @@ int main()
     simulatorGUI.Init(window, renderer);
     simulatorGUI.setSimulation(&simulation);
 
-    auto lastFrameTime = std::chrono::high_resolution_clock::now(); // For the simulation
-    auto startTime = std::chrono::high_resolution_clock::now(); // For the FPS counter (every 0.5 seconds)
+    auto lastFrameTime = std::chrono::high_resolution_clock::now();
+    auto startTime = std::chrono::high_resolution_clock::now();
     int frameCount = 0;
     double frameRate = 0.0;
 
@@ -57,14 +57,12 @@ int main()
             ImGui_ImplSDL2_ProcessEvent(&event);
         }
 
-        // Calculate delta time
         auto now = std::chrono::high_resolution_clock::now();
         auto deltaTime = std::chrono::duration_cast<std::chrono::duration<double>>(now - lastFrameTime).count();
         lastFrameTime = now;
 
         simulation.update(deltaTime);
 
-        // Update FPS counter after 0.5 seconds
         auto elapsedSeconds = std::chrono::duration<double>(now - startTime).count();
 
         if (elapsedSeconds >= 0.5) {

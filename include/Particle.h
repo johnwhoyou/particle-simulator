@@ -18,9 +18,9 @@ public:
     double getVelocity() const;
 
 private:
-    double x, y; // Position of the particle
-    double angle; // Angle in degrees, 0 is east
-    double velocity; // Velocity in pixels per second
+    double x, y;
+    double angle;
+    double velocity;
     
     void move(double deltaTime);
 };

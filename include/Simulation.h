@@ -36,4 +36,4 @@ public:
 
 };
 
-#endif // SIMULATION_H
+#endif
