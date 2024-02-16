@@ -14,3 +14,4 @@ The main features of the application include adding a single particle, batch add
 	- SDL2
 6. Build the project.
 7. Run the project by running the `Main.cpp` file or the `ParticleSimulatorApp` executable that will appear on the Startup Item dropdown. Make sure to use the Local Machine x64-Debug configuration.
+**IMPORTANT:** The single-threaded and multi-threaded implementations of the project can be found in separate branches. The single-threaded version is in branch main, while the other is in branch multithreaded.
