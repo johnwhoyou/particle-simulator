@@ -1,20 +1,16 @@
-1. support all input methods (DONE)
-2. fix collision logic (DONE)
-3. render walls (DONE)
-4. implement clear particles, walls, all (DONE)
-5. implement multithreading (DONE) //multithreaded branch
-6. optimization / improve multithreading
+# Problem Set #1: Particle Simulator
+## About the Project
+This project aims to apply distributed computing concepts by implementing a concurrently programmed particle physics simulator. To achieve this, a multithreaded C++ application was developed to showcase an interface that can allow users to render particles and walls into the simulation. The application makes use of the Dear ImGui library for its graphical user interface, as well as SDL2 for its rendering functionalities.
 
+The main features of the application include adding a single particle, batch adding particles with varying spawn points, batch adding particles with varying angles, batch adding particles with varying velocities, and adding a wall. Through these features, users will be able to perform the entire simulation on a 1280 x 720 canvas, witnessing the particles' movements as they collide against the edges of the canvas or against the user-generated walls.
 
-issues:
-1. (FIXED) for input batch method 2, start angle 0 to 360, at slower velocities < 100, resembles a square, at higher velocities > 300 resembles more of a circle
-— possible explanations: discretization of motion fix: use floats for x and y positions or doubles (SOLUTION: turned all ints to double)
-2. (expected behavior?) try adding inputs at the exact corners and see it shifts in starting positions example is (0,0) at 45degree angle and 100 velocity
-3. (FIXED) user generated wall with arbitrary angle calculation problem. (SOLUTION: used atan2 to calculate angle)
-4. (FIXED) user-gen wall with arbitrary angles or diagonal walls have tunneling problem.
-
-extra features:
-1. add a value randomizer for wall generation (DONE)
-2. add a value randomizer for particle generation (DONE)
-3. add a particle counter as display (DONE)
-4. input validation
+## How to Run the Project
+1. Clone the repository to your local machine.
+2. Ensure that you have CMake installed (at least version 3.14).
+3. Ensure that you have the `vcpkg` package manager installed in your Visual Studio environment. This can be checked using the Visual Studio installer.
+4. Once the project is open in VS, open a Developer Powershell terminal and enter the command `vcpkg integrate install` to enable library linking.
+5. Enter the command `vcpkg install` to install the following dependencies required by the project:
+	- imgui
+	- SDL2
+6. Build the project.
+7. Run the project by running the `Main.cpp` file or the `ParticleSimulatorApp` executable that will appear on the Startup Item dropdown. Make sure to use the Local Machine x64-Debug configuration.
