@@ -5,6 +5,6 @@
     {
       "name": "imgui",
       "features": [ "opengl3-binding", "sdl2-binding", "sdl2-renderer-binding" ]
-    }, "glad", "sdl2"
+    }, "glad", "sdl2", "sdl2-image"
   ]
 }
