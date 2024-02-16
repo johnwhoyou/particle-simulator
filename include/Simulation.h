@@ -3,7 +3,6 @@
 #define _USE_MATH_DEFINES
 
 #include "Particle.h"
-#include "ThreadPool.h"
 #include "ctpl_stl.h"
 #include <thread>
 #include <atomic>
