@@ -137,7 +137,7 @@ void Simulation::resolveCollisions(Particle& particle, double deltaTime) {
 
 bool Simulation::checkCollision(const Particle& particle, const Wall& wall, double deltaTime) const {
     double radians = particle.getAngle() * M_PI / 180.0;
-    double radius = 5.0; // Fixed radius for all particles
+    double radius = 2.5; // Fixed radius for all particles
 
     // Predict the particle's next position based on its current velocity and direction
     double predictedX = particle.getX() + std::cos(radians) * particle.getVelocity() * deltaTime;

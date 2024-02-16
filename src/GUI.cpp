@@ -59,23 +59,26 @@ void MainGUI::displayCanvas() {
 
 	// Retrieve and draw particles from the simulation
 	auto particles = simulation->getParticles();
-	float particleRadius = 5.0f; // Radius of the particle
+	float particleSize = 2.5f; // Size of the particle (assuming it's a square)
 	for (const auto& particle : particles) {
 		// Adjust posY correctly map simulation Y-coordinate to ImGui's coordinate system
-		float posY = canvas_sz.y - (static_cast<float>(particle.getY()) + particleRadius);
+		float posY = canvas_sz.y - (static_cast<float>(particle.getY()) + particleSize);
 
 		// Map particle position to ImGui canvas coordinates
-		float posX = static_cast<float>(particle.getX()) - particleRadius; // Subtract radius to prevent cut-off
+		float posX = static_cast<float>(particle.getX()) - particleSize; // Subtract size to prevent cut-off
 
 		// Ensure the particle is drawn within the bounds of the canvas
-		float adjustedPosX = std::max(particleRadius, std::min(posX, canvas_sz.x - particleRadius)); // Adjust to prevent overlap
-		float adjustedPosY = std::max(particleRadius, std::min(posY, canvas_sz.y - particleRadius)); // Adjust to prevent overlap
+		float adjustedPosX = std::max(particleSize, std::min(posX, canvas_sz.x - particleSize)); // Adjust to prevent overlap
+		float adjustedPosY = std::max(particleSize, std::min(posY, canvas_sz.y - particleSize)); // Adjust to prevent overlap
 
 		ImVec2 pos = ImVec2(canvas_p0.x + adjustedPosX, canvas_p0.y + adjustedPosY);
 
-		// Draw particle as a small circle
-		draw_list->AddCircleFilled(pos, particleRadius, IM_COL32(255, 255, 0, 255)); // Yellow circle for particles
+		// Draw particle as a small square
+		ImVec2 squareSize = ImVec2(particleSize, particleSize);
+		ImVec2 bottomRight = ImVec2(pos.x + squareSize.x, pos.y + squareSize.y);
+		draw_list->AddRectFilled(pos, bottomRight, IM_COL32(255, 255, 0, 255)); // Yellow square for particles
 	}
+
 
 	// Retrieve and draw walls from the simulation
 	auto walls = simulation->getWalls();
