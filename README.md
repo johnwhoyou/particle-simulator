@@ -1,4 +1,16 @@
 # Problem Set #1: Particle Simulator
+
+## TO-DO
+1. Remove walls - Aless
+2. Toggle between developer and explorer mode - Aless
+3. Create explorer mode UI - Aless
+4. Spawning a sprite at a pre-defined location - Shaun (TRY)
+5. Moving using on-screen arrow keys, WASD, or arrow keys - Shaun (TRY)
+6. Show zoomed in version of sprite's periphery - Aless (tentative)
+7. Render only the things in the sprite's periphery - John
+8. Remember last location of sprite when switching between modes - Ibz
+
+
 ## About the Project
 This project aims to apply distributed computing concepts by implementing a concurrently programmed particle physics simulator. To achieve this, a multithreaded C++ application was developed to showcase an interface that can allow users to render particles and walls into the simulation. The application makes use of the Dear ImGui library for its graphical user interface, as well as SDL2 for its rendering functionalities.
 
