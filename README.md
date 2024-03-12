@@ -1,9 +1,9 @@
 # Problem Set #1: Particle Simulator
 
 ## TO-DO
-1. Remove walls - Aless
-2. Toggle between developer and explorer mode - Aless
-3. Create explorer mode UI - Aless
+1. [DONE] Remove walls - Aless
+2. [DONE] Toggle between developer and explorer mode - Aless
+3. [DONE] Create explorer mode UI - Aless
 4. Spawning a sprite at a pre-defined location - Shaun (TRY)
 5. Moving using on-screen arrow keys, WASD, or arrow keys - Shaun (TRY)
 6. Show zoomed in version of sprite's periphery - Aless (tentative)

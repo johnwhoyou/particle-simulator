@@ -24,7 +24,7 @@ public:
 private:
 	void displayCanvas();
 	void displayBottomDetails(double frameRate);
-	void displayParamsWindow();
+	void displayControlsWindow();
 
 	void showAddParticle();
 	void showBatchAddParticle();
@@ -36,4 +36,5 @@ private:
 	void centerElement(float width);
 
 	Simulation* simulation;
+	bool explorerMode = false;
 };

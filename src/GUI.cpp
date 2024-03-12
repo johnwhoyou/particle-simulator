@@ -26,7 +26,7 @@ void MainGUI::NewFrame(SDL_Window* window) {
 void MainGUI::Update(double frameRate) {
 	displayCanvas();
 	displayBottomDetails(frameRate);
-	displayParamsWindow();
+	displayControlsWindow();
 }
 
 void MainGUI::Render() {
@@ -44,8 +44,9 @@ void MainGUI::Shutdown() {
 }
 
 void MainGUI::displayCanvas() {
-	ImGui::SetNextWindowSize(ImVec2(1280, 720), ImGuiCond_FirstUseEver);
-	ImGui::Begin("Simulation Canvas", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+	ImGui::SetNextWindowSize(ImVec2(1300, 800), ImGuiCond_Always);
+	ImGui::Begin("Simulation Canvas", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse |
+												ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBackground);
 
 	ImVec2 canvas_p0 = ImGui::GetCursorScreenPos();
 	ImVec2 canvas_sz = ImVec2(1280.0f, 720.0f);
@@ -56,7 +57,7 @@ void MainGUI::displayCanvas() {
 
 	auto particles = simulation->getParticles();
 	float particleSize = 2.5f;
-	for (const auto& particle : particles) {
+	for (const auto& particle : particles) { // TODO: Modify this to check if explorer mode is enabled; if so, only draw the ones within periphery
 		float posY = canvas_sz.y - (static_cast<float>(particle.getY()) + particleSize);
 
 		float posX = static_cast<float>(particle.getX()) - particleSize;
@@ -71,11 +72,8 @@ void MainGUI::displayCanvas() {
 		draw_list->AddRectFilled(pos, bottomRight, IM_COL32(255, 255, 0, 255));
 	}
 
-	auto walls = simulation->getWalls();
-	for (const auto& wall : walls) {
-		ImVec2 wallStart = ImVec2(canvas_p0.x + wall.getX1(), canvas_p0.y + canvas_sz.y - wall.getY1());
-		ImVec2 wallEnd = ImVec2(canvas_p0.x + wall.getX2(), canvas_p0.y + canvas_sz.y - wall.getY2());
-		draw_list->AddLine(wallStart, wallEnd, IM_COL32(255, 255, 255, 255), 2.0f);
+	if (explorerMode) {
+		// TODO: Show sprite at most recent position
 	}
 
 	ImGui::End();
@@ -99,61 +97,84 @@ void MainGUI::displayBottomDetails(double frameRate) {
 	ImGui::Dummy(ImVec2(16, 0));
 	ImGui::SetWindowFontScale(1.5f);
 
-
-	ImGui::SameLine();
-	if (ImGui::Button("Clear Particles") && simulation) {
-		simulation->clearParticles();
-	}
-
-	ImGui::SameLine();
-	if (ImGui::Button("Clear Walls") && simulation) {
-		simulation->clearWalls();
-	}
-
-	ImGui::SameLine();
-	if (ImGui::Button("Clear All") && simulation) {
-		simulation->clearAll();
-	}
-
 	ImGui::Text("P1: Alessandra Pauleen Gomez");
 	ImGui::SameLine();
 	ImGui::Dummy(ImVec2(16, 0));
 	ImGui::SameLine();
 	ImGui::Text("P2: John Carlo Joyo");
+	ImGui::SameLine();
+	ImGui::Dummy(ImVec2(16, 0));
+	ImGui::SameLine();
+	ImGui::Text("P3: Ibrahim Kahil");
+	ImGui::SameLine();
+	ImGui::Dummy(ImVec2(16, 0));
+	ImGui::SameLine();
+	ImGui::Text("P4: Shaun Vincent Ong");
 
 	ImGui::End();
 }
 
-void MainGUI::displayParamsWindow() {
+void MainGUI::displayControlsWindow() {
 	static bool batchAdd = false;
 
 	ImGui::SetNextWindowSize(ImVec2(ImGui::GetIO().DisplaySize.x - 1280, 0), ImGuiCond_Always);
-	ImGui::SetNextWindowPos(ImVec2(1280+50, 0), ImGuiCond_Always);
+	ImGui::SetNextWindowPos(ImVec2(1280+30, 0), ImGuiCond_Always);
 
-	ImGui::Begin("Simulation Parameters", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse | 
-	ImGuiWindowFlags_NoBackground);
+	ImGui::Begin("Simulation Controls", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBackground);
 
 	ImGui::SetWindowFontScale(1.3f);
 
-	centerElement(150.0f);
-	ImGui::TextColored(ImVec4(0.7f, 0.7f, 1, 1), "ADD PARTICLE/S");
-	ImGui::Spacing();
-	ImGui::Checkbox("Add Particles by Batch", &batchAdd);
-	ImGui::Dummy(ImVec2(0, 8));
-
-	if (!batchAdd)
-		showAddParticle();
-	else
-		showBatchAddParticle();
+	ImGui::Checkbox("Enable Explorer Mode", &explorerMode);
 
 	ImGui::Dummy(ImVec2(0, 8));
 	ImGui::Separator();
 	ImGui::Dummy(ImVec2(0, 8));
 
-	centerElement(100.0f);
-	ImGui::TextColored(ImVec4(0.7f, 0.7f, 1, 1), "ADD WALL");
-	ImGui::Dummy(ImVec2(0, 8));
-	showAddWall();
+	if (explorerMode) {
+		ImGui::SetWindowFontScale(3.0f);
+
+		centerElement(300.0f);
+		ImGui::TextColored(ImVec4(0.7f, 0.7f, 1, 1), "ARROW CONTROLS");
+		ImGui::Dummy(ImVec2(0, 8));
+
+		centerElement(74.0f);
+		if (ImGui::ArrowButton("Up", ImGuiDir_Up)) {
+			// TODO: Move the sprite up
+		}
+
+		centerElement(180.0f);
+		if (ImGui::ArrowButton("Left", ImGuiDir_Left)) {
+			// TODO: Move the sprite to the left
+		}
+
+		ImGui::SameLine();
+		if (ImGui::ArrowButton("Down", ImGuiDir_Down)) {
+			// TODO: Move the sprite down
+		}
+
+		ImGui::SameLine();
+		if (ImGui::ArrowButton("Right", ImGuiDir_Right)) {
+			// TODO: Move the sprite to the right
+		}
+	}
+	else {
+		centerElement(150.0f);
+		ImGui::TextColored(ImVec4(0.7f, 0.7f, 1, 1), "ADD PARTICLE/S");
+		ImGui::Spacing();
+		ImGui::Checkbox("Add Particles by Batch", &batchAdd);
+		ImGui::Dummy(ImVec2(0, 8));
+
+		if (!batchAdd)
+			showAddParticle();
+		else
+			showBatchAddParticle();
+		
+		ImGui::Dummy(ImVec2(0, 8));
+		centerElement(150.0f);
+		if (ImGui::Button("Clear Particles") && simulation) {
+			simulation->clearParticles();
+		}
+	}
 
 	ImGui::SetWindowFontScale(1.0f);
 	ImGui::End();
