@@ -4,8 +4,8 @@
 1. [DONE] Remove walls - Aless
 2. [DONE] Toggle between developer and explorer mode - Aless
 3. [DONE] Create explorer mode UI - Aless
-4. Spawning a sprite at a pre-defined location - Shaun (TRY)
-5. Moving using on-screen arrow keys, WASD, or arrow keys - Shaun (TRY)
+4. [DONE] Spawning a sprite at a pre-defined location - Shaun
+5. [PENDING WASD or arrow keys] Moving using on-screen arrow keys, WASD, or arrow keys - Shaun (TRY)
 6. Show zoomed in version of sprite's periphery - Aless (tentative)
 7. Render only the things in the sprite's periphery - John
 8. Remember last location of sprite when switching between modes - Ibz

@@ -74,7 +74,13 @@ void MainGUI::displayCanvas() {
 	}
 
 	if (explorerMode) {
-		// TODO: Show sprite at most recent position
+		// TODO: Load in image of sprite
+
+		Sprite sprite = simulation->getSprite();
+		ImVec2 spritePos = ImVec2(canvas_p0.x + sprite.getX(), canvas_p0.y + sprite.getY());
+		ImVec2 spriteSize = ImVec2(30.0f, 30.0f);  // Adjust size as needed
+
+		draw_list->AddRectFilled(spritePos, ImVec2(spritePos.x + spriteSize.x, spritePos.y + spriteSize.y), IM_COL32(255, 255, 0, 255));
 	}
 
 	ImGui::End();
@@ -141,21 +147,25 @@ void MainGUI::displayControlsWindow() {
 		centerElement(74.0f);
 		if (ImGui::ArrowButton("Up", ImGuiDir_Up)) {
 			// TODO: Move the sprite up
+			simulation->moveSprite(1);
 		}
 
 		centerElement(180.0f);
 		if (ImGui::ArrowButton("Left", ImGuiDir_Left)) {
 			// TODO: Move the sprite to the left
+			simulation->moveSprite(2);
 		}
 
 		ImGui::SameLine();
 		if (ImGui::ArrowButton("Down", ImGuiDir_Down)) {
 			// TODO: Move the sprite down
+			simulation->moveSprite(3);
 		}
 
 		ImGui::SameLine();
 		if (ImGui::ArrowButton("Right", ImGuiDir_Right)) {
 			// TODO: Move the sprite to the right
+			simulation->moveSprite(0);
 		}
 	}
 	else {

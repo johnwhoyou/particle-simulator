@@ -9,18 +9,16 @@ class Sprite {
 public:
     Sprite(double x, double y);
 
-    void update(string direction);
+    void moveUp();
+    void moveDown();
+    void moveLeft();
+    void moveRight();
 
     double getX() const;
     double getY() const;
 
 private:
     double x, y;
-
-    void moveUp();
-    void moveDown();
-    void moveLeft();
-    void moveRight();
 };
 
 #endif

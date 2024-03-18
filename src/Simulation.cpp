@@ -21,6 +21,20 @@ void Simulation::update(double deltaTime) {
     }
 }
 
+void Simulation::moveSprite(int direction) {
+    switch (direction) {
+        case 0:
+            sprite.moveRight(); break;
+        case 1:
+            sprite.moveUp(); break;
+        case 2:
+            sprite.moveLeft(); break;
+        case 3:
+            sprite.moveDown(); break;
+        default: break;
+    }
+}
+
 void Simulation::updateParticlesInRange(size_t startIdx, size_t endIdx, double deltaTime) {
     for (size_t i = startIdx; i < endIdx; ++i) {
         particles[i].update(deltaTime);
@@ -112,6 +126,11 @@ std::vector<Particle> Simulation::getParticles() {
 std::vector<Wall> Simulation::getWalls() {
     return walls;
 }
+
+Sprite Simulation::getSprite() {
+    return sprite;
+}
+
 
 void Simulation::resolveCollisions(Particle& particle, double deltaTime) {
     for (const auto& wall : walls) {

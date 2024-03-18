@@ -3,6 +3,7 @@
 #define _USE_MATH_DEFINES
 
 #include "Particle.h"
+#include "Sprite.h"
 #include "ctpl_stl.h"
 #include <thread>
 #include <atomic>
@@ -17,6 +18,7 @@ private:
     std::vector<Particle> particles;
     std::vector<Wall> walls;
     ctpl::thread_pool threadPool;
+    Sprite sprite;
 
     void resolveCollisions(Particle& particle, double deltaTime);
     bool checkCollision(const Particle& particle, const Wall& wall, double deltaTime) const;
@@ -24,8 +26,9 @@ private:
     void updateParticlesInRange(size_t startIdx, size_t endIdx, double deltaTime);
 
 public:
-    Simulation(int nThreads = std::thread::hardware_concurrency()) : threadPool(nThreads) {}
+    Simulation(int nThreads = std::thread::hardware_concurrency(), double x = 640, double y = 360) : threadPool(nThreads), sprite(x, y) {}
     void update(double deltaTime);
+    void moveSprite(int direction);
     void initializeCanvasBoundaries();
     void addWall(int x1, int y1, int x2, int y2);
     void addParticle(double x, double y, double angle, double velocity);
@@ -37,6 +40,7 @@ public:
     void clearAll();
     std::vector<Particle> getParticles();
     std::vector<Wall> getWalls();
+    Sprite getSprite();
 
 };
 
