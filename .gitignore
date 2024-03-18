@@ -90,4 +90,3 @@ googlemock/gtest
 
 # vcpkg
 vcpkg_installed
-/CMakeLists.txt
