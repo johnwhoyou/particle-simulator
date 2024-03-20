@@ -37,4 +37,5 @@ private:
 
 	Simulation* simulation;
 	bool explorerMode = false;
+	bool spawnedSprite = false;
 };

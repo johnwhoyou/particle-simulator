@@ -73,7 +73,11 @@ void MainGUI::displayCanvas() {
 		draw_list->AddRectFilled(pos, bottomRight, IM_COL32(255, 255, 0, 255));
 	}
 
-	if (explorerMode) {
+	if (explorerMode && !spawnedSprite) {
+		spawnedSprite = true;
+	}
+
+	if (spawnedSprite) {
 		// TODO: Load in image of sprite
 
 		Sprite sprite = simulation->getSprite();
