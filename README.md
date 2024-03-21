@@ -2,8 +2,8 @@
 
 ## TO-DO
 1. [PENDING WASD or arrow keys] Moving using on-screen arrow keys, WASD, or arrow keys - Shaun (TRY)
-2. Show zoomed in version of sprite's periphery - Aless (tentative)
-3. Render only the things in the sprite's periphery - John
+2. [PENDING] Render sprite image - Shaun
+3. [IN PROGRESS] Handle wall encounters in explorer mode - Aless
 4. Polishing and fixes
 
 

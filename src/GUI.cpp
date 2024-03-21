@@ -54,37 +54,62 @@ void MainGUI::displayCanvas() {
 
 	ImDrawList* draw_list = ImGui::GetWindowDrawList();
 	draw_list->AddRectFilled(canvas_p0, ImVec2(canvas_p0.x + canvas_sz.x, canvas_p0.y + canvas_sz.y), IM_COL32(50, 50, 50, 255));
-	draw_list->AddRect(canvas_p0, ImVec2(canvas_p0.x + canvas_sz.x, canvas_p0.y + canvas_sz.y), IM_COL32(255, 255, 255, 255));
+	//draw_list->AddRect(canvas_p0, ImVec2(canvas_p0.x + canvas_sz.x, canvas_p0.y + canvas_sz.y), IM_COL32(255, 255, 255, 255));
 
+	Sprite sprite = simulation->getSprite();
 	auto particles = simulation->getParticles();
 	float particleSize = 2.5f;
-	for (const auto& particle : particles) { // TODO: Modify this to check if explorer mode is enabled; if so, only draw the ones within periphery
-		float posY = canvas_sz.y - (static_cast<float>(particle.getY()) + particleSize);
 
-		float posX = static_cast<float>(particle.getX()) - particleSize;
+	if (!explorerMode) {
+		draw_list->AddRect(canvas_p0, ImVec2(canvas_p0.x + canvas_sz.x, canvas_p0.y + canvas_sz.y), IM_COL32(255, 255, 255, 255));
 
-		float adjustedPosX = std::max(particleSize, std::min(posX, canvas_sz.x - particleSize));
-		float adjustedPosY = std::max(particleSize, std::min(posY, canvas_sz.y - particleSize));
+		for (const auto& particle : particles) {
+			float posX = static_cast<float>(particle.getX()) - particleSize;
+			float posY = canvas_sz.y - (static_cast<float>(particle.getY()) + particleSize);
 
-		ImVec2 pos = ImVec2(canvas_p0.x + adjustedPosX, canvas_p0.y + adjustedPosY);
+			float adjustedPosX = std::max(particleSize, std::min(posX, canvas_sz.x - particleSize));
+			float adjustedPosY = std::max(particleSize, std::min(posY, canvas_sz.y - particleSize));
 
-		ImVec2 squareSize = ImVec2(particleSize, particleSize);
-		ImVec2 bottomRight = ImVec2(pos.x + squareSize.x, pos.y + squareSize.y);
-		draw_list->AddRectFilled(pos, bottomRight, IM_COL32(255, 255, 0, 255));
+			ImVec2 pos = ImVec2(canvas_p0.x + adjustedPosX, canvas_p0.y + adjustedPosY);
+			ImVec2 squareSize = ImVec2(particleSize, particleSize);
+			ImVec2 bottomRight = ImVec2(pos.x + squareSize.x, pos.y + squareSize.y);
+			draw_list->AddRectFilled(pos, bottomRight, IM_COL32(255, 255, 0, 255));
+		}
+
+		if (spawnedSprite) {
+			// TODO: Load in image of sprite
+			ImVec2 spritePos = ImVec2(canvas_p0.x + sprite.getX(), canvas_p0.y + sprite.getY());
+			ImVec2 spriteSize = ImVec2(2.5f, 2.5f);  // Adjust size as needed
+
+			draw_list->AddRectFilled(spritePos, ImVec2(spritePos.x + spriteSize.x, spritePos.y + spriteSize.y), IM_COL32(200, 160, 255, 255));
+		}
 	}
+	else {
+		if (!spawnedSprite)
+			spawnedSprite = true;
 
-	if (explorerMode && !spawnedSprite) {
-		spawnedSprite = true;
-	}
+		float scaledWidth = 1280 / 33;
+		float scaledHeight = 720 / 19;
 
-	if (spawnedSprite) {
-		// TODO: Load in image of sprite
+		for (const auto& particle : particles) {
+			if (particle.getX() >= sprite.getX() - 16 && particle.getX() <= sprite.getX() + 16 && particle.getY() >= sprite.getY() - 9 && particle.getY() <= sprite.getY() + 9) {
+				float adjustedPosX = 640 + (particle.getX() - sprite.getX()) * scaledWidth;
+				float adjustedPosY = 360 + (particle.getY() - sprite.getY()) * scaledHeight;
 
-		Sprite sprite = simulation->getSprite();
-		ImVec2 spritePos = ImVec2(canvas_p0.x + sprite.getX(), canvas_p0.y + sprite.getY());
-		ImVec2 spriteSize = ImVec2(30.0f, 30.0f);  // Adjust size as needed
+				ImVec2 pos = ImVec2(canvas_p0.x + adjustedPosX, canvas_p0.y + adjustedPosY);
+				ImVec2 squareSize = ImVec2(scaledWidth, scaledHeight);
+				ImVec2 bottomRight = ImVec2(pos.x + squareSize.x, pos.y + squareSize.y);
+				draw_list->AddRectFilled(pos, bottomRight, IM_COL32(255, 255, 0, 255));
+			}
+		}
 
-		draw_list->AddRectFilled(spritePos, ImVec2(spritePos.x + spriteSize.x, spritePos.y + spriteSize.y), IM_COL32(255, 255, 0, 255));
+		// TODO: Figure out what to do/render if wall is within periphery
+
+
+		ImVec2 spritePos = ImVec2(canvas_p0.x + 640, canvas_p0.y + 360);
+		ImVec2 spriteSize = ImVec2(scaledWidth, scaledHeight);  // Adjust size as needed
+
+		draw_list->AddRectFilled(spritePos, ImVec2(spritePos.x + spriteSize.x, spritePos.y + spriteSize.y), IM_COL32(200, 160, 255, 255));
 	}
 
 	ImGui::End();
@@ -106,8 +131,14 @@ void MainGUI::displayBottomDetails(double frameRate) {
 	ImGui::Text("Particle Count: %zu", simulation->getParticles().size());
 	ImGui::SameLine();
 	ImGui::Dummy(ImVec2(16, 0));
+	ImGui::SameLine();
+
+	if (spawnedSprite)
+		ImGui::Text("Sprite Position: (%.2f, %.2f)", simulation->getSprite().getX(), simulation->getSprite().getY());
+
 	ImGui::SetWindowFontScale(1.5f);
 
+	ImGui::Dummy(ImVec2(0, 4));
 	ImGui::Text("P1: Alessandra Pauleen Gomez");
 	ImGui::SameLine();
 	ImGui::Dummy(ImVec2(16, 0));
@@ -150,25 +181,21 @@ void MainGUI::displayControlsWindow() {
 
 		centerElement(74.0f);
 		if (ImGui::ArrowButton("Up", ImGuiDir_Up)) {
-			// TODO: Move the sprite up
 			simulation->moveSprite(1);
 		}
 
 		centerElement(180.0f);
 		if (ImGui::ArrowButton("Left", ImGuiDir_Left)) {
-			// TODO: Move the sprite to the left
 			simulation->moveSprite(2);
 		}
 
 		ImGui::SameLine();
 		if (ImGui::ArrowButton("Down", ImGuiDir_Down)) {
-			// TODO: Move the sprite down
 			simulation->moveSprite(3);
 		}
 
 		ImGui::SameLine();
 		if (ImGui::ArrowButton("Right", ImGuiDir_Right)) {
-			// TODO: Move the sprite to the right
 			simulation->moveSprite(0);
 		}
 	}
