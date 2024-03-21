@@ -54,6 +54,36 @@ int main()
             if (event.type == SDL_QUIT) {
                 isRunning = false;
             }
+            else if (event.type == SDL_KEYDOWN && simulatorGUI.getExplorerMode()) {
+                switch (event.key.keysym.sym) {
+                case SDLK_w:
+                    simulation.moveSprite(1);
+                    break;
+                case SDLK_UP:
+                    simulation.moveSprite(1);
+                    break;
+                case SDLK_s:
+                    simulation.moveSprite(3);
+                    break;
+                case SDLK_DOWN:
+                    simulation.moveSprite(3);
+                    break;
+                case SDLK_a:
+                    simulation.moveSprite(2);
+                    break;
+                case SDLK_LEFT:
+                    simulation.moveSprite(2);
+                    break;
+                case SDLK_d:
+                    simulation.moveSprite(0);
+                    break;
+                case SDLK_RIGHT:
+                    simulation.moveSprite(0);
+                    break;
+                default:
+                    break;
+                }
+            }
             ImGui_ImplSDL2_ProcessEvent(&event);
         }
 
@@ -78,7 +108,7 @@ int main()
         SDL_RenderClear(renderer);
         simulatorGUI.GetDrawData();
         SDL_RenderPresent(renderer);
-    }
+    };
 
     simulatorGUI.Shutdown();
     SDL_DestroyRenderer(renderer);

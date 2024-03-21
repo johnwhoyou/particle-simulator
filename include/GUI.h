@@ -7,6 +7,7 @@
 #include "Simulation.h"
 #include <random>
 #include <iostream>
+#include <conio.h>
 
 class MainGUI {
 public:
@@ -16,6 +17,8 @@ public:
 	void Render();
 	void GetDrawData();
 	void Shutdown();
+	
+	bool getExplorerMode();
 
 	void setSimulation(Simulation* sim) {
 		simulation = sim;

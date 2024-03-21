@@ -1,7 +1,7 @@
 # Problem Set #1: Particle Simulator
 
 ## TO-DO
-1. [PENDING WASD or arrow keys] Moving using on-screen arrow keys, WASD, or arrow keys - Shaun (TRY)
+1. [DONE] Moving using on-screen arrow keys, WASD, or arrow keys - Shaun (TRY)
 2. [PENDING] Render sprite image - Shaun
 3. [IN PROGRESS] Handle wall encounters in explorer mode - Aless
 4. Polishing and fixes

@@ -43,6 +43,10 @@ void MainGUI::Shutdown() {
 	ImGui::DestroyContext();
 }
 
+bool MainGUI::getExplorerMode() {
+	return explorerMode;
+}
+
 void MainGUI::displayCanvas() {
 	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
 	ImGui::SetNextWindowSize(ImVec2(1300, 800), ImGuiCond_Always);
@@ -111,6 +115,21 @@ void MainGUI::displayCanvas() {
 		ImVec2 spriteSize = ImVec2(scaledWidth, scaledHeight);  // Adjust size as needed
 
 		draw_list->AddRectFilled(spritePos, ImVec2(spritePos.x + spriteSize.x, spritePos.y + spriteSize.y), IM_COL32(200, 160, 255, 255));
+
+		/*switch (getch()) {
+			case 72:
+				simulation->moveSprite(1);	// key up
+				break;
+			case 80:
+				simulation->moveSprite(3);   // key down
+				break;
+			case 75:
+				simulation->moveSprite(2);  // key left
+				break;
+			case 77:
+				simulation->moveSprite(0);  // key right
+				break;
+			}*/
 	}
 
 	ImGui::End();
