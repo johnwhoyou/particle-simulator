@@ -106,6 +106,7 @@ void MainGUI::displayCanvas() {
 		// TODO: Figure out what to do/render if wall is within periphery
 
 
+		// TODO: Load in image of sprite
 		ImVec2 spritePos = ImVec2(canvas_p0.x + 640, canvas_p0.y + 360);
 		ImVec2 spriteSize = ImVec2(scaledWidth, scaledHeight);  // Adjust size as needed
 
