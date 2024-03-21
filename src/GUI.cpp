@@ -8,13 +8,14 @@ std::uniform_int_distribution<> distrY(0, 720);
 std::uniform_real_distribution<> distrAngle(0, 360);
 std::uniform_real_distribution<> distrVelocity(100, 500);
 
-void MainGUI::Init(SDL_Window* window, SDL_Renderer* renderer) {
+void MainGUI::Init(SDL_Window* window, SDL_Renderer* renderer, SDL_Texture* spriteTexture) {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	ImGui_ImplSDL2_InitForSDLRenderer(window, renderer);
 	ImGui_ImplSDLRenderer2_Init(renderer);
 	ImGui::StyleColorsDark();
+	texture = spriteTexture;
 }
 
 void MainGUI::NewFrame(SDL_Window* window) {
@@ -81,11 +82,19 @@ void MainGUI::displayCanvas() {
 		}
 
 		if (spawnedSprite) {
-			// TODO: Load in image of sprite
-			ImVec2 spritePos = ImVec2(canvas_p0.x + sprite.getX(), canvas_p0.y + sprite.getY());
-			ImVec2 spriteSize = ImVec2(2.5f, 2.5f);  // Adjust size as needed
+			if (texture) {
+				ImVec2 spritePos = ImVec2(canvas_p0.x + sprite.getX(), canvas_p0.y + sprite.getY());
+				ImVec2 spriteSize = ImVec2(2.5f, 2.5f);
+				draw_list->AddImage((void*)texture, spritePos, ImVec2(spritePos.x + spriteSize.x, spritePos.y + spriteSize.y));
+			}
+			//TO BE REMOVED
+			else {
+				ImVec2 spritePos = ImVec2(canvas_p0.x + sprite.getX(), canvas_p0.y + sprite.getY());
+				ImVec2 spriteSize = ImVec2(2.5f, 2.5f);
+				draw_list->AddRectFilled(spritePos, ImVec2(spritePos.x + spriteSize.x, spritePos.y + spriteSize.y), IM_COL32(200, 160, 255, 255));
+			}
 
-			draw_list->AddRectFilled(spritePos, ImVec2(spritePos.x + spriteSize.x, spritePos.y + spriteSize.y), IM_COL32(200, 160, 255, 255));
+			
 		}
 	}
 	else {
@@ -109,27 +118,18 @@ void MainGUI::displayCanvas() {
 
 		// TODO: Figure out what to do/render if wall is within periphery
 
+		if (texture) {
+			ImVec2 spritePos = ImVec2(canvas_p0.x + 640, canvas_p0.y + 360);
+			ImVec2 spriteSize = ImVec2(scaledWidth, scaledHeight);
+			draw_list->AddImage((void*)texture, spritePos, ImVec2(spritePos.x + spriteSize.x, spritePos.y + spriteSize.y));
+		}
+		//TO BE REMOVED
+		else {
+			ImVec2 spritePos = ImVec2(canvas_p0.x + 640, canvas_p0.y + 360);
+			ImVec2 spriteSize = ImVec2(scaledWidth, scaledHeight);
+			draw_list->AddRectFilled(spritePos, ImVec2(spritePos.x + spriteSize.x, spritePos.y + spriteSize.y), IM_COL32(200, 160, 255, 255));
+		}
 
-		// TODO: Load in image of sprite
-		ImVec2 spritePos = ImVec2(canvas_p0.x + 640, canvas_p0.y + 360);
-		ImVec2 spriteSize = ImVec2(scaledWidth, scaledHeight);  // Adjust size as needed
-
-		draw_list->AddRectFilled(spritePos, ImVec2(spritePos.x + spriteSize.x, spritePos.y + spriteSize.y), IM_COL32(200, 160, 255, 255));
-
-		/*switch (getch()) {
-			case 72:
-				simulation->moveSprite(1);	// key up
-				break;
-			case 80:
-				simulation->moveSprite(3);   // key down
-				break;
-			case 75:
-				simulation->moveSprite(2);  // key left
-				break;
-			case 77:
-				simulation->moveSprite(0);  // key right
-				break;
-			}*/
 	}
 
 	ImGui::End();

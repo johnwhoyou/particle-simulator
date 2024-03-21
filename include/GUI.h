@@ -11,7 +11,7 @@
 
 class MainGUI {
 public:
-	void Init(SDL_Window* window, SDL_Renderer* renderer);
+	void Init(SDL_Window* window, SDL_Renderer* renderer, SDL_Texture* spriteTexture);
 	void NewFrame(SDL_Window* window);
 	void Update(double frameRate);
 	void Render();
@@ -41,4 +41,5 @@ private:
 	Simulation* simulation;
 	bool explorerMode = false;
 	bool spawnedSprite = false;
+	SDL_Texture* texture;
 };

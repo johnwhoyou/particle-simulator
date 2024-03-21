@@ -1,6 +1,7 @@
 #include "GUI.h"
 #include "glad/glad.h"
 #include "SDL.h"
+#include "SDL_image.h"
 #undef main
 
 int main()
@@ -36,10 +37,22 @@ int main()
         return -1;
     }
 
+    SDL_Surface* surface = IMG_Load("sprite.png");
+    if (!surface) {
+        std::cout << "Incorrect directory" << std::endl;
+    }
+
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    if (!texture) {
+        std::cout << "texture failure" << std::endl;
+    }
+
+    SDL_FreeSurface(surface);
+
     Simulation simulation;
     simulation.initializeCanvasBoundaries();
     MainGUI simulatorGUI;
-    simulatorGUI.Init(window, renderer);
+    simulatorGUI.Init(window, renderer, texture);
     simulatorGUI.setSimulation(&simulation);
 
     auto lastFrameTime = std::chrono::high_resolution_clock::now();
@@ -111,6 +124,7 @@ int main()
     };
 
     simulatorGUI.Shutdown();
+    SDL_DestroyTexture(texture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();

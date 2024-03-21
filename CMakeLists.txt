@@ -35,8 +35,32 @@ target_link_libraries(ParticleSimulatorApp PRIVATE
 find_package(imgui CONFIG REQUIRED)
 target_link_libraries(ParticleSimulator PRIVATE imgui::imgui)
 
+find_package(ZLIB REQUIRED)
+target_link_libraries(ParticleSimulatorApp PRIVATE ZLIB::ZLIB)
+
+find_package(PNG REQUIRED)
+target_link_libraries(ParticleSimulatorApp PRIVATE PNG::PNG)
+
+find_package(SDL2_image CONFIG REQUIRED)
+target_link_libraries(ParticleSimulatorApp PRIVATE $<IF:$<TARGET_EXISTS:SDL2_image::SDL2_image>,SDL2_image::SDL2_image,SDL2_image::SDL2_image-static>)
+
 # Copy DLLs to the output directory
 #add_custom_command(TARGET ParticleSimulator POST_BUILD
 #	COMMAND ${CMAKE_COMMAND} -E copy_if_different
 #		"${CMAKE_CURRENT_SOURCE_DIR}/vcpkg_installed/vcpkg/blds/sdl2/x64-windows-dbg/SDL2d.dll"
 #		$<TARGET_FILE_DIR:ParticleSimulator>)
+
+add_custom_command(TARGET ParticleSimulator POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		"${CMAKE_CURRENT_SOURCE_DIR}/vcpkg_installed/vcpkg/blds/sdl2-image/x64-windows-dbg/SDL2_imaged.dll"
+		$<TARGET_FILE_DIR:ParticleSimulator>)
+
+add_custom_command(TARGET ParticleSimulator POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		"${CMAKE_CURRENT_SOURCE_DIR}/vcpkg_installed/vcpkg/blds/libpng/x64-windows-dbg/libpng16d.dll"
+		$<TARGET_FILE_DIR:ParticleSimulator>)
+
+add_custom_command(TARGET ParticleSimulator POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		"${CMAKE_CURRENT_SOURCE_DIR}/vcpkg_installed/vcpkg/blds/zlib/x64-windows-dbg/zlibd1.dll"
+		$<TARGET_FILE_DIR:ParticleSimulator>)
