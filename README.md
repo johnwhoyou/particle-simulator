@@ -20,6 +20,9 @@ The main features of the application include adding a single particle, batch add
 5. Enter the command `vcpkg install` to install the following dependencies required by the project:
 	- imgui
 	- SDL2
+	- SDL2-Image
+	- libpng
+	- zlib
 6. Build the project.
 7. Run the project by running the `Main.cpp` file or the `ParticleSimulatorApp` executable that will appear on the Startup Item dropdown. Make sure to use the Local Machine x64-Debug configuration.
 
