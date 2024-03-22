@@ -83,8 +83,8 @@ void MainGUI::displayCanvas() {
 
 		if (spawnedSprite) {
 			if (texture) {
-				ImVec2 spriteSize = ImVec2(5.0f, 5.0f);
-				ImVec2 spritePos = ImVec2(canvas_p0.x + (sprite.getX() - spriteSize.x), canvas_p0.y + (canvas_sz.y - sprite.getY()));
+				ImVec2 spriteSize = ImVec2(30.0f, 30.0f);
+				ImVec2 spritePos = ImVec2(canvas_p0.x + sprite.getX() - (spriteSize.x / 2), canvas_p0.y + (canvas_sz.y - sprite.getY()) - (spriteSize.y / 2));
 				draw_list->AddImage((void*)texture, spritePos, ImVec2(spritePos.x + spriteSize.x, spritePos.y + spriteSize.y));
 			}
 		}
