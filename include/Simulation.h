@@ -28,7 +28,7 @@ private:
 public:
     Simulation(int nThreads = std::thread::hardware_concurrency(), double x = 640, double y = 360) : threadPool(nThreads), sprite(x, y) {}
     void update(double deltaTime);
-    void moveSprite(int direction);
+    void moveSprite(char direction);
     void initializeCanvasBoundaries();
     void addWall(int x1, int y1, int x2, int y2);
     void addParticle(double x, double y, double angle, double velocity);

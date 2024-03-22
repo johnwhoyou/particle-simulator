@@ -221,22 +221,22 @@ void MainGUI::displayControlsWindow() {
 
 		centerElement(74.0f);
 		if (ImGui::ArrowButton("Up", ImGuiDir_Up)) {
-			simulation->moveSprite(1);
+			simulation->moveSprite('U');
 		}
 
 		centerElement(180.0f);
 		if (ImGui::ArrowButton("Left", ImGuiDir_Left)) {
-			simulation->moveSprite(2);
+			simulation->moveSprite('L');
 		}
 
 		ImGui::SameLine();
 		if (ImGui::ArrowButton("Down", ImGuiDir_Down)) {
-			simulation->moveSprite(3);
+			simulation->moveSprite('D');
 		}
 
 		ImGui::SameLine();
 		if (ImGui::ArrowButton("Right", ImGuiDir_Right)) {
-			simulation->moveSprite(0);
+			simulation->moveSprite('R');
 		}
 
 		ImGui::SetWindowFontScale(1.7f);

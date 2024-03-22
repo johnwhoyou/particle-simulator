@@ -21,15 +21,15 @@ void Simulation::update(double deltaTime) {
     }
 }
 
-void Simulation::moveSprite(int direction) {
+void Simulation::moveSprite(char direction) {
     switch (direction) {
-        case 0:
+        case 'R':
             sprite.moveRight(); break;
-        case 1:
+        case 'U':
             sprite.moveUp(); break;
-        case 2:
+        case 'L':
             sprite.moveLeft(); break;
-        case 3:
+        case 'D':
             sprite.moveDown(); break;
         default: break;
     }
