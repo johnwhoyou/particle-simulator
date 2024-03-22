@@ -1,13 +1,10 @@
 # Problem Set #1: Particle Simulator
 
 ## TO-DO
-1. [DONE] Moving using on-screen arrow keys, WASD, or arrow keys - Shaun (TRY)
-2. [DONE] Render sprite image - Shaun
-3. [IN PROGRESS] Handle wall encounters in explorer mode - Aless
-4. Polishing and fixes
-5. Fix Sprite Image Loading (Assigned to: @johnwhoyou)
-6. Fix Sprite Going Outside of Canvas Boundaries
-7. Enhancement: Add Reset Button to Clear All Particles and Move Sprite Back to Center
+1. [IN PROGRESS] Handle wall encounters in explorer mode - Aless
+2. Polishing and fixes
+3. Fix Sprite Going Outside of Canvas Boundaries
+4. Enhancement: Add Reset Button to Clear All Particles and Move Sprite Back to Center
 
 ## About the Project
 This project aims to apply distributed computing concepts by implementing a concurrently programmed particle physics simulator. To achieve this, a multithreaded C++ application was developed to showcase an interface that can allow users to render particles and walls into the simulation. The application makes use of the Dear ImGui library for its graphical user interface, as well as SDL2 for its rendering functionalities.

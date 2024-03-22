@@ -70,3 +70,5 @@ add_custom_command(TARGET ParticleSimulator POST_BUILD
 		"${CMAKE_CURRENT_SOURCE_DIR}/vcpkg_installed/vcpkg/blds/zlib/x64-windows-dbg/zlibd1.dll"
 		$<TARGET_FILE_DIR:ParticleSimulator>)
 endif()
+
+add_definitions(-DPROJECT_ROOT_PATH="${CMAKE_CURRENT_SOURCE_DIR}")

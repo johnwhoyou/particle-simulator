@@ -37,9 +37,10 @@ int main()
         return -1;
     }
 
-    SDL_Surface* surface = IMG_Load("sprite.png");
+    std::string spritePath = std::string(PROJECT_ROOT_PATH) + "/res/sprite.png";
+    SDL_Surface* surface = IMG_Load(spritePath.c_str());
     if (!surface) {
-        std::cout << "Incorrect directory" << std::endl;
+        std::cout << "Could not load sprite from: " << spritePath << std::endl;
     }
 
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
