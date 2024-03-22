@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 project(ParticleSimulator)
 
-set(CMAKE_CXX_STANDARD 17) # You have C_STANDARD, but you're using C++
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 include_directories(include)
@@ -20,7 +20,11 @@ add_executable(ParticleSimulatorApp "src/Main.cpp")
 target_link_libraries(ParticleSimulatorApp PRIVATE ParticleSimulator)
 
 # Add installation prefix of vcpkg to CMAKE_PREFIX_PATH
-list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg_installed/x64-windows)
+if(WIN32)
+	list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg_installed/x64-windows)
+elseif(APPLE)
+	list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg_installed/arm64-osx)
+endif()
 
 # Packages
 find_package(glad CONFIG REQUIRED)
@@ -50,6 +54,7 @@ target_link_libraries(ParticleSimulatorApp PRIVATE $<IF:$<TARGET_EXISTS:SDL2_ima
 #		"${CMAKE_CURRENT_SOURCE_DIR}/vcpkg_installed/vcpkg/blds/sdl2/x64-windows-dbg/SDL2d.dll"
 #		$<TARGET_FILE_DIR:ParticleSimulator>)
 
+if (WIN32)
 add_custom_command(TARGET ParticleSimulator POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy_if_different
 		"${CMAKE_CURRENT_SOURCE_DIR}/vcpkg_installed/vcpkg/blds/sdl2-image/x64-windows-dbg/SDL2_imaged.dll"
@@ -64,3 +69,4 @@ add_custom_command(TARGET ParticleSimulator POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy_if_different
 		"${CMAKE_CURRENT_SOURCE_DIR}/vcpkg_installed/vcpkg/blds/zlib/x64-windows-dbg/zlibd1.dll"
 		$<TARGET_FILE_DIR:ParticleSimulator>)
+endif()
