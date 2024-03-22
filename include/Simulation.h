@@ -40,7 +40,6 @@ public:
     std::vector<Particle> getParticles();
     std::vector<Wall> getWalls();
     Sprite getSprite();
-
 };
 
 #endif

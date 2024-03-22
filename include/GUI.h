@@ -35,8 +35,6 @@ private:
 	void showBatchAddMethod2();
 	void showBatchAddMethod3();
 
-	bool isWallWithinPeriphery(Wall wall, double spritePosX, double spritePosY);
-
 	void centerElement(float width);
 
 	Simulation* simulation;

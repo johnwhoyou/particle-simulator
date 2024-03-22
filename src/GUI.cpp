@@ -59,7 +59,6 @@ void MainGUI::displayCanvas() {
 
 	ImDrawList* draw_list = ImGui::GetWindowDrawList();
 	draw_list->AddRectFilled(canvas_p0, ImVec2(canvas_p0.x + canvas_sz.x, canvas_p0.y + canvas_sz.y), IM_COL32(50, 50, 50, 255));
-	//draw_list->AddRect(canvas_p0, ImVec2(canvas_p0.x + canvas_sz.x, canvas_p0.y + canvas_sz.y), IM_COL32(255, 255, 255, 255));
 
 	Sprite sprite = simulation->getSprite();
 	auto particles = simulation->getParticles();
@@ -109,7 +108,10 @@ void MainGUI::displayCanvas() {
 		}
 
 		for (const auto& wall : simulation->getWalls()) {
-			if (isWallWithinPeriphery(wall, sprite.getX(), canvas_sz.y - sprite.getY())) {
+			float distanceX1Wall = abs(wall.getX1() - sprite.getX());
+			float distanceY1Wall = abs(wall.getY1() - sprite.getY());
+
+			if (distanceX1Wall <= 16 || distanceY1Wall <= 9) {
 				float adjustedX1 = 640 + (wall.getX1() - sprite.getX()) * scaledWidth;
 				float adjustedY1 = 360 + (wall.getY1() - sprite.getY()) * scaledHeight;
 				float adjustedX2 = 640 + (wall.getX2() - sprite.getX()) * scaledWidth;
@@ -119,13 +121,17 @@ void MainGUI::displayCanvas() {
 				ImVec2 pos2 = ImVec2(canvas_p0.x + adjustedX2, canvas_p0.y + (canvas_sz.y - adjustedY2));
 				draw_list->AddLine(pos1, pos2, IM_COL32(255, 255, 255, 255));
 
-				// TODO: Render black squares for area beyond the walls
-				/*if (adjustedX1 < 0) {
-					ImVec2 pos = ImVec2(canvas_p0.x, canvas_p0.y + adjustedY1);
-					ImVec2 squareSize = ImVec2(adjustedX1, scaledHeight);
-					ImVec2 bottomRight = ImVec2(pos.x + squareSize.x, pos.y + squareSize.y);
-					draw_list->AddRectFilled(pos, bottomRight, IM_COL32(0, 0, 0, 255));
-				}*/
+				//if (wall.getX1() == wall.getX2())
+				//	if (wall.getX1() == 0)
+				////	//ImGui::Text("X1: %.2f, Y1: %.2f, X2: %.2f, Y2: %.2f", wall.getX1(), wall.getY1(), wall.getX2(), wall.getY2());
+				//		draw_list->AddRectFilled(canvas_p0, pos2, IM_COL32(0, 0, 0, 255));
+				////	//else
+				////		//draw_list->AddRectFilled(pos1, ImVec2(canvas_p0.x + 1280, pos2.y), IM_COL32(0, 0, 0, 255));
+				////}
+
+				//if (wall.getY1() == wall.getY2())
+				//	draw_list->AddRectFilled(canvas_p0, pos2, IM_COL32(0, 0, 0, 255));
+				////}
 			}
 		}
 
@@ -470,18 +476,6 @@ void MainGUI::showBatchAddMethod3() {
 	if (ImGui::Button("Add Particles") && simulation) {
 		simulation->addParticleByBatchMethod3(x, y, angle, startVelocity, endVelocity, numParticles);
 	}
-}
-
-bool MainGUI::isWallWithinPeriphery(Wall wall, double spritePosX, double spritePosY) {
-	float distanceX1Wall = abs(wall.getX1() - spritePosX);
-	float distanceY1Wall = abs(wall.getY1() - spritePosY);
-	float distanceX2Wall = abs(wall.getX2() - spritePosX);
-	float distanceY2Wall = abs(wall.getY2() - spritePosY);
-
-	return (distanceX1Wall >= spritePosX - 16 && distanceX1Wall <= spritePosX + 16) ||
-		(distanceX2Wall >= spritePosX - 16 && distanceX2Wall <= spritePosX + 16) ||
-		(distanceY1Wall >= spritePosY - 9 && distanceY1Wall <= spritePosY + 9) ||
-		(distanceY2Wall >= spritePosY - 9 && distanceY2Wall <= spritePosY + 9);
 }
 
 void MainGUI::centerElement(float width) {
