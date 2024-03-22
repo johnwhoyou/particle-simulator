@@ -3,8 +3,9 @@
 ## TO-DO
 1. [IN PROGRESS] Handle wall encounters in explorer mode - Aless
 2. Polishing and fixes
-3. Fix Sprite Going Outside of Canvas Boundaries
-4. Update README description to reflect new PS2 features
+	- Sprite exceeds bottom & right edges of canvas
+	- Partial rendering of walls exceeds canvas
+3. Update README description to reflect new PS2 features
 
 ## About the Project
 This project aims to apply distributed computing concepts by implementing a concurrently programmed particle physics simulator. To achieve this, a multithreaded C++ application was developed to showcase an interface that can allow users to render particles and walls into the simulation. The application makes use of the Dear ImGui library for its graphical user interface, as well as SDL2 for its rendering functionalities.

@@ -36,8 +36,6 @@ public:
     void addParticleByBatchMethod2(double x, double y, double startAngle, double endAngle, double velocity, int n);
     void addParticleByBatchMethod3(double x, double y, double angle, double startVelocity, double endVelocity, int n);
     void clearParticles();
-    void clearWalls();
-    void clearAll();
     void resetSprite();
     std::vector<Particle> getParticles();
     std::vector<Wall> getWalls();

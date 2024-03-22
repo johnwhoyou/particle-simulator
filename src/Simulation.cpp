@@ -108,17 +108,6 @@ void Simulation::clearParticles() {
     particles.clear();
 }
 
-void Simulation::clearWalls() {
-    if (walls.size() > 4) {
-        walls.erase(walls.begin() + 4, walls.end());
-    }
-}
-
-void Simulation::clearAll() {
-    clearParticles();
-    clearWalls();
-}
-
 void Simulation::resetSprite() {
 	sprite.reset();
 }

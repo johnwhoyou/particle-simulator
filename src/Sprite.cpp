@@ -5,27 +5,27 @@ Sprite::Sprite(double x, double y)
     : x(x), y(y) {}
 
 void Sprite::moveUp() {
-    if (y - 20 > 0) {
-        y -= 20;
+    if (y + STEP < 720) {
+        y += STEP;
     }
     else {
-        y = 0;
+        y = 720;
     }
     
 }
 
 void Sprite::moveDown() {
-    if (y + 20 < 720) {
-        y += 20;
+    if (y - STEP > 0) {
+        y -= STEP;
     }
     else {
-        y = 720;
+        y = 0;
     }
 }
 
 void Sprite::moveLeft() {
-    if (x - 20 > 0) {
-        x -= 20;
+    if (x - STEP > 0) {
+        x -= STEP;
     }
     else {
         x = 0;
@@ -33,8 +33,8 @@ void Sprite::moveLeft() {
 }
 
 void Sprite::moveRight() {
-    if (x + 20 < 1280) {
-        x += 20;
+    if (x + STEP < 1280) {
+        x += STEP;
     }
     else {
         x = 1280;

@@ -34,7 +34,8 @@ private:
 	void showBatchAddMethod1();
 	void showBatchAddMethod2();
 	void showBatchAddMethod3();
-	void showAddWall();
+
+	bool isWallWithinPeriphery(Wall wall, double spritePosX, double spritePosY);
 
 	void centerElement(float width);
 

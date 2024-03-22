@@ -83,7 +83,7 @@ void MainGUI::displayCanvas() {
 
 		if (spawnedSprite) {
 			if (texture) {
-				ImVec2 spritePos = ImVec2(canvas_p0.x + sprite.getX(), canvas_p0.y + sprite.getY());
+				ImVec2 spritePos = ImVec2(canvas_p0.x + sprite.getX(), canvas_p0.y + (canvas_sz.y - sprite.getY()));
 				ImVec2 spriteSize = ImVec2(2.5f, 2.5f);
 				draw_list->AddImage((void*)texture, spritePos, ImVec2(spritePos.x + spriteSize.x, spritePos.y + spriteSize.y));
 			}
@@ -97,18 +97,37 @@ void MainGUI::displayCanvas() {
 		float scaledHeight = 720 / 19;
 
 		for (const auto& particle : particles) {
-			if (particle.getX() >= sprite.getX() - 16 && particle.getX() <= sprite.getX() + 16 && particle.getY() >= sprite.getY() - 9 && particle.getY() <= sprite.getY() + 9) {
+			if (particle.getX() >= sprite.getX() - 16 && particle.getX() <= sprite.getX() + 16 && particle.getY() >= sprite.getY() - 9 && particle.getY() <= sprite.getY() + 9) {				
 				float adjustedPosX = 640 + (particle.getX() - sprite.getX()) * scaledWidth;
 				float adjustedPosY = 360 + (particle.getY() - sprite.getY()) * scaledHeight;
 
-				ImVec2 pos = ImVec2(canvas_p0.x + adjustedPosX, canvas_p0.y + adjustedPosY);
+				ImVec2 pos = ImVec2(canvas_p0.x + adjustedPosX, canvas_p0.y + (canvas_sz.y - adjustedPosY));
 				ImVec2 squareSize = ImVec2(scaledWidth, scaledHeight);
 				ImVec2 bottomRight = ImVec2(pos.x + squareSize.x, pos.y + squareSize.y);
 				draw_list->AddRectFilled(pos, bottomRight, IM_COL32(255, 255, 0, 255));
 			}
 		}
 
-		// TODO: Figure out what to do/render if wall is within periphery
+		for (const auto& wall : simulation->getWalls()) {
+			if (isWallWithinPeriphery(wall, sprite.getX(), canvas_sz.y - sprite.getY())) {
+				float adjustedX1 = 640 + (wall.getX1() - sprite.getX()) * scaledWidth;
+				float adjustedY1 = 360 + (wall.getY1() - sprite.getY()) * scaledHeight;
+				float adjustedX2 = 640 + (wall.getX2() - sprite.getX()) * scaledWidth;
+				float adjustedY2 = 360 + (wall.getY2() - sprite.getY()) * scaledHeight;
+
+				ImVec2 pos1 = ImVec2(canvas_p0.x + adjustedX1, canvas_p0.y + (canvas_sz.y - adjustedY1));
+				ImVec2 pos2 = ImVec2(canvas_p0.x + adjustedX2, canvas_p0.y + (canvas_sz.y - adjustedY2));
+				draw_list->AddLine(pos1, pos2, IM_COL32(255, 255, 255, 255));
+
+				// TODO: Render black squares for area beyond the walls
+				/*if (adjustedX1 < 0) {
+					ImVec2 pos = ImVec2(canvas_p0.x, canvas_p0.y + adjustedY1);
+					ImVec2 squareSize = ImVec2(adjustedX1, scaledHeight);
+					ImVec2 bottomRight = ImVec2(pos.x + squareSize.x, pos.y + squareSize.y);
+					draw_list->AddRectFilled(pos, bottomRight, IM_COL32(0, 0, 0, 255));
+				}*/
+			}
+		}
 
 		if (texture) {
 			ImVec2 spritePos = ImVec2(canvas_p0.x + 640, canvas_p0.y + 360);
@@ -453,48 +472,16 @@ void MainGUI::showBatchAddMethod3() {
 	}
 }
 
-void MainGUI::showAddWall() {
-	static int x1 = 0.0;
-	static int y1 = 0.0;
-	static int x2 = 0.0;
-	static int y2 = 0.0;
+bool MainGUI::isWallWithinPeriphery(Wall wall, double spritePosX, double spritePosY) {
+	float distanceX1Wall = abs(wall.getX1() - spritePosX);
+	float distanceY1Wall = abs(wall.getY1() - spritePosY);
+	float distanceX2Wall = abs(wall.getX2() - spritePosX);
+	float distanceY2Wall = abs(wall.getY2() - spritePosY);
 
-	ImGui::Columns(2, "Wall Parameters", false);
-	ImGui::SetColumnWidth(0, 50.0f);
-
-	ImGui::Text("X1");
-	ImGui::NextColumn();
-	ImGui::InputInt("##x1", &x1, 0, 0);
-	ImGui::NextColumn();
-
-	ImGui::Text("Y1");
-	ImGui::NextColumn();
-	ImGui::InputInt("####y1", &y1, 0, 0);
-	ImGui::NextColumn();
-
-	ImGui::Text("X2");
-	ImGui::NextColumn();
-	ImGui::InputInt("##x2", &x2, 0, 0);
-	ImGui::NextColumn();
-
-	ImGui::Text("Y2");
-	ImGui::NextColumn();
-	ImGui::InputInt("##y2", &y2, 0, 0);
-	ImGui::Columns(1);
-	ImGui::Dummy(ImVec2(0, 8));
-
-	centerElement(200.0f);
-	if (ImGui::Button("Add Wall") && simulation) {
-		simulation->addWall(x1, y1, x2, y2);
-	}
-
-	ImGui::SameLine();
-	if (ImGui::Button("Random Wall")) {
-		x1 = distrX(eng);
-		y1 = distrY(eng);
-		x2 = distrX(eng);
-		y2 = distrY(eng);
-	}
+	return (distanceX1Wall >= spritePosX - 16 && distanceX1Wall <= spritePosX + 16) ||
+		(distanceX2Wall >= spritePosX - 16 && distanceX2Wall <= spritePosX + 16) ||
+		(distanceY1Wall >= spritePosY - 9 && distanceY1Wall <= spritePosY + 9) ||
+		(distanceY2Wall >= spritePosY - 9 && distanceY2Wall <= spritePosY + 9);
 }
 
 void MainGUI::centerElement(float width) {
