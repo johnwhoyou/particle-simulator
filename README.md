@@ -3,7 +3,6 @@
 ## TO-DO
 1. Polishing and fixes
 	- Sprite exceeds bottom & right edges of canvas
-	- Partial rendering of right wall exceeds canvas
 
 ## About the Project
 This project aims to apply distributed computing concepts by implementing a concurrently programmed particle physics simulator. To achieve this, a multithreaded C++ application was developed to showcase an interface that can allow users to render particles into the simulation. The application makes use of the Dear ImGui library for its graphical user interface, as well as SDL2 for its rendering functionalities.

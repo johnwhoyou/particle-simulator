@@ -50,7 +50,7 @@ bool MainGUI::getExplorerMode() {
 
 void MainGUI::displayCanvas() {
 	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
-	ImGui::SetNextWindowSize(ImVec2(1300, 800), ImGuiCond_Always);
+	ImGui::SetNextWindowSize(ImVec2(1300, 750), ImGuiCond_Always);
 	ImGui::Begin("Simulation Canvas", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse |
 												ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBackground | 
 												ImGuiWindowFlags_NoBringToFrontOnFocus);
