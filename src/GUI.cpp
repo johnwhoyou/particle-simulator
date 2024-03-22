@@ -52,7 +52,8 @@ void MainGUI::displayCanvas() {
 	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
 	ImGui::SetNextWindowSize(ImVec2(1300, 800), ImGuiCond_Always);
 	ImGui::Begin("Simulation Canvas", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse |
-												ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBackground);
+												ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBackground | 
+												ImGuiWindowFlags_NoBringToFrontOnFocus);
 
 	ImVec2 canvas_p0 = ImGui::GetCursorScreenPos();
 	ImVec2 canvas_sz = ImVec2(1280.0f, 720.0f);
@@ -108,30 +109,30 @@ void MainGUI::displayCanvas() {
 		}
 
 		for (const auto& wall : simulation->getWalls()) {
-			float distanceX1Wall = abs(wall.getX1() - sprite.getX());
-			float distanceY1Wall = abs(wall.getY1() - sprite.getY());
+			float distanceXWall = abs(wall.getX1() - sprite.getX());
+			float distanceYWall = abs(wall.getY1() - (canvas_sz.y - sprite.getY()));
 
-			if (distanceX1Wall <= 16 || distanceY1Wall <= 9) {
+			if (distanceXWall <= 16 || distanceYWall <= 9) {
 				float adjustedX1 = 640 + (wall.getX1() - sprite.getX()) * scaledWidth;
-				float adjustedY1 = 360 + (wall.getY1() - sprite.getY()) * scaledHeight;
+				float adjustedY1 = 360 + (wall.getY1() - (canvas_sz.y - sprite.getY())) * scaledHeight;
 				float adjustedX2 = 640 + (wall.getX2() - sprite.getX()) * scaledWidth;
-				float adjustedY2 = 360 + (wall.getY2() - sprite.getY()) * scaledHeight;
+				float adjustedY2 = 360 + (wall.getY2() - (canvas_sz.y - sprite.getY())) * scaledHeight;
 
-				ImVec2 pos1 = ImVec2(canvas_p0.x + adjustedX1, canvas_p0.y + (canvas_sz.y - adjustedY1));
-				ImVec2 pos2 = ImVec2(canvas_p0.x + adjustedX2, canvas_p0.y + (canvas_sz.y - adjustedY2));
+				ImVec2 pos1 = ImVec2(canvas_p0.x + adjustedX1, canvas_p0.y + adjustedY1);
+				ImVec2 pos2 = ImVec2(canvas_p0.x + adjustedX2, canvas_p0.y + adjustedY2);
 				draw_list->AddLine(pos1, pos2, IM_COL32(255, 255, 255, 255));
 
-				//if (wall.getX1() == wall.getX2())
-				//	if (wall.getX1() == 0)
-				////	//ImGui::Text("X1: %.2f, Y1: %.2f, X2: %.2f, Y2: %.2f", wall.getX1(), wall.getY1(), wall.getX2(), wall.getY2());
-				//		draw_list->AddRectFilled(canvas_p0, pos2, IM_COL32(0, 0, 0, 255));
-				////	//else
-				////		//draw_list->AddRectFilled(pos1, ImVec2(canvas_p0.x + 1280, pos2.y), IM_COL32(0, 0, 0, 255));
-				////}
+				if (wall.getX1() == wall.getX2())
+					if (wall.getX1() == 0)
+						draw_list->AddRectFilled(canvas_p0, pos2, IM_COL32(0, 0, 0, 255));
+					else
+						draw_list->AddRectFilled(ImVec2(pos1.x + 1, pos1.y), ImVec2(canvas_p0.x + canvas_sz.x, pos2.y), IM_COL32(0, 0, 0, 255));
 
-				//if (wall.getY1() == wall.getY2())
-				//	draw_list->AddRectFilled(canvas_p0, pos2, IM_COL32(0, 0, 0, 255));
-				////}
+				if (wall.getY1() == wall.getY2())
+					if (wall.getY1() == 0)
+						draw_list->AddRectFilled(canvas_p0, ImVec2(canvas_p0.x + canvas_sz.x, pos2.y), IM_COL32(0, 0, 0, 255));
+					else
+						draw_list->AddRectFilled(ImVec2(canvas_p0.x, pos1.y + 1), ImVec2(canvas_p0.x + canvas_sz.x, canvas_p0.y + canvas_sz.y), IM_COL32(0, 0, 0, 255));
 			}
 		}
 

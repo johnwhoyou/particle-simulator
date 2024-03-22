@@ -1,16 +1,18 @@
 # Problem Set #2: Particle Simulator
 
 ## TO-DO
-1. [IN PROGRESS] Handle wall encounters in explorer mode - Aless
-2. Polishing and fixes
+1. Polishing and fixes
 	- Sprite exceeds bottom & right edges of canvas
-	- Partial rendering of walls exceeds canvas
-3. Update README description to reflect new PS2 features
+	- Partial rendering of right wall exceeds canvas
 
 ## About the Project
-This project aims to apply distributed computing concepts by implementing a concurrently programmed particle physics simulator. To achieve this, a multithreaded C++ application was developed to showcase an interface that can allow users to render particles and walls into the simulation. The application makes use of the Dear ImGui library for its graphical user interface, as well as SDL2 for its rendering functionalities.
+This project aims to apply distributed computing concepts by implementing a concurrently programmed particle physics simulator. To achieve this, a multithreaded C++ application was developed to showcase an interface that can allow users to render particles into the simulation. The application makes use of the Dear ImGui library for its graphical user interface, as well as SDL2 for its rendering functionalities.
 
-The main features of the application include adding a single particle, batch adding particles with varying spawn points, batch adding particles with varying angles, batch adding particles with varying velocities, and adding a wall. Through these features, users will be able to perform the entire simulation on a 1280 x 720 canvas, witnessing the particles' movements as they collide against the edges of the canvas or against the user-generated walls.
+The application has two modes that the user can toggle between: Developer Mode and Explorer Mode.
+
+The main features of the application's Developer Mode include adding a single particle, batch adding particles with varying spawn points, batch adding particles with varying angles, and batch adding particles with varying velocities. Through these features, users will be able to perform the entire simulation on a 1280 x 720 canvas, witnessing the particles' movements as they collide against the edges of the canvas.
+
+On the other hand, the application's Explorer Mode allows the user to explore the simulation environment by controlling the movement of a sprite using the keyboard or on-screen arrow buttons. The sprite can be moved in all of the four cardinal directions, and a zoomed in 33 x 19 grid serves as the sprite's periphery. Particles or edges that fall within this periphery are rendered until they go out of view.
 
 ## How to Run the Project
 1. Clone the repository to your local machine.
