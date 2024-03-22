@@ -38,6 +38,7 @@ public:
     void clearParticles();
     void clearWalls();
     void clearAll();
+    void resetSprite();
     std::vector<Particle> getParticles();
     std::vector<Wall> getWalls();
     Sprite getSprite();

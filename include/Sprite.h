@@ -13,6 +13,7 @@ public:
     void moveDown();
     void moveLeft();
     void moveRight();
+    void reset();
 
     double getX() const;
     double getY() const;

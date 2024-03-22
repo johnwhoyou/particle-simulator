@@ -20,6 +20,11 @@ void Sprite::moveRight() {
     x += 20;
 }
 
+void Sprite::reset() {
+	x = 640;
+	y = 360;
+}
+
 double Sprite::getX() const {
     return x;
 }
