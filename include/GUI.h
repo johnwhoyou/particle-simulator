@@ -4,10 +4,10 @@
 #include <SDL.h>
 #include <imgui_impl_sdl2.h>
 #include <imgui_impl_sdlrenderer2.h>
-#include "Simulation.h"
 #include <random>
 #include <iostream>
-#include <conio.h>
+
+#include "Simulation.h"
 
 class MainGUI {
 public:
