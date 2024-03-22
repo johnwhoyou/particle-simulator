@@ -42,6 +42,11 @@ void Sprite::moveRight() {
     
 }
 
+void Sprite::reset() {
+	x = 640;
+	y = 360;
+}
+
 double Sprite::getX() const {
     return x;
 }

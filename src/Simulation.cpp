@@ -119,6 +119,10 @@ void Simulation::clearAll() {
     clearWalls();
 }
 
+void Simulation::resetSprite() {
+	sprite.reset();
+}
+
 std::vector<Particle> Simulation::getParticles() {
     return particles;
 }

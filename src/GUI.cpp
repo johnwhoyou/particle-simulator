@@ -87,14 +87,6 @@ void MainGUI::displayCanvas() {
 				ImVec2 spriteSize = ImVec2(2.5f, 2.5f);
 				draw_list->AddImage((void*)texture, spritePos, ImVec2(spritePos.x + spriteSize.x, spritePos.y + spriteSize.y));
 			}
-			//TO BE REMOVED
-			else {
-				ImVec2 spritePos = ImVec2(canvas_p0.x + sprite.getX(), canvas_p0.y + sprite.getY());
-				ImVec2 spriteSize = ImVec2(2.5f, 2.5f);
-				draw_list->AddRectFilled(spritePos, ImVec2(spritePos.x + spriteSize.x, spritePos.y + spriteSize.y), IM_COL32(200, 160, 255, 255));
-			}
-
-			
 		}
 	}
 	else {
@@ -123,13 +115,6 @@ void MainGUI::displayCanvas() {
 			ImVec2 spriteSize = ImVec2(scaledWidth, scaledHeight);
 			draw_list->AddImage((void*)texture, spritePos, ImVec2(spritePos.x + spriteSize.x, spritePos.y + spriteSize.y));
 		}
-		//TO BE REMOVED
-		else {
-			ImVec2 spritePos = ImVec2(canvas_p0.x + 640, canvas_p0.y + 360);
-			ImVec2 spriteSize = ImVec2(scaledWidth, scaledHeight);
-			draw_list->AddRectFilled(spritePos, ImVec2(spritePos.x + spriteSize.x, spritePos.y + spriteSize.y), IM_COL32(200, 160, 255, 255));
-		}
-
 	}
 
 	ImGui::End();
@@ -151,10 +136,19 @@ void MainGUI::displayBottomDetails(double frameRate) {
 	ImGui::Text("Particle Count: %zu", simulation->getParticles().size());
 	ImGui::SameLine();
 	ImGui::Dummy(ImVec2(16, 0));
-	ImGui::SameLine();
 
-	if (spawnedSprite)
+	if (spawnedSprite) {
+		ImGui::SameLine();
 		ImGui::Text("Sprite Position: (%.2f, %.2f)", simulation->getSprite().getX(), simulation->getSprite().getY());
+		ImGui::SameLine();
+		ImGui::Dummy(ImVec2(16, 0));
+	}
+
+	ImGui::SameLine();
+	if (ImGui::Button("Reset")) {
+		simulation->clearParticles();
+		simulation->resetSprite();
+	}
 
 	ImGui::SetWindowFontScale(1.5f);
 
@@ -218,6 +212,11 @@ void MainGUI::displayControlsWindow() {
 		if (ImGui::ArrowButton("Right", ImGuiDir_Right)) {
 			simulation->moveSprite(0);
 		}
+
+		ImGui::SetWindowFontScale(1.7f);
+		ImGui::Dummy(ImVec2(0, 8));
+		centerElement(450.0f);
+		ImGui::Text("Alternatively, use WASD or arrow keys.");
 	}
 	else {
 		centerElement(150.0f);
