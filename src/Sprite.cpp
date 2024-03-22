@@ -5,19 +5,41 @@ Sprite::Sprite(double x, double y)
     : x(x), y(y) {}
 
 void Sprite::moveUp() {
-    y -= 20;
+    if (y - 20 > 0) {
+        y -= 20;
+    }
+    else {
+        y = 0;
+    }
+    
 }
 
 void Sprite::moveDown() {
-    y += 20;
+    if (y + 20 < 720) {
+        y += 20;
+    }
+    else {
+        y = 720;
+    }
 }
 
 void Sprite::moveLeft() {
-    x -= 20;
+    if (x - 20 > 0) {
+        x -= 20;
+    }
+    else {
+        x = 0;
+    }
 }
 
 void Sprite::moveRight() {
-    x += 20;
+    if (x + 20 < 1280) {
+        x += 20;
+    }
+    else {
+        x = 1280;
+    }
+    
 }
 
 double Sprite::getX() const {
