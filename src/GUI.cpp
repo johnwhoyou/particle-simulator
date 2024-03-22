@@ -239,10 +239,10 @@ void MainGUI::displayControlsWindow() {
 			simulation->moveSprite('R');
 		}
 
-		ImGui::SetWindowFontScale(1.7f);
+		ImGui::SetWindowFontScale(1.3f);
 		ImGui::Dummy(ImVec2(0, 8));
-		centerElement(450.0f);
-		ImGui::Text("Alternatively, use WASD or arrow keys.");
+		centerElement(300.0f);
+		ImGui::Text("ALTERNATIVE: WASD or Arrow Keys");
 	}
 	else {
 		centerElement(150.0f);
