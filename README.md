@@ -1,5 +1,29 @@
 # Problem Set #2: Particle Simulator
 
+## TO-DO
+Server
+- [ ] remove walls - ibz
+- [ ] accept connections from clients continouously - ibz
+- [ ] create sprite classes - shaun
+- [ ] spawn/render sprites on screen when clients connect - shaun
+- [ ] make sprites disappear when client disconnectst - shaun
+- [ ] assign client IDs to new clients - shaun
+- [ ] receive sprite location/data from client - ibz
+- [ ] send filtered particle data to clients - ibz
+- [ ] send other sprite data to clients - ibz
+
+Client
+- [ ] connect to server - carlo
+- [ ] send own sprite data to server - carlo
+- [ ] receive other sprite data from server - carlo
+- [ ] receive filtered particle data from server - carlo
+- [ ] render the filtered particles - aless
+- [ ] render the other spritese - aless
+
+Other Deliverables
+- [ ] Technical Report Template - aless
+
+
 ## About the Project
 This project aims to apply distributed computing concepts by implementing a concurrently programmed particle physics simulator. To achieve this, a multithreaded C++ application was developed to showcase an interface that can allow users to render particles into the simulation. The application makes use of the Dear ImGui library for its graphical user interface, as well as SDL2 for its rendering functionalities.
 
