@@ -7,6 +7,7 @@ import java.util.concurrent.Executors;
 public class ParticleSimulatorModel {
     private List<Particle> particles = new CopyOnWriteArrayList<>();
     private List<Wall> walls = new CopyOnWriteArrayList<>();
+    //private List<Sprites> sprites = new CopyOnWriteArrayList<>();
     private final int numThreads;
     ExecutorService executor;
 
@@ -43,6 +44,10 @@ public class ParticleSimulatorModel {
             startIndex = endIndex;
         }
     }
+
+    // public void addSprite(int id){
+    //     sprites.add(new Sprite(id, 640, 360));
+    // }
 
     public void addParticle(double x, double y, double angle, double velocity) {
         particles.add(new Particle(x, y, angle, velocity));

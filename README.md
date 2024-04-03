@@ -4,7 +4,7 @@
 Server
 - [ ] remove walls - ibz
 - [ ] accept connections from clients continouously - ibz
-- [ ] create sprite classes - shaun
+- [x] create sprite classes - shaun
 - [ ] spawn/render sprites on screen when clients connect - shaun
 - [ ] make sprites disappear when client disconnectst - shaun
 - [ ] assign client IDs to new clients - shaun

@@ -63,7 +63,7 @@ public class ParticleSimulatorView extends JFrame {
         setResizable(false);
         setVisible(true);
 
-        simulatorCanvas = new SimulatorCanvasPanel(particles, walls);
+        simulatorCanvas = new SimulatorCanvasPanel(particles, walls/*, sprites */);
         JPanel eastPanel = createEastPanel();
         JPanel westPanel = createWestPanel(simulatorCanvas);
 
@@ -223,6 +223,7 @@ public class ParticleSimulatorView extends JFrame {
         private List<Particle> particles;
         private List<Wall> walls;
         private int frameCount = 0;
+        //private List<Sprite> sprites;
 
         public SimulatorCanvasPanel(List<Particle> particles, List<Wall> walls) {
             setPreferredSize(new Dimension(ParticleSimulatorController.CANVAS_WIDTH, ParticleSimulatorController.CANVAS_HEIGHT)); // Set the size of the canvas\
@@ -290,6 +291,12 @@ public class ParticleSimulatorView extends JFrame {
         private void drawParticles(Graphics g, int start, int end) {
             for (int i = start; i < end; i++) {
                 particles.get(i).draw(g);
+            }
+        }
+
+        private void drawSprites(Graphics g, int start, int end){
+            for (int i = start; i < end; i++){
+                sprites.get(i).draw(g);
             }
         }
     }
