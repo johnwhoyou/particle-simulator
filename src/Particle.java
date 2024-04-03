@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.awt.geom.Line2D;
 import java.util.List;
 
 public class Particle {
@@ -21,11 +20,6 @@ public class Particle {
 
         double updatedX = x + dx;
         double updatedY = y + dy;
-
-        double adjustedParticleY = ParticleSimulatorController.CANVAS_HEIGHT - y;
-        double adjustedUpdatedParticleY = ParticleSimulatorController.CANVAS_HEIGHT - updatedY;
-
-        Line2D particlePath = new Line2D.Double(x, adjustedParticleY, updatedX, adjustedUpdatedParticleY);
 
         for (Wall wall : walls) {
             double startX = wall.getStartX();

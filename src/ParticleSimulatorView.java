@@ -10,20 +10,12 @@ public class ParticleSimulatorView extends JFrame {
     private final int numThreads;
 
     private JButton clearParticlesBtn;
-    private JButton clearWallsBtn;
-    private JButton clearAllBtn;
 
     private JTextField xParticleField;
     private JTextField yParticleField;
     private JTextField angleParticleField;
     private JTextField velocityParticleField;
     private JButton addParticleBtn;
-
-    private JTextField startXWallField;
-    private JTextField startYWallField;
-    private JTextField endXWallField;
-    private JTextField endYWallField;
-    private JButton addWallBtn;
 
     private JTextField numBatchPointField;
     private JTextField startXBatchPointField;
@@ -51,7 +43,6 @@ public class ParticleSimulatorView extends JFrame {
     private JButton addBatchVelBtn;
 
     private JLabel particleCounterLabel;
-    private JLabel wallCounterLabel;
     private JLabel fpsLabel;
 
     public ParticleSimulatorView(int numThreads, List<Particle> particles, List<Wall> walls) {
@@ -79,10 +70,6 @@ public class ParticleSimulatorView extends JFrame {
         particleCounterLabel.setText("Particle Counter: " + count);
     }
 
-    public void updateWallCounter(int count) {
-        wallCounterLabel.setText("Wall Counter: " + count);
-    }
-
     public String getXParticleField() {
         return xParticleField.getText();
     }
@@ -97,22 +84,6 @@ public class ParticleSimulatorView extends JFrame {
 
     public String getVelocityParticleField() {
         return velocityParticleField.getText();
-    }
-
-    public String getStartXWallField() {
-        return startXWallField.getText();
-    }
-
-    public String getStartYWallField() {
-        return startYWallField.getText();
-    }
-
-    public String getEndXWallField() {
-        return endXWallField.getText();
-    }
-
-    public String getEndYWallField() {
-        return endYWallField.getText();
     }
 
     public String getNumBatchPointField() {
@@ -197,10 +168,7 @@ public class ParticleSimulatorView extends JFrame {
     public void setActionListeners(ActionListener listener)
     {
         clearParticlesBtn.addActionListener(listener);
-        clearWallsBtn.addActionListener(listener);
-        clearAllBtn.addActionListener(listener);
         addParticleBtn.addActionListener(listener);
-        addWallBtn.addActionListener(listener);
         addBatchPointBtn.addActionListener(listener);
         addBatchAngleBtn.addActionListener(listener);
         addBatchVelBtn.addActionListener(listener);
@@ -355,17 +323,12 @@ public class ParticleSimulatorView extends JFrame {
         particleCounterLabel.setForeground(Color.WHITE);
         particleCounterLabel.setFont(counterFont);
 
-        wallCounterLabel = new JLabel("Wall Counter: 0");
-        wallCounterLabel.setForeground(Color.WHITE);
-        wallCounterLabel.setFont(counterFont);
-
         // Initialize FPS label
         fpsLabel = new JLabel("FPS: 0");
         fpsLabel.setFont(new Font("Helvetica Neue", Font.BOLD, 22));
         fpsLabel.setForeground(Color.WHITE);
 
         counterPanel.add(particleCounterLabel);
-        counterPanel.add(wallCounterLabel);
         counterPanel.add(fpsLabel);
 
         basicInputPanel.add(counterPanel);
@@ -384,18 +347,8 @@ public class ParticleSimulatorView extends JFrame {
         clearParticlesBtn.setBorder(new EmptyBorder(10, 15, 10, 15));
         clearParticlesBtn.setActionCommand("clear particles");
 
-        clearWallsBtn = new JButton("Clear Walls");
-        clearWallsBtn.setBorder(new EmptyBorder(10, 15, 10, 15));
-        clearWallsBtn.setActionCommand("clear walls");
-
-        clearAllBtn = new JButton("Clear All");
-        clearAllBtn.setBorder(new EmptyBorder(10, 15, 10, 15));
-        clearAllBtn.setActionCommand("clear all");
-
 
         clearPanel.add(clearParticlesBtn);
-        clearPanel.add(clearWallsBtn);
-        clearPanel.add(clearAllBtn);
         basicInputPanel.add(clearPanel);
 
         JPanel emptyPanel2 = new JPanel();
@@ -403,67 +356,7 @@ public class ParticleSimulatorView extends JFrame {
         emptyPanel2.setBackground(Color.BLACK);
         basicInputPanel.add(emptyPanel2);
 
-        //--------------------------------------------------------------------------------------------------------------
-        // ADD WALL
-
-        JPanel addWallPanel = new JPanel();
-        addWallPanel.setLayout(new BorderLayout());
-        addWallPanel.setBackground(Color.BLACK);
-        addWallPanel.setPreferredSize(new Dimension(280, 160));
-        addWallPanel.setMaximumSize(new Dimension(280, 280));
-
-        JLabel addWallTitle = new JLabel("Add Wall");
-        addWallTitle.setForeground(Color.WHITE);
-        addWallTitle.setBorder(new EmptyBorder(5, 5, 5, 5));
-        addWallTitle.setHorizontalAlignment(SwingConstants.CENTER);
-        addWallTitle.setFont(titleFont);
-        addWallPanel.add(addWallTitle, BorderLayout.NORTH);
-
-        JPanel addWallFieldsPanel = new JPanel();
-        addWallFieldsPanel.setLayout(new GridLayout(4, 2, 0, 15));
-        addWallFieldsPanel.setBackground(Color.BLACK);
-        addWallFieldsPanel.setBorder(new EmptyBorder(10, 20, 0, 20));
-
-        JLabel startXWallLabel = new JLabel("Start X:");
-        startXWallLabel.setForeground(Color.WHITE);
-        startXWallField = new JTextField(5);
-
-        JLabel startYWallLabel = new JLabel("Start Y:");
-        startYWallLabel.setForeground(Color.WHITE);
-        startYWallField = new JTextField(5);
-
-        JLabel endXWallLabel = new JLabel("End X:");
-        endXWallLabel.setForeground(Color.WHITE);
-        endXWallField = new JTextField(5);
-
-        JLabel endYWallLabel = new JLabel("End Y:");
-        endYWallLabel.setForeground(Color.WHITE);
-        endYWallField = new JTextField(5);
-
-        addWallFieldsPanel.add(startXWallLabel);
-        addWallFieldsPanel.add(startXWallField);
-        addWallFieldsPanel.add(startYWallLabel);
-        addWallFieldsPanel.add(startYWallField);
-        addWallFieldsPanel.add(endXWallLabel);
-        addWallFieldsPanel.add(endXWallField);
-        addWallFieldsPanel.add(endYWallLabel);
-        addWallFieldsPanel.add(endYWallField);
-
-        addWallPanel.add(addWallFieldsPanel, BorderLayout.CENTER);
-
-        JPanel addWallBtnPanel = new JPanel(new BorderLayout());
-        addWallBtnPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        addWallBtnPanel.setBackground(Color.BLACK);
-
-        addWallBtn = new JButton("Add");
-        addWallBtn.setActionCommand("add wall");
-
-        addWallBtnPanel.add(addWallBtn);
-        addWallPanel.add(addWallBtnPanel, BorderLayout.EAST);
-
-        basicInputPanel.add(addWallPanel);
-
-
+   
         JPanel middlePanel = new JPanel();
         middlePanel.setPreferredSize(new Dimension(20, 160));
         middlePanel.setBackground(Color.BLACK);

@@ -275,37 +275,6 @@ public class ParticleSimulatorController implements ActionListener {
                 }
                 break;
 
-            case "add wall" :
-                try {
-                    double startX = Double.parseDouble(view.getStartXWallField());
-                    double startY = Double.parseDouble(view.getStartYWallField());
-                    double endX = Double.parseDouble(view.getEndXWallField());
-                    double endY = Double.parseDouble(view.getEndYWallField());
-
-                    if (startX >= 0 && startX <= 1280 && endX >= 0 && endX <= 1280) {
-                        if (startY >= 0 && startY <= 720 && endY >= 0 && endY <= 720) {
-                            try {
-                                semaphore.acquire();
-                            } catch (InterruptedException ex) {
-                                throw new RuntimeException(ex);
-                            }
-                            model.addWall(startX, startY, endX, endY);
-                            view.updateWallCounter(model.getWallCount());
-                            semaphore.release();
-                        }
-                        else {
-                            JOptionPane.showMessageDialog(view, "Please enter Y values between 0 and 720 (inclusive) only");
-                        }
-                    }
-                    else{
-                        JOptionPane.showMessageDialog(view, "Please enter X values between 0 and 1280 (inclusive) only");
-                    }
-
-                } catch (Exception exception) {
-                    JOptionPane.showMessageDialog(view, "No fields should be empty and all fields should have numerical input only");
-                }
-                break;
-
             case "clear particles" :
                 try {
                     semaphore.acquire();
@@ -314,17 +283,6 @@ public class ParticleSimulatorController implements ActionListener {
                 }
                 model.clearParticles();
                 view.updateParticleCounter(model.getParticleCount());
-                semaphore.release();
-                break;
-
-            case "clear walls" :
-                try {
-                    semaphore.acquire();
-                } catch (InterruptedException ex) {
-                    throw new RuntimeException(ex);
-                }
-                model.clearWalls();
-                view.updateWallCounter(model.getWallCount());
                 semaphore.release();
                 break;
 
@@ -337,7 +295,6 @@ public class ParticleSimulatorController implements ActionListener {
                 model.clearParticles();
                 model.clearWalls();
                 view.updateParticleCounter(model.getParticleCount());
-                view.updateWallCounter(model.getWallCount());
                 semaphore.release();
                 break;
 
