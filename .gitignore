@@ -90,3 +90,6 @@ googlemock/gtest
 
 # vcpkg
 vcpkg_installed
+
+# java class files
+*.class
