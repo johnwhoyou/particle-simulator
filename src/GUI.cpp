@@ -206,7 +206,7 @@ void MainGUI::displayControlsWindow() {
 
 	ImGui::SetWindowFontScale(1.3f);
 
-	ImGui::Checkbox("Enable Explorer Mode", &explorerMode);
+	//ImGui::Checkbox("Enable Explorer Mode", &explorerMode);
 
 	ImGui::Dummy(ImVec2(0, 8));
 	ImGui::Separator();

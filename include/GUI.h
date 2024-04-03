@@ -38,7 +38,7 @@ private:
 	void centerElement(float width);
 
 	Simulation* simulation;
-	bool explorerMode = false;
+	bool explorerMode = true;
 	bool spawnedSprite = false;
 	SDL_Texture* texture;
 };
