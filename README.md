@@ -2,7 +2,7 @@
 
 ## TO-DO
 Server
-- [ ] remove walls - ibz
+- [x] remove walls - ibz
 - [ ] accept connections from clients continouously - ibz
 - [x] create sprite classes - shaun
 - [ ] spawn/render sprites on screen when clients connect - shaun
@@ -11,17 +11,6 @@ Server
 - [ ] receive sprite location/data from client - ibz
 - [ ] send filtered particle data to clients - ibz
 - [ ] send other sprite data to clients - ibz
-
-Client
-- [ ] connect to server - carlo
-- [ ] send own sprite data to server - carlo
-- [ ] receive other sprite data from server - carlo
-- [ ] receive filtered particle data from server - carlo
-- [ ] render the filtered particles - aless
-- [ ] render the other spritese - aless
-
-Other Deliverables
-- [ ] Technical Report Template - aless
 
 
 ## About the Project
