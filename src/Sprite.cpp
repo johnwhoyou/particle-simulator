@@ -1,5 +1,4 @@
 #include "Sprite.h"
-#include <string>
 
 Sprite::Sprite(double x, double y)
     : x(x), y(y) {}
@@ -11,7 +10,6 @@ void Sprite::moveUp() {
     else {
         y = 720;
     }
-    
 }
 
 void Sprite::moveDown() {
@@ -39,7 +37,6 @@ void Sprite::moveRight() {
     else {
         x = 1280;
     }
-    
 }
 
 void Sprite::reset() {

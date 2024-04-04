@@ -2,9 +2,11 @@
 #define NETWORKMANAGER_H
 
 #include "SDL_net.h"
+#include "json.hpp"
 #include <string>
 #include <thread>
 #include <iostream>
+#include <atomic>
 
 class NetworkManager {
 public:
@@ -14,17 +16,16 @@ public:
     void start();
     void stop();
 
+    void sendCommand(const char* command);
+
 private:
-    const int CLIENT_PORT = 1234;
     const int PACKET_SIZE = 512;
     IPaddress serverIP;
     UDPsocket udpSocket;
     std::thread senderThread;
     std::thread receiverThread;
     bool isRunning;
-
-    void sendPackets();
-    void receivePackets();
+    void listen();
 };
 
 #endif // NETWORKMANAGER_H

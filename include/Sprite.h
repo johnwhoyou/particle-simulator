@@ -17,7 +17,7 @@ public:
 
     double getX() const;
     double getY() const;
-
+    
 private:
     double x, y;
     const double STEP = 5;

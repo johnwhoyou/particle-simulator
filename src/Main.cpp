@@ -77,33 +77,34 @@ int main()
                 isRunning = false;
             }
             else if (event.type == SDL_KEYDOWN && simulatorGUI.getExplorerMode()) {
+                const char* command = nullptr;
                 switch (event.key.keysym.sym) {
-                case SDLK_w:
-                    simulation.moveSprite('U');
-                    break;
-                case SDLK_UP:
-                    simulation.moveSprite('U');
-                    break;
-                case SDLK_s:
-                    simulation.moveSprite('D');
-                    break;
-                case SDLK_DOWN:
-                    simulation.moveSprite('D');
-                    break;
-                case SDLK_a:
-                    simulation.moveSprite('L');
-                    break;
-                case SDLK_LEFT:
-                    simulation.moveSprite('L');
-                    break;
-                case SDLK_d:
-                    simulation.moveSprite('R');
-                    break;
-                case SDLK_RIGHT:
-                    simulation.moveSprite('R');
-                    break;
-                default:
-                    break;
+                    case SDLK_w:
+                    case SDLK_UP:
+                        simulation.moveSprite('U');
+                        command = "up";
+                        break;
+                    case SDLK_s:
+                    case SDLK_DOWN:
+                        simulation.moveSprite('D');
+                        command = "down";
+                        break;
+                    case SDLK_a:
+                    case SDLK_LEFT:
+                        simulation.moveSprite('L');
+                        command = "left";
+                        break;
+                    case SDLK_d:
+                    case SDLK_RIGHT:
+                        simulation.moveSprite('R');
+                        command = "right";
+                        break;
+                    default:
+                        break;
+                }
+
+                if(command) {
+                    netManager.sendCommand(command);
                 }
             }
             ImGui_ImplSDL2_ProcessEvent(&event);

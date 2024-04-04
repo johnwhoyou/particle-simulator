@@ -1,12 +1,15 @@
 #include "NetworkManager.h"
 
-NetworkManager::NetworkManager(const std::string& serverIP, Uint16 serverPort) : isRunning(false) {
+std::thread listeningThread;
+std::atomic<bool> listening{false};
+
+NetworkManager::NetworkManager(const std::string& serverIP, Uint16 serverPort) : isRunning(false), udpSocket(nullptr) {
     if (SDLNet_Init() == -1) {
         std::cerr << "SDLNet_Init: " << SDLNet_GetError() << std::endl;
         exit(-1);
     }
 
-    udpSocket = SDLNet_UDP_Open(CLIENT_PORT);
+    udpSocket = SDLNet_UDP_Open(9000); 
     if (!udpSocket) {
         std::cerr << "SDLNet_UDP_Open: " << SDLNet_GetError() << std::endl;
         SDLNet_Quit();
@@ -23,57 +26,57 @@ NetworkManager::NetworkManager(const std::string& serverIP, Uint16 serverPort) :
 
 NetworkManager::~NetworkManager() {
     stop();
+    if (listeningThread.joinable()) {
+        listeningThread.join();
+    }
     SDLNet_UDP_Close(udpSocket);
     SDLNet_Quit();
 }
 
 void NetworkManager::start() {
     isRunning = true;
-    senderThread = std::thread(&NetworkManager::sendPackets, this);
-    receiverThread = std::thread(&NetworkManager::receivePackets, this);
+    listening = true;
+    listeningThread = std::thread(&NetworkManager::listen, this);
 }
 
 void NetworkManager::stop() {
     if (isRunning) {
         isRunning = false;
-        senderThread.join();
-        receiverThread.join();
     }
+    listening = false;
 }
 
-void NetworkManager::sendPackets() {
+void NetworkManager::sendCommand(const char* command) {
     UDPpacket* packet = SDLNet_AllocPacket(PACKET_SIZE);
     if (!packet) {
         std::cerr << "SDLNet_AllocPacket: " << SDLNet_GetError() << std::endl;
         return;
     }
 
-    while (isRunning) {
-        // Replace with actual data to send
-        const char* message = "Hello from C++ client";
-        memcpy(packet->data, message, strlen(message) + 1);
-        packet->address = serverIP;
-        packet->len = strlen(message) + 1;
+    memcpy(packet->data, command, strlen(command));
+    packet->address = serverIP;
+    packet->len = strlen(command);
 
-        SDLNet_UDP_Send(udpSocket, -1, packet);
-        std::this_thread::sleep_for(std::chrono::seconds(1)); // Example sending rate
+    if (SDLNet_UDP_Send(udpSocket, -1, packet) == 0) {
+        std::cerr << "SDLNet_UDP_Send: " << SDLNet_GetError() << std::endl;
     }
 
     SDLNet_FreePacket(packet);
 }
 
-void NetworkManager::receivePackets() {
-    UDPpacket* packet = SDLNet_AllocPacket(PACKET_SIZE);
-    if (!packet) {
-        std::cerr << "SDLNet_AllocPacket: " << SDLNet_GetError() << std::endl;
-        return;
-    }
-
-    while (isRunning) {
-        if (SDLNet_UDP_Recv(udpSocket, packet)) {
-            std::cout << "Received: " << packet->data << std::endl;
+void NetworkManager::listen() {
+    while (listening) {
+        UDPpacket* packet = SDLNet_AllocPacket(PACKET_SIZE);
+        if (!packet) {
+            std::cerr << "SDLNet_AllocPacket: " << SDLNet_GetError() << std::endl;
+            continue;
         }
-    }
 
-    SDLNet_FreePacket(packet);
+        if (SDLNet_UDP_Recv(udpSocket, packet)) {
+            std::string receivedMessage(reinterpret_cast<char*>(packet->data), packet->len);
+            std::cout << "Received message from server: " << receivedMessage << std::endl;
+        }
+
+        SDLNet_FreePacket(packet);
+    }
 }

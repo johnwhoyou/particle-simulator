@@ -2,8 +2,8 @@
 
 ## TO-DO
 Client
-- [ ] connect to server - carlo
-- [ ] send own sprite data to server - carlo
+- [X] connect to server - carlo
+- [X] send own sprite data to server - carlo
 - [ ] receive other sprite data from server - carlo
 - [ ] receive filtered particle data from server - carlo
 - [ ] render the filtered particles - aless
