@@ -23,20 +23,20 @@ NetworkManager::NetworkManager(const std::string& serverIP, Uint16 serverTCPPort
         exit(-1);
     }
 
-    if (SDLNet_ResolveHost(&this->serverIP, serverIP.c_str(), serverUDPPort) == -1) {
-        std::cerr << "SDLNet_ResolveHost: " << SDLNet_GetError() << std::endl;
+    if (SDLNet_ResolveHost(&serverUDPIP, serverIP.c_str(), serverUDPPort) == -1) {
+        std::cerr << "SDLNet_ResolveHost UDP: " << SDLNet_GetError() << std::endl;
         SDLNet_UDP_Close(udpSocket);
         SDLNet_Quit();
         exit(-1);
     }
 
-    if (SDLNet_ResolveHost(&this->serverIP, serverIP.c_str(), serverTCPPort) == -1) {
-        std::cerr << "SDLNet_ResolveHost: " << SDLNet_GetError() << std::endl;
+    if (SDLNet_ResolveHost(&serverTCPIP, serverIP.c_str(), serverTCPPort) == -1) {
+        std::cerr << "SDLNet_ResolveHost TCP: " << SDLNet_GetError() << std::endl;
         SDLNet_Quit();
         exit(-1);
     }
 
-    tcpSocket = SDLNet_TCP_Open(&this->serverIP);
+    tcpSocket = SDLNet_TCP_Open(&serverTCPIP);
     if (!tcpSocket) {
         std::cerr << "SDLNet_TCP_Open: " << SDLNet_GetError() << std::endl;
         SDLNet_Quit();
@@ -103,7 +103,7 @@ void NetworkManager::sendCommand(const char* command) {
     }
 
     memcpy(packet->data, command, strlen(command));
-    packet->address = serverIP;
+    packet->address = serverUDPIP;
     packet->len = strlen(command);
 
     if (SDLNet_UDP_Send(udpSocket, -1, packet) == 0) {

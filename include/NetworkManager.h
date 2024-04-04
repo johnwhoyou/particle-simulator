@@ -20,7 +20,8 @@ public:
     void sendCommand(const char* command);
 
 private:
-    IPaddress serverIP;
+    IPaddress serverUDPIP;
+    IPaddress serverTCPIP;
     TCPsocket tcpSocket;
     UDPsocket udpSocket;
     std::atomic<bool> isRunning;
