@@ -35,20 +35,20 @@ public class Sprite {
     }
 
     public void moveUp(){
-        if (this.y + STEP < 720){
-            y += STEP;
-        }
-        else{
-            y = 720;
-        }
-    }
-
-    public void moveDown(){
         if (this.y - STEP > 0){
             y -= STEP;
         }
         else{
             y = 0;
+        }
+    }
+
+    public void moveDown(){
+        if (this.y + STEP < 720){
+            y += STEP;
+        }
+        else{
+            y = 720;
         }
     }
 
