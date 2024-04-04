@@ -7,10 +7,11 @@
 #include <thread>
 #include <iostream>
 #include <atomic>
+#include <chrono>
 
 class NetworkManager {
 public:
-    NetworkManager(const std::string& serverIP, Uint16 serverPort);
+    NetworkManager(const std::string& serverIP, Uint16 serverTCPPort, Uint16 serverUDPPort);
     ~NetworkManager();
 
     void start();
@@ -19,12 +20,13 @@ public:
     void sendCommand(const char* command);
 
 private:
-    const int PACKET_SIZE = 512;
     IPaddress serverIP;
+    TCPsocket tcpSocket;
     UDPsocket udpSocket;
-    std::thread senderThread;
-    std::thread receiverThread;
-    bool isRunning;
+    std::atomic<bool> isRunning;
+    std::atomic<bool> listening;
+
+    void heartbeat();
     void listen();
 };
 

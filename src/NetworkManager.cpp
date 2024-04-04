@@ -1,24 +1,44 @@
 #include "NetworkManager.h"
 
 std::thread listeningThread;
+std::thread heartbeatThread;
 std::atomic<bool> listening{false};
+std::atomic<bool> isRunning{false};
 
-NetworkManager::NetworkManager(const std::string& serverIP, Uint16 serverPort) : isRunning(false), udpSocket(nullptr) {
+const int PACKET_SIZE = 512;
+const int CLIENT_PORT = 9000;
+const int HEARTBEAT_INTERVAL = 1000;
+
+
+NetworkManager::NetworkManager(const std::string& serverIP, Uint16 serverTCPPort, Uint16 serverUDPPort) : udpSocket(nullptr), tcpSocket(nullptr) {
     if (SDLNet_Init() == -1) {
         std::cerr << "SDLNet_Init: " << SDLNet_GetError() << std::endl;
         exit(-1);
     }
 
-    udpSocket = SDLNet_UDP_Open(9000); 
+    udpSocket = SDLNet_UDP_Open(CLIENT_PORT); 
     if (!udpSocket) {
         std::cerr << "SDLNet_UDP_Open: " << SDLNet_GetError() << std::endl;
         SDLNet_Quit();
         exit(-1);
     }
 
-    if (SDLNet_ResolveHost(&this->serverIP, serverIP.c_str(), serverPort) == -1) {
+    if (SDLNet_ResolveHost(&this->serverIP, serverIP.c_str(), serverUDPPort) == -1) {
         std::cerr << "SDLNet_ResolveHost: " << SDLNet_GetError() << std::endl;
         SDLNet_UDP_Close(udpSocket);
+        SDLNet_Quit();
+        exit(-1);
+    }
+
+    if (SDLNet_ResolveHost(&this->serverIP, serverIP.c_str(), serverTCPPort) == -1) {
+        std::cerr << "SDLNet_ResolveHost: " << SDLNet_GetError() << std::endl;
+        SDLNet_Quit();
+        exit(-1);
+    }
+
+    tcpSocket = SDLNet_TCP_Open(&this->serverIP);
+    if (!tcpSocket) {
+        std::cerr << "SDLNet_TCP_Open: " << SDLNet_GetError() << std::endl;
         SDLNet_Quit();
         exit(-1);
     }
@@ -29,6 +49,10 @@ NetworkManager::~NetworkManager() {
     if (listeningThread.joinable()) {
         listeningThread.join();
     }
+    if (heartbeatThread.joinable()) {
+        heartbeatThread.join();
+    }
+    SDLNet_TCP_Close(tcpSocket);
     SDLNet_UDP_Close(udpSocket);
     SDLNet_Quit();
 }
@@ -37,13 +61,35 @@ void NetworkManager::start() {
     isRunning = true;
     listening = true;
     listeningThread = std::thread(&NetworkManager::listen, this);
+    heartbeatThread = std::thread(&NetworkManager::heartbeat, this);
 }
 
 void NetworkManager::stop() {
-    if (isRunning) {
-        isRunning = false;
-    }
+    isRunning = false;
     listening = false;
+}
+
+void NetworkManager::heartbeat() {
+    const char* HEARTBEAT_MESSAGE = "HEARTBEAT";
+
+    while (isRunning) {
+        SDLNet_TCP_Send(tcpSocket, HEARTBEAT_MESSAGE, strlen(HEARTBEAT_MESSAGE));
+
+        char response[1024];
+        int receivedLength = SDLNet_TCP_Recv(tcpSocket, response, 1024);
+        if (receivedLength > 0) {
+            std::string receivedMsg(response, receivedLength);
+            if (receivedMsg != HEARTBEAT_MESSAGE) {
+                std::cerr << "Heartbeat failed, server response invalid" << std::endl;
+                break;
+            }
+        } else {
+            std::cerr << "Heartbeat failed, no response from server" << std::endl;
+            break;
+        }
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(HEARTBEAT_INTERVAL));
+    }
 }
 
 void NetworkManager::sendCommand(const char* command) {

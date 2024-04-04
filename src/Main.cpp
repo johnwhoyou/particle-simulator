@@ -7,7 +7,8 @@
 #undef main
 
 const char* SERVER_ADDRESS = "172.29.64.90";
-const int SERVER_PORT = 8000;
+const int SERVER_TCP_PORT = 3000;
+const int SERVER_UDP_PORT = 8000;
 
 int main()
 {
@@ -55,7 +56,7 @@ int main()
 
     SDL_FreeSurface(surface);
 
-    NetworkManager netManager(SERVER_ADDRESS, SERVER_PORT);
+    NetworkManager netManager(SERVER_ADDRESS, SERVER_TCP_PORT, SERVER_UDP_PORT);
     netManager.start();
 
     Simulation simulation;
