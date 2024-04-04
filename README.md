@@ -3,14 +3,15 @@
 ## TO-DO
 Server
 - [x] remove walls - ibz
-- [ ] accept connections from clients continouously - ibz
+- [x] accept connections from clients continouously - ibz
 - [x] create sprite classes - shaun
-- [ ] spawn/render sprites on screen when clients connect - shaun
-- [ ] make sprites disappear when client disconnect - shaun
-- [ ] assign client IDs to new clients - shaun
-- [ ] receive sprite location/data from client - ibz
+- [x] spawn/render sprites on screen when clients connect - shaun
+- [x] make sprites disappear when client disconnect - shaun
+- [x] assign client IDs to new clients - shaun
+- [x] receive sprite location/data from client - ibz
 - [ ] send filtered particle data to clients - ibz
 - [ ] send other sprite data to clients - ibz
+- [ ] fixing boundaries of sprite movement (right and bottom) - shaun
 
 
 ## About the Project
