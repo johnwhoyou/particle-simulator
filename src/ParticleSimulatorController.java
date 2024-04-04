@@ -62,7 +62,7 @@ public class ParticleSimulatorController implements ActionListener {
         startRendering();
         startAcceptingConnections();
         startReceivingData();
-        //startSendingData();
+        startSendingData();
 
         System.out.println("Server is running...");
 
@@ -220,22 +220,45 @@ public class ParticleSimulatorController implements ActionListener {
     }
 
     public void startSendingData() {
- 
         Runnable sendingTask = () -> {
             try {
                 DatagramSocket socket = new DatagramSocket();
-                while (true) {
-                    // filter particles
-                    // serialize filtered particles and other sprites
-                    // send filtered particles and other sprites
+                double scaledWidth = 1280.0 / 33.0;
+                double scaledHeight = 720.0 / 19.0;
 
-                    byte[] sendData = new byte[512];
-                    String message = "Hello from Java server";
-                    sendData = message.getBytes();
-                    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("172.29.64.90"), CLIENT_PORT);
-                    socket.send(sendPacket);
-                    System.out.println("Broadcasted message: " + message);
-                    Thread.sleep(1000); // Wait for 1 second
+                // Create a thread pool to manage threads for each client
+                ExecutorService clientExecutor = Executors.newFixedThreadPool(clients.size());
+
+                while (true) {
+                    for (int i = 0; i < clients.size(); i++) {
+                        final int clientId = i;
+                        clientExecutor.submit(() -> {
+                            try {
+                                Sprite sprite = model.getSprites().get(clientId);
+                                List<Particle> filteredParticles = new ArrayList<>();
+                                for (Particle particle : model.getParticles()) {
+                                    if (particle.getX() >= sprite.getX() - 16 && particle.getX() <= sprite.getX() + 16 && particle.getY() >= sprite.getY() - 9 && particle.getY() <= sprite.getY() + 9) {
+                                        double adjustedPosX = 640 + (particle.getX() - sprite.getX()) * scaledWidth;
+                                        double adjustedPosY = 360 + (particle.getY() - sprite.getY()) * scaledHeight;
+                                        filteredParticles.add(new Particle(adjustedPosX, adjustedPosY));
+                                    }
+                                }
+                                if (!filteredParticles.isEmpty()) {
+                                    // serialize filtered particles
+                                    Gson gson = new Gson();
+                                    String jsonString = gson.toJson(filteredParticles);
+                                    byte[] sendData = jsonString.getBytes();
+
+                                    // send filtered particles to clients
+                                    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, clients.get(clientId).getClientAddress(), CLIENT_PORT);
+                                    socket.send(sendPacket);
+                                    //System.out.println(jsonString);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    }
                 }
 
             } catch (Exception e) {

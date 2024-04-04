@@ -34,21 +34,29 @@ public class Sprite {
         return id;
     }
 
-    public void moveUp(){
-        if (this.y - STEP > 0){
-            y -= STEP;
-        }
-        else{
-            y = 0;
-        }
+    public double getX() {
+        return x;
     }
 
-    public void moveDown(){
+    public double getY() {
+        return y;
+    }
+
+    public void moveUp(){
         if (this.y + STEP < 720){
             y += STEP;
         }
         else{
             y = 720;
+        }
+    }
+
+    public void moveDown(){
+        if (this.y - STEP > 0){
+            y -= STEP;
+        }
+        else{
+            y = 0;
         }
     }
 
@@ -77,6 +85,7 @@ public class Sprite {
 
     public void draw(Graphics g) {
         //scale to be fixed
-        g.drawImage(this.img, (int) this.x, (int) this.y, 30, 40,  null);
+        double adjustedY = ParticleSimulatorController.CANVAS_HEIGHT - y;
+        g.drawImage(this.img, (int) this.x, (int) adjustedY, 30, 40,  null);
     }
 }

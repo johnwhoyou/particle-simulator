@@ -14,6 +14,21 @@ public class Particle {
         this.velocity = velocity;
     }
 
+    public Particle(double x, double y) {
+        this.x = x;
+        this.y = y;
+        this.angle = 0;
+        this.velocity = 0;
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
     public void moveParticle(List<Wall> walls, double deltaTime) {
         double dx = velocity * Math.cos(Math.toRadians(angle)) * deltaTime;
         double dy = velocity * Math.sin(Math.toRadians(angle)) * deltaTime;
