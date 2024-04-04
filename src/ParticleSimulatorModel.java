@@ -50,6 +50,10 @@ public class ParticleSimulatorModel {
         sprites.add(new Sprite(id, 640, 360));
     }
 
+    public void removeSprite(int id) {
+        sprites.removeIf(obj -> obj.getId() == id);
+    }
+
     public void addParticle(double x, double y, double angle, double velocity) {
         particles.add(new Particle(x, y, angle, velocity));
     }

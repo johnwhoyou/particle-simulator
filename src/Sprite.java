@@ -21,14 +21,17 @@ public class Sprite {
 
     private BufferedImage loadImage(){
         try {
-            img = ImageIO.read(new FileInputStream("particle-simulator\\res\\sprite.png"));
+            img = ImageIO.read(new FileInputStream("res/sprite.png"));
         }
         catch(IOException e){
             Logger logger = java.util.logging.Logger.getLogger(this.getClass().getName());
             logger.info("IOException"+ e);
         }
-
         return img;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public void moveUp(){

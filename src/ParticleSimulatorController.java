@@ -1,20 +1,46 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.*;
+import com.google.gson.Gson;
 
 public class ParticleSimulatorController implements ActionListener {
     public static final int CANVAS_WIDTH = 1280; // Width of the simulator
     public static final int CANVAS_HEIGHT = 720; // Height of the simulator
-    private final ParticleSimulatorModel model;
-    private final ParticleSimulatorView view;
     private long lastUpdateTime;
-    private final ExecutorService computationExecutor;
-    private final ExecutorService renderingExecutor;
     private final int framesPerSecond = 70;
     private final Semaphore semaphore = new Semaphore(1);
-    private int spriteID = 0;
+    //private int spriteID = 0;
 
+    private final ParticleSimulatorModel model;
+    private final ParticleSimulatorView view;
+    
+    private final ExecutorService computationExecutor;
+    private final ExecutorService renderingExecutor;
+    private final ExecutorService sendExecutor;
+    private final ExecutorService receiveExecutor;
+    private final ExecutorService connectionExecutor;
+
+    private final int SERVER_PORT = 8000;
+    private final int CLIENT_PORT = 9000;
+    private final int HEARTBEAT_TIMEOUT = 1000; // 5 seconds
+    DatagramSocket serverSocket;
+
+
+    private static List<ClientHandler> clients = new ArrayList<>();
+    private static int clientIdCounter = 0;
+   
     public ParticleSimulatorController() {
         int numThreadsCompute = 32;
         int numThreadsRender = 2;
@@ -27,9 +53,17 @@ public class ParticleSimulatorController implements ActionListener {
 
         computationExecutor = Executors.newSingleThreadExecutor();
         renderingExecutor = Executors.newSingleThreadExecutor();
+        sendExecutor = Executors.newSingleThreadExecutor();
+        receiveExecutor = Executors.newSingleThreadExecutor();
+        connectionExecutor = Executors.newSingleThreadExecutor();
 
         startComputation();
         startRendering();
+        //startAcceptingConnections();
+        startReceivingData();
+        startSendingData();
+
+        System.out.println("Server is running...");
 
         // Create a ScheduledExecutorService with a single thread for FPS update
         ScheduledExecutorService fpsScheduler = Executors.newSingleThreadScheduledExecutor();
@@ -43,8 +77,120 @@ public class ParticleSimulatorController implements ActionListener {
                 view.resetFrameCount();
                 lastUpdateTime = currentTime;
         }, 0, 500_000_000, TimeUnit.NANOSECONDS); // 500 milliseconds in nanoseconds
-
     }
+
+    public void startAcceptingConnections() {
+
+        Runnable acceptingConnTask = () -> {
+            try {
+                ServerSocket serverSocket = new ServerSocket(3000);
+
+                while (true) {
+                    Socket clientSocket = serverSocket.accept();
+                    System.out.println("New client connected.");
+
+                    int newClientId = clientIdCounter++;
+                    model.addSprite(newClientId);
+                    ClientHandler clientHandler = new ClientHandler(clientSocket, newClientId);
+
+                    clients.add(clientHandler);
+                    new Thread(clientHandler).start();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        };
+
+        receiveExecutor.submit(acceptingConnTask);
+    }
+
+    private class ClientHandler implements Runnable {
+        private Socket clientSocket;
+        private final InetAddress clientAddress;
+
+        private int clientId;
+
+        public ClientHandler(Socket socket, int clientId) {
+            this.clientSocket = socket;
+            this.clientId = clientId;
+            this.clientAddress = socket.getInetAddress();
+        }
+
+        @Override
+        public void run() {
+            try {
+                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+
+                while (true) {
+                    out.println("HEARTBEAT");
+                    String response = in.readLine();
+                    if (response == null || !response.equals("HEARTBEAT")) {
+                        System.out.println("Client disconnected: " + clientSocket.getInetAddress());
+                        break;
+                    }
+                    Thread.sleep(HEARTBEAT_TIMEOUT); // Wait for 1 second before sending the next heartbeat
+                }
+
+                clientSocket.close();
+                model.removeSprite(this.clientId);
+                clients.remove(this); // Remove the client handler from the list when the client disconnects
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void startReceivingData() {
+ 
+        Runnable receivingTask = () -> {
+            try {
+                serverSocket = new DatagramSocket(SERVER_PORT);
+                byte[] receiveData = new byte[512];
+                while (true) {
+                    // receive sprite locations
+                    // if address is not yet in list, then add it to the clients array
+                    // if address has note sent a packet in a while, disconnect it
+                    DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+                    serverSocket.receive(receivePacket);
+                    String receivedMessage = new String(receivePacket.getData(), 0, receivePacket.getLength());
+                    System.out.println("Received from client: " + receivedMessage);
+                    receiveData = new byte[512];
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        };
+        receiveExecutor.submit(receivingTask);
+    }
+
+    public void startSendingData() {
+ 
+        Runnable sendingTask = () -> {
+            try {
+                DatagramSocket socket = new DatagramSocket();
+                while (true) {
+                    // filter particles
+                    // serialize filtered particles and other sprites
+                    // send filtered particles and other sprites
+                    byte[] sendData = new byte[512];
+                    String message = "Hello from Java server";
+                    sendData = message.getBytes();
+                    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("172.29.118.133"), CLIENT_PORT);
+                    socket.send(sendPacket);
+                    System.out.println("Broadcasted message: " + message);
+                    Thread.sleep(1000); // Wait for 1 second
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        };
+
+        sendExecutor.submit(sendingTask);
+    }
+
+    
 
     public void startComputation() {
         double deltaTime = 1.0 / framesPerSecond;
@@ -110,7 +256,7 @@ public class ParticleSimulatorController implements ActionListener {
                                     }
 
                                     model.addParticle(x, y, angle, velocity);
-                                    model.addSprite(spriteID);                                      //Temporary to test
+                                                                       //Temporary to test
                                     view.updateParticleCounter(model.getParticleCount());
                                     semaphore.release();
                                 }
