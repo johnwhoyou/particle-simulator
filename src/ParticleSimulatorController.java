@@ -35,7 +35,7 @@ public class ParticleSimulatorController implements ActionListener {
     private final int SERVER_PORT = 8000;
     private final int SERVER_PORT_2 = 3000;
     private final int CLIENT_PORT = 9000;
-    private final int HEARTBEAT_TIMEOUT = 1000; // 5 seconds
+    private final int HEARTBEAT_TIMEOUT = 10000; // 5 seconds
     DatagramSocket serverSocket;
 
 
@@ -88,7 +88,7 @@ public class ParticleSimulatorController implements ActionListener {
                 while (true) {
                     Socket clientSocket = serverSocket.accept();
                     System.out.println("New client connected.");
-
+                    //System.out.println(clientSocket.getPort());
                     int newClientId = clientIdCounter++;
                     model.addSprite(newClientId);
                     ClientHandler clientHandler = new ClientHandler(clientSocket, newClientId);
@@ -101,7 +101,7 @@ public class ParticleSimulatorController implements ActionListener {
             }
         };
 
-        receiveExecutor.submit(acceptingConnTask);
+        connectionExecutor.submit(acceptingConnTask);
     }
 
     private class ClientHandler implements Runnable {
@@ -127,6 +127,8 @@ public class ParticleSimulatorController implements ActionListener {
                 while (true) {
                     out.println("HEARTBEAT");
                     String response = in.readLine();
+                    //System.out.println("response received");
+                    //System.out.println(response);
                     if (response == null || !response.equals("HEARTBEAT")) {
                         System.out.println("Client disconnected: " + clientSocket.getInetAddress());
                         break;
@@ -186,7 +188,7 @@ public class ParticleSimulatorController implements ActionListener {
                     byte[] sendData = new byte[512];
                     String message = "Hello from Java server";
                     sendData = message.getBytes();
-                    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("172.29.118.133"), CLIENT_PORT);
+                    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("172.29.64.90"), CLIENT_PORT);
                     socket.send(sendPacket);
                     System.out.println("Broadcasted message: " + message);
                     Thread.sleep(1000); // Wait for 1 second
