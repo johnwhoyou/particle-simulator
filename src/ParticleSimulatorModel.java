@@ -54,7 +54,7 @@ public class ParticleSimulatorModel {
         sprites.removeIf(obj -> obj.getId() == id);
     }
 
-    public void moveSprite(int id, String direction) {
+    public void moveSpriteWithId(int id, String direction) {
         int i = 0;
         boolean isSpriteFound = false;
         while (i < sprites.size() && !isSpriteFound) {
@@ -75,6 +75,23 @@ public class ParticleSimulatorModel {
                 }
 
             }
+        }
+    }
+
+    public void moveSpriteWithIndex(int index, String direction) {
+        switch (direction) {
+            case "up":
+                sprites.get(index).moveUp();
+                break;
+            case "down":
+                sprites.get(index).moveDown();
+                break;
+            case "left":
+                sprites.get(index).moveLeft();
+                break;
+            case "right":
+                sprites.get(index).moveRight();
+                break;
         }
     }
 

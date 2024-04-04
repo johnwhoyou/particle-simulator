@@ -116,6 +116,18 @@ public class ParticleSimulatorController implements ActionListener {
             this.clientAddress = socket.getInetAddress();
         }
 
+        public Socket getClientSocket() {
+            return clientSocket;
+        }
+
+        public InetAddress getClientAddress() {
+            return clientAddress;
+        }
+
+        public int getClientId() {
+            return clientId;
+        }
+
         @Override
         public void run() {
             try {
@@ -160,6 +172,19 @@ public class ParticleSimulatorController implements ActionListener {
                     System.out.println(receivePacket.getAddress());
 
                     String receivedMessage = new String(receivePacket.getData(), 0, receivePacket.getLength());
+                    InetAddress receiveAddress = receivePacket.getAddress();
+
+                    int i = 0;
+                    boolean isClientFound = false;
+                    int clientIndex = -1;
+                    while (i < clients.size() && !isClientFound) {
+                        if (compareInetAddresses(clients.get(i).getClientAddress(), receiveAddress)) {
+                            isClientFound = true;
+                            clientIndex = i;
+                        }
+                    }
+
+                    model.moveSpriteWithIndex(clientIndex, receivedMessage);
 
                     // get client id of the received packet
                     // get direction of the received packet
@@ -173,6 +198,25 @@ public class ParticleSimulatorController implements ActionListener {
             }
         };
         receiveExecutor.submit(receivingTask);
+    }
+
+    public static boolean compareInetAddresses(InetAddress address1, InetAddress address2) {
+        // Get byte arrays representing IP addresses
+        byte[] byteAddress1 = address1.getAddress();
+        byte[] byteAddress2 = address2.getAddress();
+
+        // Compare byte arrays
+        if (byteAddress1.length != byteAddress2.length) {
+            return false;
+        }
+
+        for (int i = 0; i < byteAddress1.length; i++) {
+            if (byteAddress1[i] != byteAddress2[i]) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public void startSendingData() {
