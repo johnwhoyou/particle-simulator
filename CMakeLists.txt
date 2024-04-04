@@ -48,6 +48,12 @@ target_link_libraries(ParticleSimulatorApp PRIVATE PNG::PNG)
 find_package(SDL2_image CONFIG REQUIRED)
 target_link_libraries(ParticleSimulatorApp PRIVATE $<IF:$<TARGET_EXISTS:SDL2_image::SDL2_image>,SDL2_image::SDL2_image,SDL2_image::SDL2_image-static>)
 
+find_package(SDL2_net CONFIG REQUIRED)
+target_link_libraries(ParticleSimulatorApp PRIVATE
+    $<IF:$<TARGET_EXISTS:SDL2_net::SDL2_net>,SDL2_net::SDL2_net,SDL2_net::SDL2_net-static>
+    ParticleSimulator
+)
+
 # Copy DLLs to the output directory
 #add_custom_command(TARGET ParticleSimulator POST_BUILD
 #	COMMAND ${CMAKE_COMMAND} -E copy_if_different
