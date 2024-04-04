@@ -10,7 +10,7 @@ const int CLIENT_PORT = 9000;
 const int HEARTBEAT_INTERVAL = 1000;
 
 
-NetworkManager::NetworkManager(const std::string& serverIP, Uint16 serverTCPPort, Uint16 serverUDPPort) : udpSocket(nullptr), tcpSocket(nullptr) {
+NetworkManager::NetworkManager(const std::string& serverIP, Uint16 serverTCPPort, Uint16 serverUDPPort) : tcpSocket(nullptr), udpSocket(nullptr) {
     if (SDLNet_Init() == -1) {
         std::cerr << "SDLNet_Init: " << SDLNet_GetError() << std::endl;
         exit(-1);
@@ -70,25 +70,28 @@ void NetworkManager::stop() {
 }
 
 void NetworkManager::heartbeat() {
-    const char* HEARTBEAT_MESSAGE = "HEARTBEAT";
+    const char* HEARTBEAT_MESSAGE = "HEARTBEAT\n";
 
     while (isRunning) {
-        SDLNet_TCP_Send(tcpSocket, HEARTBEAT_MESSAGE, strlen(HEARTBEAT_MESSAGE));
-
         char response[1024];
         int receivedLength = SDLNet_TCP_Recv(tcpSocket, response, 1024);
         if (receivedLength > 0) {
             std::string receivedMsg(response, receivedLength);
-            if (receivedMsg != HEARTBEAT_MESSAGE) {
+            std::cout << receivedMsg << std::endl;
+            if (receivedMsg.find(HEARTBEAT_MESSAGE) == std::string::npos) {
                 std::cerr << "Heartbeat failed, server response invalid" << std::endl;
                 break;
+            }
+            else {
+                SDLNet_TCP_Send(tcpSocket, HEARTBEAT_MESSAGE, strlen(HEARTBEAT_MESSAGE));
             }
         } else {
             std::cerr << "Heartbeat failed, no response from server" << std::endl;
             break;
         }
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(HEARTBEAT_INTERVAL));
+
+        //std::this_thread::sleep_for(std::chrono::milliseconds(HEARTBEAT_INTERVAL));
     }
 }
 
