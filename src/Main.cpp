@@ -2,7 +2,12 @@
 #include "glad/glad.h"
 #include "SDL.h"
 #include "SDL_image.h"
+#include "SDL_net.h"
+#include "NetworkManager.h"
 #undef main
+
+const char* SERVER_ADDRESS = "172.29.64.90";
+const int SERVER_PORT = 8000;
 
 int main()
 {
@@ -49,6 +54,9 @@ int main()
     }
 
     SDL_FreeSurface(surface);
+
+    NetworkManager netManager(SERVER_ADDRESS, SERVER_PORT);
+    netManager.start();
 
     Simulation simulation;
     simulation.initializeCanvasBoundaries();
@@ -130,5 +138,7 @@ int main()
     SDL_DestroyWindow(window);
     SDL_Quit();
 
+    netManager.stop();
+    
     return 0;
 }
