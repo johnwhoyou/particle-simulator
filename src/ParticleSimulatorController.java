@@ -33,6 +33,7 @@ public class ParticleSimulatorController implements ActionListener {
     private final ExecutorService connectionExecutor;
 
     private final int SERVER_PORT = 8000;
+    private final int SERVER_PORT_2 = 3000;
     private final int CLIENT_PORT = 9000;
     private final int HEARTBEAT_TIMEOUT = 1000; // 5 seconds
     DatagramSocket serverSocket;
@@ -59,9 +60,9 @@ public class ParticleSimulatorController implements ActionListener {
 
         startComputation();
         startRendering();
-        //startAcceptingConnections();
+        startAcceptingConnections();
         startReceivingData();
-        startSendingData();
+        //startSendingData();
 
         System.out.println("Server is running...");
 
@@ -83,8 +84,7 @@ public class ParticleSimulatorController implements ActionListener {
 
         Runnable acceptingConnTask = () -> {
             try {
-                ServerSocket serverSocket = new ServerSocket(3000);
-
+                ServerSocket serverSocket = new ServerSocket(SERVER_PORT_2);
                 while (true) {
                     Socket clientSocket = serverSocket.accept();
                     System.out.println("New client connected.");
@@ -122,6 +122,8 @@ public class ParticleSimulatorController implements ActionListener {
                 PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
+                //out.println(clientId);
+
                 while (true) {
                     out.println("HEARTBEAT");
                     String response = in.readLine();
@@ -153,7 +155,14 @@ public class ParticleSimulatorController implements ActionListener {
                     // if address has note sent a packet in a while, disconnect it
                     DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
                     serverSocket.receive(receivePacket);
+                    System.out.println(receivePacket.getAddress());
+
                     String receivedMessage = new String(receivePacket.getData(), 0, receivePacket.getLength());
+
+                    // get client id of the received packet
+                    // get direction of the received packet
+                    // model.moveSprite(clientId, direction)
+
                     System.out.println("Received from client: " + receivedMessage);
                     receiveData = new byte[512];
                 }
@@ -173,6 +182,7 @@ public class ParticleSimulatorController implements ActionListener {
                     // filter particles
                     // serialize filtered particles and other sprites
                     // send filtered particles and other sprites
+
                     byte[] sendData = new byte[512];
                     String message = "Hello from Java server";
                     sendData = message.getBytes();
