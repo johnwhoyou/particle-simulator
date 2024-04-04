@@ -6,7 +6,7 @@ Server
 - [ ] accept connections from clients continouously - ibz
 - [x] create sprite classes - shaun
 - [ ] spawn/render sprites on screen when clients connect - shaun
-- [ ] make sprites disappear when client disconnectst - shaun
+- [ ] make sprites disappear when client disconnect - shaun
 - [ ] assign client IDs to new clients - shaun
 - [ ] receive sprite location/data from client - ibz
 - [ ] send filtered particle data to clients - ibz

@@ -13,13 +13,14 @@ public class ParticleSimulatorController implements ActionListener {
     private final ExecutorService renderingExecutor;
     private final int framesPerSecond = 70;
     private final Semaphore semaphore = new Semaphore(1);
+    private int spriteID = 0;
 
     public ParticleSimulatorController() {
         int numThreadsCompute = 32;
         int numThreadsRender = 2;
 
         this.model = new ParticleSimulatorModel(numThreadsCompute);
-        this.view = new ParticleSimulatorView(numThreadsRender, model.getParticles(), model.getWalls());
+        this.view = new ParticleSimulatorView(numThreadsRender, model.getParticles(), model.getWalls(), model.getSprites());
         this.view.setActionListeners(this);
 
         lastUpdateTime = System.nanoTime();
@@ -109,6 +110,7 @@ public class ParticleSimulatorController implements ActionListener {
                                     }
 
                                     model.addParticle(x, y, angle, velocity);
+                                    model.addSprite(spriteID);                                      //Temporary to test
                                     view.updateParticleCounter(model.getParticleCount());
                                     semaphore.release();
                                 }

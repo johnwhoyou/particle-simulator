@@ -45,7 +45,7 @@ public class ParticleSimulatorView extends JFrame {
     private JLabel particleCounterLabel;
     private JLabel fpsLabel;
 
-    public ParticleSimulatorView(int numThreads, List<Particle> particles, List<Wall> walls) {
+    public ParticleSimulatorView(int numThreads, List<Particle> particles, List<Wall> walls, List<Sprite> sprites) {
         super("Particle Simulator");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -54,7 +54,7 @@ public class ParticleSimulatorView extends JFrame {
         setResizable(false);
         setVisible(true);
 
-        simulatorCanvas = new SimulatorCanvasPanel(particles, walls/*, sprites */);
+        simulatorCanvas = new SimulatorCanvasPanel(particles, walls, sprites);
         JPanel eastPanel = createEastPanel();
         JPanel westPanel = createWestPanel(simulatorCanvas);
 
@@ -191,9 +191,9 @@ public class ParticleSimulatorView extends JFrame {
         private List<Particle> particles;
         private List<Wall> walls;
         private int frameCount = 0;
-        //private List<Sprite> sprites;
+        private List<Sprite> sprites;
 
-        public SimulatorCanvasPanel(List<Particle> particles, List<Wall> walls) {
+        public SimulatorCanvasPanel(List<Particle> particles, List<Wall> walls, List<Sprite> sprites) {
             setPreferredSize(new Dimension(ParticleSimulatorController.CANVAS_WIDTH, ParticleSimulatorController.CANVAS_HEIGHT)); // Set the size of the canvas\
             setMaximumSize(new Dimension(ParticleSimulatorController.CANVAS_WIDTH, ParticleSimulatorController.CANVAS_HEIGHT));
             setBackground(Color.WHITE);
@@ -201,6 +201,7 @@ public class ParticleSimulatorView extends JFrame {
 
             this.particles = particles;
             this.walls = walls;
+            this.sprites = sprites;
         }
 
         public void resetFrameCount() {
@@ -236,6 +237,8 @@ public class ParticleSimulatorView extends JFrame {
                 final int end = (i == numThreads - 1) ? numParticles : (i + 1) * particlesPerThread;
                 executor.submit(() -> drawParticles(g, start, end));
             }
+            
+            executor.submit(() -> drawSprites(g, 0, sprites.size()));
 
            // Shutdown the executor service to prevent new tasks from being submitted
             executor.shutdown();
