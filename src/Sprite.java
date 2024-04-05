@@ -83,7 +83,7 @@ public class Sprite {
 
     public void draw(Graphics g) {
         //scale to be fixed
-        double adjustedY = ParticleSimulatorController.CANVAS_HEIGHT - y;
-        g.drawImage(this.img, (int) this.x - (WIDTH / 2), (int) adjustedY + (HEIGHT / 2), WIDTH, HEIGHT,  null);
+        double adjustedY = ParticleSimulatorController.CANVAS_HEIGHT - (y + (HEIGHT / 2));
+        g.drawImage(this.img, (int) this.x - (WIDTH / 2), (int) adjustedY, WIDTH, HEIGHT,  null);
     }
 }
