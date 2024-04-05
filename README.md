@@ -25,4 +25,4 @@ On the other hand, the C++ Client application allows the user to explore the sim
 7. Run the project by running the `Main.cpp` file or the `ParticleSimulatorApp` executable that will appear on the Startup Item dropdown. Make sure to use the Local Machine x64-Debug configuration.
 
 ## Important Note
-The source code for the C++ Client and Java Server can be found in separate branches. The C++ Client is in branch client, while the Java Server is in branch server.
+The source code for the C++ Client and Java Server can be found in separate branches. The C++ Client is in branch `client`, while the Java Server is in branch `server`.
