@@ -22,6 +22,10 @@ public:
 
     void sendCommand(const char* command);
 
+    void setSimulation(Simulation* sim) {
+        simulation = sim;
+    }
+
 private:
     Simulation* simulation;
 
@@ -35,6 +39,7 @@ private:
     void heartbeat();
     void listen();
     void processReceivedData(const std::string& receivedData);
+
 };
 
 #endif // NETWORKMANAGER_H

@@ -16,6 +16,7 @@
 class Simulation {
 private:
     std::vector<std::pair<double, double>> serverParticles;
+    std::vector<std::pair<double, double>> clientParticles;
     std::vector<Particle> particles;
     std::vector<Wall> walls;
     ctpl::thread_pool threadPool;
@@ -43,7 +44,11 @@ public:
     Sprite getSprite();
 
     void addServerParticle(double x, double y);
+    void setServerParticles(const std::vector<std::pair<double, double>>& particleList);
+    void updateClientParticles();
+    std::vector<std::pair<double, double>> getClientParticles();
     std::vector<std::pair<double, double>> getServerParticles();
+    void clearClientParticles();
 };
 
 #endif

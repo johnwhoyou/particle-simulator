@@ -95,17 +95,12 @@ void MainGUI::displayCanvas() {
 
 		float scaledWidth = 1280 / 33;
 		float scaledHeight = 720 / 19;
-		auto serverParticles = simulation->getServerParticles();
-		for (const auto& particle : serverParticles) {
-			if (particle.first >= sprite.getX() - 16 && particle.first <= sprite.getX() + 16 && particle.second >= sprite.getY() - 9 && particle.second <= sprite.getY() + 9) {				
-				float adjustedPosX = 640 + (particle.first - sprite.getX()) * scaledWidth;
-				float adjustedPosY = 360 + (particle.second - sprite.getY()) * scaledHeight;
-
-				ImVec2 pos = ImVec2(canvas_p0.x + adjustedPosX, canvas_p0.y + (canvas_sz.y - adjustedPosY));
-				ImVec2 squareSize = ImVec2(scaledWidth, scaledHeight);
-				ImVec2 bottomRight = ImVec2(pos.x + squareSize.x, pos.y + squareSize.y);
-				draw_list->AddRectFilled(pos, bottomRight, IM_COL32(255, 255, 0, 255));
-			}
+		auto clientParticles = simulation->getClientParticles();
+		for (const auto& particle : clientParticles) {
+			ImVec2 pos = ImVec2(canvas_p0.x + particle.first , canvas_p0.y + (canvas_sz.y - particle.second));
+			ImVec2 squareSize = ImVec2(scaledWidth, scaledHeight);
+			ImVec2 bottomRight = ImVec2(pos.x + squareSize.x, pos.y + squareSize.y);
+			draw_list->AddRectFilled(pos, bottomRight, IM_COL32(255, 255, 0, 255));
 		}
 
 		for (const auto& wall : simulation->getWalls()) {

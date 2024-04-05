@@ -1,4 +1,5 @@
 #include "Simulation.h"
+#include <iostream>
 
 void Simulation::update(double deltaTime) {
     size_t totalParticles = particles.size();
@@ -172,8 +173,26 @@ void Simulation::handleCollision(Particle& particle, const Wall& wall) {
 }
 
 void Simulation::addServerParticle(double x, double y) {
-    serverParticles.emplace_back(x, y);
+    std::pair<double, double> newPair = std::make_pair(x,y);
+    serverParticles.emplace_back(newPair);
 }
+
+void Simulation::setServerParticles(const std::vector<std::pair<double, double>>& particleList) {
+    serverParticles = particleList;
+}
+
+void Simulation::updateClientParticles() {
+    clientParticles = serverParticles;
+}
+
 std::vector<std::pair<double, double>> Simulation::getServerParticles() {
     return serverParticles;
+}
+
+std::vector<std::pair<double, double>> Simulation::getClientParticles() {
+    return clientParticles;
+}
+
+void Simulation::clearClientParticles() {
+    clientParticles.clear();
 }

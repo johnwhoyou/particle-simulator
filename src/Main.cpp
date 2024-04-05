@@ -6,7 +6,7 @@
 #include "NetworkManager.h"
 #undef main
 
-const char* SERVER_ADDRESS = "172.29.64.90";
+const char* SERVER_ADDRESS = "172.29.118.133";
 const int SERVER_TCP_PORT = 3000;
 const int SERVER_UDP_PORT = 8000;
 
@@ -64,6 +64,7 @@ int main()
     MainGUI simulatorGUI;
     simulatorGUI.Init(window, renderer, texture);
     simulatorGUI.setSimulation(&simulation);
+    netManager.setSimulation(&simulation);
 
     auto lastFrameTime = std::chrono::high_resolution_clock::now();
     auto startTime = std::chrono::high_resolution_clock::now();
@@ -116,6 +117,7 @@ int main()
         lastFrameTime = now;
 
         //simulation.update(deltaTime);
+        simulation.updateClientParticles();
 
         auto elapsedSeconds = std::chrono::duration<double>(now - startTime).count();
 
@@ -129,6 +131,7 @@ int main()
         simulatorGUI.NewFrame(window);
         simulatorGUI.Update(frameRate);
         simulatorGUI.Render();
+        // simulation.clearClientParticles();
         SDL_RenderClear(renderer);
         simulatorGUI.GetDrawData();
         SDL_RenderPresent(renderer);

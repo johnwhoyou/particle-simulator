@@ -1,4 +1,5 @@
 #include "NetworkManager.h"
+#include <iostream>
 
 std::thread listeningThread;
 std::thread heartbeatThread;
@@ -136,15 +137,19 @@ void NetworkManager::processReceivedData(const std::string& receivedData) {
     }
 
     if (document.HasMember("particles") && document["particles"].IsArray()) {
+        std::vector<std::pair<double, double>> serverParticles;
+
         const rapidjson::Value& particlesArray = document["particles"];
         for (rapidjson::SizeType i = 0; i < particlesArray.Size(); ++i) {
             const rapidjson::Value& particleObject = particlesArray[i];
             if (particleObject.IsObject()) {
                 double x = particleObject["x"].GetDouble();
                 double y = particleObject["y"].GetDouble();
-                simulation->addServerParticle(x, y);
+                std::pair<double, double> newPair = std::make_pair(x, y);
+                serverParticles.emplace_back(newPair);
             }
         }
+        simulation->setServerParticles(serverParticles);
     }
 
     if (document.HasMember("sprites") && document["sprites"].IsArray()) {
