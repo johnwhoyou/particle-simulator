@@ -244,7 +244,10 @@ public class ParticleSimulatorController implements ActionListener {
                                     Sprite otherSprite = allSprites.get(j);
                                     if (j != clientIndex) {
                                         if (otherSprite.getX() >= sprite.getX() - 16 && otherSprite.getX() <= sprite.getX() + 16 && otherSprite.getY() >= sprite.getY() - 9 && otherSprite.getY() <= sprite.getY() + 9) {
-                                            filteredSprites.add(otherSprite);
+                                            double adjustedPosX = 640 + (otherSprite.getX() - sprite.getX()) * scaledWidth;
+                                            double adjustedPosY = 360 + (otherSprite.getY() - sprite.getY()) * scaledHeight;
+
+                                            filteredSprites.add(new Sprite(otherSprite.getId(), adjustedPosX, adjustedPosY));
                                         }
                                     }
                                 }
