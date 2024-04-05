@@ -196,3 +196,20 @@ std::vector<std::pair<double, double>> Simulation::getClientParticles() {
 void Simulation::clearClientParticles() {
     clientParticles.clear();
 }
+
+void Simulation::setServerSprites(const std::vector<Sprite>& spriteList) {
+    serverSprites = spriteList;
+}
+
+void Simulation::updateClientSprites() {
+    clientSprites = serverSprites;
+}
+
+void Simulation::updateClient() {
+    updateClientParticles();
+    updateClientSprites();
+}
+
+std::vector<Sprite> Simulation::getClientSprites() {
+    return clientSprites;
+}

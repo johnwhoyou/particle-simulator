@@ -20,7 +20,7 @@ public:
     
 private:
     double x, y;
-    const double STEP = 5;
+    double STEP = 5;
 };
 
 #endif

@@ -117,8 +117,8 @@ int main()
         lastFrameTime = now;
 
         //simulation.update(deltaTime);
-        simulation.updateClientParticles();
-
+        simulation.updateClient();
+        
         auto elapsedSeconds = std::chrono::duration<double>(now - startTime).count();
 
         if (elapsedSeconds >= 0.5) {

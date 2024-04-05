@@ -4,11 +4,10 @@
 Client
 - [X] connect to server - carlo
 - [X] send own sprite data to server - carlo
-- [ ] receive other sprite data from server - carlo
-- [ ] receive filtered particle data from server - carlo
-- [ ] render the filtered particles - aless
-- [ ] render the other spritese - aless
-
+- [X] receive other sprite data from server - carlo
+- [X] receive filtered particle data from server - carlo
+- [X] render the filtered particles - aless
+- [ ] render the other sprites - aless
 
 ## About the Project
 This project aims to apply distributed computing concepts by implementing a concurrently programmed particle physics simulator. To achieve this, a multithreaded C++ application was developed to showcase an interface that can allow users to render particles into the simulation. The application makes use of the Dear ImGui library for its graphical user interface, as well as SDL2 for its rendering functionalities.

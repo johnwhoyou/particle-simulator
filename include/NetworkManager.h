@@ -3,6 +3,7 @@
 
 #include "Simulation.h"
 #include "SDL_net.h"
+#include "Sprite.h"
 #include <string>
 #include <thread>
 #include <iostream>

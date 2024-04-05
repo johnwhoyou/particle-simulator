@@ -1,12 +1,11 @@
 #include "NetworkManager.h"
-#include <iostream>
 
 std::thread listeningThread;
 std::thread heartbeatThread;
 std::atomic<bool> listening{false};
 std::atomic<bool> isRunning{false};
 
-const int PACKET_SIZE = 512;
+const int PACKET_SIZE = 16384;
 const int CLIENT_PORT = 9000;
 
 NetworkManager::NetworkManager(const std::string& serverIP, Uint16 serverTCPPort, Uint16 serverUDPPort) : tcpSocket(nullptr), udpSocket(nullptr) {
@@ -153,15 +152,18 @@ void NetworkManager::processReceivedData(const std::string& receivedData) {
     }
 
     if (document.HasMember("sprites") && document["sprites"].IsArray()) {
+        std::vector<Sprite> serverSprites;
+
         const rapidjson::Value& spritesArray = document["sprites"];
         for (rapidjson::SizeType i = 0; i < spritesArray.Size(); ++i) {
             const rapidjson::Value& spriteObject = spritesArray[i];
             if (spriteObject.IsObject()) {
                 double x = spriteObject["x"].GetDouble();
                 double y = spriteObject["y"].GetDouble();
-                // Create or update sprite objects based on the received data
-                // ...
+                Sprite newSprite(x, y);
+                serverSprites.emplace_back(newSprite);
             }
         }
+        simulation->setServerSprites(serverSprites);
     }
 }

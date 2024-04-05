@@ -15,6 +15,8 @@
 
 class Simulation {
 private:
+    std::vector<Sprite> serverSprites;
+    std::vector<Sprite> clientSprites;
     std::vector<std::pair<double, double>> serverParticles;
     std::vector<std::pair<double, double>> clientParticles;
     std::vector<Particle> particles;
@@ -49,6 +51,11 @@ public:
     std::vector<std::pair<double, double>> getClientParticles();
     std::vector<std::pair<double, double>> getServerParticles();
     void clearClientParticles();
+
+    std::vector<Sprite> getClientSprites();
+    void setServerSprites(const std::vector<Sprite>& spriteList);
+    void updateClientSprites();
+    void updateClient();
 };
 
 #endif

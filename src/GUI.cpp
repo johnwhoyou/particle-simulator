@@ -130,11 +130,14 @@ void MainGUI::displayCanvas() {
 						draw_list->AddRectFilled(ImVec2(canvas_p0.x, pos1.y + 1), ImVec2(canvas_p0.x + canvas_sz.x, canvas_p0.y + canvas_sz.y), IM_COL32(0, 0, 0, 255));
 			}
 		}
-
+		
 		if (texture) {
 			ImVec2 spriteSize = ImVec2(55.0f, 55.0f);
-			ImVec2 spritePos = ImVec2(canvas_p0.x + 640 - (spriteSize.x / 2), canvas_p0.y + 360 - (spriteSize.y / 2));
-			draw_list->AddImage((void*)texture, spritePos, ImVec2(spritePos.x + spriteSize.x, spritePos.y + spriteSize.y));
+			auto clientSprites = simulation->getClientSprites();
+			for (const auto& sprite : clientSprites) {
+				ImVec2 spritePos = ImVec2(canvas_p0.x + sprite.getX() - (spriteSize.x / 2), canvas_p0.y + sprite.getY() - (spriteSize.y / 2));
+				draw_list->AddImage((void*)texture, spritePos, ImVec2(spritePos.x + spriteSize.x, spritePos.y + spriteSize.y));
+			}
 		}
 	}
 
