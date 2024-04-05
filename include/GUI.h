@@ -25,9 +25,9 @@ public:
 		simulation = sim;
 	}
 	
-	void setNetManager(NetworkManager* netManager) {
-		netManager = netManager;
-	}
+	void setNetworkManager(NetworkManager* manager) {
+        netManager = manager;
+    }
 
 private:
 	void displayCanvas();

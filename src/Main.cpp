@@ -63,6 +63,7 @@ int main()
     simulation.initializeCanvasBoundaries();
     MainGUI simulatorGUI;
     simulatorGUI.Init(window, renderer, texture);
+    simulatorGUI.setNetworkManager(&netManager);
     simulatorGUI.setSimulation(&simulation);
     netManager.setSimulation(&simulation);
 
