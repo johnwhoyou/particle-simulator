@@ -130,7 +130,7 @@ void MainGUI::displayCanvas() {
 						draw_list->AddRectFilled(ImVec2(canvas_p0.x, pos1.y + 1), ImVec2(canvas_p0.x + canvas_sz.x, canvas_p0.y + canvas_sz.y), IM_COL32(0, 0, 0, 255));
 			}
 		}
-		
+
 		if (texture) {
 			ImVec2 spriteSize = ImVec2(55.0f, 55.0f);
 			auto clientSprites = simulation->getClientSprites();
@@ -157,7 +157,7 @@ void MainGUI::displayBottomDetails(double frameRate) {
 	ImGui::SameLine();
 	ImGui::Dummy(ImVec2(16, 0));
 	ImGui::SameLine();
-	ImGui::Text("Particle Count: %zu", simulation->getClientParticles().size());
+	ImGui::Text("Particle Count: %zu", simulation->getParticles().size());
 	ImGui::SameLine();
 	ImGui::Dummy(ImVec2(16, 0));
 
