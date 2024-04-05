@@ -3,16 +3,15 @@
 ## TO-DO
 Server
 - [x] remove walls - ibz
-- [x] accept connections from clients continouously - ibz
+- [x] accept connections from clients continuously - ibz
 - [x] create sprite classes - shaun
 - [x] spawn/render sprites on screen when clients connect - shaun
 - [x] make sprites disappear when client disconnect - shaun
 - [x] assign client IDs to new clients - shaun
 - [x] receive sprite location/data from client - ibz
-- [ ] send filtered particle data to clients - ibz
-- [ ] send other sprite data to clients - ibz
-- [ ] fixing boundaries of sprite movement (right and bottom) - shaun
-
+- [x] fixing boundaries of sprite movement (right and bottom) - shaun
+- [x] send filtered particle data to clients - ibz
+- [x] send other sprite data to clients - ibz
 
 ## About the Project
 This project aims to apply distributed computing concepts by implementing a concurrently programmed particle physics simulator. To achieve this, a multithreaded C++ application was developed to showcase an interface that can allow users to render particles into the simulation. The application makes use of the Dear ImGui library for its graphical user interface, as well as SDL2 for its rendering functionalities.
