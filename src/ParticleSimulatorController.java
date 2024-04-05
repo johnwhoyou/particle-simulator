@@ -66,7 +66,7 @@ public class ParticleSimulatorController implements ActionListener {
         startAcceptingConnections();
         startReceivingData();
         startSendingData();
-        startSendingSpriteData();
+        //startSendingSpriteData();
 
         System.out.println("Server is running...");
 
