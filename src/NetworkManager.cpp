@@ -142,9 +142,7 @@ void NetworkManager::processReceivedData(const std::string& receivedData) {
             if (particleObject.IsObject()) {
                 double x = particleObject["x"].GetDouble();
                 double y = particleObject["y"].GetDouble();
-                double radius = particleObject["radius"].GetDouble();
-                // Create or update particle objects based on the received data
-                // ...
+                simulation->addServerParticle(x, y);
             }
         }
     }

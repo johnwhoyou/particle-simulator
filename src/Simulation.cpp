@@ -170,3 +170,10 @@ bool Simulation::checkCollision(const Particle& particle, const Wall& wall, doub
 void Simulation::handleCollision(Particle& particle, const Wall& wall) {
     particle.bounceOffWall(wall);
 }
+
+void Simulation::addServerParticle(double x, double y) {
+    serverParticles.emplace_back(x, y);
+}
+std::vector<std::pair<double, double>> Simulation::getServerParticles() {
+    return serverParticles;
+}

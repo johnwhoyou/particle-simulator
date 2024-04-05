@@ -115,7 +115,7 @@ int main()
         auto deltaTime = std::chrono::duration_cast<std::chrono::duration<double>>(now - lastFrameTime).count();
         lastFrameTime = now;
 
-        simulation.update(deltaTime);
+        //simulation.update(deltaTime);
 
         auto elapsedSeconds = std::chrono::duration<double>(now - startTime).count();
 

@@ -1,6 +1,7 @@
 #ifndef NETWORKMANAGER_H
 #define NETWORKMANAGER_H
 
+#include "Simulation.h"
 #include "SDL_net.h"
 #include <string>
 #include <thread>
@@ -22,6 +23,8 @@ public:
     void sendCommand(const char* command);
 
 private:
+    Simulation* simulation;
+
     IPaddress serverUDPIP;
     IPaddress serverTCPIP;
     TCPsocket tcpSocket;

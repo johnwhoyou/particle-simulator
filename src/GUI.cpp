@@ -95,11 +95,11 @@ void MainGUI::displayCanvas() {
 
 		float scaledWidth = 1280 / 33;
 		float scaledHeight = 720 / 19;
-
-		for (const auto& particle : particles) {
-			if (particle.getX() >= sprite.getX() - 16 && particle.getX() <= sprite.getX() + 16 && particle.getY() >= sprite.getY() - 9 && particle.getY() <= sprite.getY() + 9) {				
-				float adjustedPosX = 640 + (particle.getX() - sprite.getX()) * scaledWidth;
-				float adjustedPosY = 360 + (particle.getY() - sprite.getY()) * scaledHeight;
+		auto serverParticles = simulation->getServerParticles();
+		for (const auto& particle : serverParticles) {
+			if (particle.first >= sprite.getX() - 16 && particle.first <= sprite.getX() + 16 && particle.second >= sprite.getY() - 9 && particle.second <= sprite.getY() + 9) {				
+				float adjustedPosX = 640 + (particle.first - sprite.getX()) * scaledWidth;
+				float adjustedPosY = 360 + (particle.second - sprite.getY()) * scaledHeight;
 
 				ImVec2 pos = ImVec2(canvas_p0.x + adjustedPosX, canvas_p0.y + (canvas_sz.y - adjustedPosY));
 				ImVec2 squareSize = ImVec2(scaledWidth, scaledHeight);
