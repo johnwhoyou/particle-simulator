@@ -176,7 +176,8 @@ public class ParticleSimulatorController implements ActionListener {
                         }
                     }
 
-                    model.moveSpriteWithIndex(clientIndex, receivedMessage);
+                    int clientId = clients.get(clientIndex).getClientId();
+                    model.moveSpriteWithId(clientId, receivedMessage);
                     receiveData = new byte[512];
                 }
             } catch (Exception e) {
