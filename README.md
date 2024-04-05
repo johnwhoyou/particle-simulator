@@ -1,4 +1,4 @@
-# Problem Set #3: Particle Simulator
+# Problem Set #3: Distributed Particle Simulator
 
 ## About the Project
 This project aims to apply distributed computing concepts by implementing a distributed particle physics simulator. To achieve this, a Java Server as well as a C++ Client application were developed to showcase an interface that can allow users to render particles into the simulation. The C++ Client application makes use of the Dear ImGui library for its graphical user interface, as well as SDL2 for its rendering functionalities. Meanwhile, the Java Server application utilizes the Java Swing library for the user interface and rendering. 
