@@ -9,6 +9,8 @@ import javax.imageio.*;
 public class Sprite {
     private transient int id; //Sprite ID
     private double x, y; //Position of Sprite
+    private final int WIDTH = 30;   //Change to scaled value
+    private final int HEIGHT = 40;  //Change to scaled value
     private transient final double STEP = 5;
     private transient BufferedImage img;
 
@@ -43,7 +45,7 @@ public class Sprite {
     }
 
     public void moveUp(){
-        if (this.y + STEP < 720){
+        if ((this.y - (HEIGHT / 2)) + STEP < 720){
             y += STEP;
         }
         else{
@@ -52,7 +54,7 @@ public class Sprite {
     }
 
     public void moveDown(){
-        if (this.y - STEP > 0){
+        if ((this.y - (HEIGHT / 2)) - STEP > 0){
             y -= STEP;
         }
         else{
@@ -61,7 +63,7 @@ public class Sprite {
     }
 
     public void moveLeft(){
-        if (this.x + STEP > 0){
+        if ((this.x + (WIDTH / 2)) - STEP > 0){
             x -= STEP;
         }
         else{
@@ -70,7 +72,7 @@ public class Sprite {
     }
 
     public void moveRight(){
-        if (this.x + STEP < 1280){
+        if ((this.x + (WIDTH / 2)) + STEP < 1280){
             x += STEP;
         }
         else{
@@ -86,6 +88,6 @@ public class Sprite {
     public void draw(Graphics g) {
         //scale to be fixed
         double adjustedY = ParticleSimulatorController.CANVAS_HEIGHT - y;
-        g.drawImage(this.img, (int) this.x, (int) adjustedY, 30, 40,  null);
+        g.drawImage(this.img, (int) this.x, (int) adjustedY, WIDTH, HEIGHT,  null);
     }
 }
