@@ -8,6 +8,7 @@
 #include <iostream>
 
 #include "Simulation.h"
+#include "NetworkManager.h"
 
 class MainGUI {
 public:
@@ -22,6 +23,10 @@ public:
 
 	void setSimulation(Simulation* sim) {
 		simulation = sim;
+	}
+	
+	void setNetManager(NetworkManager* netManager) {
+		netManager = netManager;
 	}
 
 private:
@@ -38,6 +43,7 @@ private:
 	void centerElement(float width);
 
 	Simulation* simulation;
+	NetworkManager* netManager;
 	bool explorerMode = true;
 	bool spawnedSprite = false;
 	SDL_Texture* texture;

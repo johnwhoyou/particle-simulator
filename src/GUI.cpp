@@ -223,23 +223,32 @@ void MainGUI::displayControlsWindow() {
 		ImGui::Dummy(ImVec2(0, 8));
 
 		centerElement(74.0f);
+		const char* command = nullptr;
 		if (ImGui::ArrowButton("Up", ImGuiDir_Up)) {
 			simulation->moveSprite('U');
+			command = "up";
 		}
 
 		centerElement(180.0f);
 		if (ImGui::ArrowButton("Left", ImGuiDir_Left)) {
 			simulation->moveSprite('L');
+			command = "left";
 		}
 
 		ImGui::SameLine();
 		if (ImGui::ArrowButton("Down", ImGuiDir_Down)) {
 			simulation->moveSprite('D');
+			command = "down";
 		}
 
 		ImGui::SameLine();
 		if (ImGui::ArrowButton("Right", ImGuiDir_Right)) {
 			simulation->moveSprite('R');
+			command = "right";
+		}
+
+		if(command) {
+			netManager->sendCommand(command);
 		}
 
 		ImGui::SetWindowFontScale(1.3f);
