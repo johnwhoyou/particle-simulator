@@ -165,7 +165,7 @@ public class ParticleSimulatorController implements ActionListener {
 
                     String receivedMessage = new String(receivePacket.getData(), 0, receivePacket.getLength());
                     InetAddress receiveAddress = receivePacket.getAddress();
-
+                    System.out.println(receivedMessage);
                     int i = 0;
                     boolean isClientFound = false;
                     int clientIndex = -1;
@@ -174,10 +174,13 @@ public class ParticleSimulatorController implements ActionListener {
                             isClientFound = true;
                             clientIndex = i;
                         }
+                        i++;
                     }
 
-                    int clientId = clients.get(clientIndex).getClientId();
-                    model.moveSpriteWithId(clientId, receivedMessage);
+                    if (isClientFound && clientIndex != -1) {
+                        int clientId = clients.get(clientIndex).getClientId();
+                        model.moveSpriteWithId(clientId, receivedMessage);
+                    }
                     receiveData = new byte[512];
                 }
             } catch (Exception e) {
