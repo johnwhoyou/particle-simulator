@@ -7,10 +7,10 @@ import java.util.logging.Logger;
 import javax.imageio.*;
 
 public class Sprite {
-    private int id; //Sprite ID
+    private transient int id; //Sprite ID
     private double x, y; //Position of Sprite
-    private final double STEP = 5;
-    private BufferedImage img;
+    private transient final double STEP = 5;
+    private transient BufferedImage img;
 
     public Sprite(int id, double x, double y){
         this.id = id;

@@ -3,8 +3,8 @@ import java.util.List;
 
 public class Particle {
     private double x, y; // Position
-    private double angle; // Angle in degrees
-    private double velocity; // Velocity in pixels per second
+    private transient double angle; // Angle in degrees
+    private transient double velocity; // Velocity in pixels per second
     private static final int SIZE = 5; // Size of the particle
 
     public Particle(double x, double y, double angle, double velocity) {

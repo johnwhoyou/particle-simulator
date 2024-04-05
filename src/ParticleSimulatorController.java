@@ -31,6 +31,7 @@ public class ParticleSimulatorController implements ActionListener {
     private final ExecutorService sendExecutor;
     private final ExecutorService receiveExecutor;
     private final ExecutorService connectionExecutor;
+    private final ExecutorService sendSpritesExecutor;
 
     private final int SERVER_PORT = 8000;
     private final int SERVER_PORT_2 = 3000;
@@ -39,7 +40,7 @@ public class ParticleSimulatorController implements ActionListener {
     DatagramSocket serverSocket;
 
 
-    private static List<ClientHandler> clients = new ArrayList<>();
+    private static List<ClientHandler> clients = new CopyOnWriteArrayList<>();
     private static int clientIdCounter = 0;
    
     public ParticleSimulatorController() {
@@ -57,12 +58,15 @@ public class ParticleSimulatorController implements ActionListener {
         sendExecutor = Executors.newSingleThreadExecutor();
         receiveExecutor = Executors.newSingleThreadExecutor();
         connectionExecutor = Executors.newSingleThreadExecutor();
+        sendSpritesExecutor = Executors.newSingleThreadExecutor();
+
 
         startComputation();
         startRendering();
         startAcceptingConnections();
         startReceivingData();
         startSendingData();
+        startSendingSpriteData();
 
         System.out.println("Server is running...");
 
@@ -254,6 +258,7 @@ public class ParticleSimulatorController implements ActionListener {
                                     socket.send(sendPacket);
                                     //System.out.println(jsonString);
                                 }
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -267,6 +272,56 @@ public class ParticleSimulatorController implements ActionListener {
         };
 
         sendExecutor.submit(sendingTask);
+    }
+
+    public void startSendingSpriteData() {
+        Runnable sendingSpritesTask = () -> {
+            try {
+                DatagramSocket socket = new DatagramSocket();
+                double scaledWidth = 1280.0 / 33.0;
+                double scaledHeight = 720.0 / 19.0;
+
+                // Create a thread pool to manage threads for each client
+                ExecutorService clientExecutor = Executors.newFixedThreadPool(clients.size());
+
+                while (true) {
+                    for (int i = 0; i < clients.size(); i++) {
+                        final int clientId = i;
+                        clientExecutor.submit(() -> {
+                            try {
+                                List<Sprite> otherSprites = new ArrayList<>();
+                                List<Sprite> allSprites = model.getSprites();
+                                for (int j = 0; j < allSprites.size(); j++) {
+                                    if (j != clientId) {
+                                        otherSprites.add(allSprites.get(j));
+                                    }
+                                }
+
+                                if (!otherSprites.isEmpty()) {
+                                    // serialize other sprites
+                                    Gson gson = new Gson();
+                                    String jsonString = gson.toJson(otherSprites);
+                                    byte[] sendData = jsonString.getBytes();
+
+                                    // send filtered particles to clients
+                                    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, clients.get(clientId).getClientAddress(), CLIENT_PORT);
+                                    socket.send(sendPacket);
+                                    //System.out.println(jsonString);
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        };
+
+        sendSpritesExecutor.submit(sendingSpritesTask);
     }
 
     
