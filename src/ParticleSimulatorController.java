@@ -5,11 +5,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -62,7 +58,7 @@ public class ParticleSimulatorController implements ActionListener {
         startRendering();
         startAcceptingConnections();
         startReceivingData();
-        startSendingData();
+        //startSendingData();
 
         System.out.println("Server is running...");
 
@@ -282,6 +278,9 @@ public class ParticleSimulatorController implements ActionListener {
 
     public void startComputation() {
         double deltaTime = 1.0 / framesPerSecond;
+        double scaledWidth = 1280.0 / 33.0;
+        double scaledHeight = 720.0 / 19.0;
+        ExecutorService clientExecutor = Executors.newFixedThreadPool(3);
 
         // Define the simulation task
         Runnable computationTask = () -> {
@@ -290,6 +289,50 @@ public class ParticleSimulatorController implements ActionListener {
                     semaphore.acquire();
                     model.moveParticles(deltaTime);
                     semaphore.release();
+
+                    for (int i = 0; i < clients.size(); i++) {
+                        final int clientId = i;
+                        clientExecutor.submit(() -> {
+                            try {
+                                DatagramSocket socket = new DatagramSocket();
+
+                                Sprite sprite = model.getSprites().get(clientId);
+                                List<Particle> filteredParticles = new ArrayList<>();
+
+                                for (Particle particle : model.getParticles()) {
+                                    if (particle.getX() >= sprite.getX() - 16 && particle.getX() <= sprite.getX() + 16 && particle.getY() >= sprite.getY() - 9 && particle.getY() <= sprite.getY() + 9) {
+                                        double adjustedPosX = 640 + (particle.getX() - sprite.getX()) * scaledWidth;
+                                        double adjustedPosY = 360 + (particle.getY() - sprite.getY()) * scaledHeight;
+                                        filteredParticles.add(new Particle(adjustedPosX, adjustedPosY));
+                                    }
+                                }
+
+                                List<Sprite> otherSprites = new ArrayList<>();
+                                List<Sprite> allSprites = model.getSprites();
+                                for (int j = 0; j < allSprites.size(); j++) {
+                                    if (j != clientId) {
+                                        otherSprites.add(allSprites.get(j));
+                                    }
+                                }
+
+                                MessageObject message = new MessageObject(filteredParticles, otherSprites);
+
+                                // serialize filtered particles
+                                Gson gson = new Gson();
+                                String jsonString = gson.toJson(message);
+                                byte[] sendData = jsonString.getBytes();
+
+                                // send filtered particles to clients
+                                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, clients.get(clientId).getClientAddress(), CLIENT_PORT);
+                                socket.send(sendPacket);
+                                //System.out.println(jsonString);
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    }
+
                     Thread.sleep((long) (deltaTime * 1000)); // Sleep to control the simulation speed
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
