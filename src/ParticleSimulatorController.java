@@ -234,15 +234,21 @@ public class ParticleSimulatorController implements ActionListener {
                                     }
                                 }
 
-                                List<Sprite> otherSprites = new ArrayList<>();
+                                List<Sprite> filteredSprites = new ArrayList<>();
 
-                                for (int j = 0; j < allSprites.size(); j++) {
-                                    if (allSprites.get(j).getId() != clientId) {
-                                        otherSprites.add(allSprites.get(j));
+                                for(int j = 0; j < allSprites.size(); j++) {
+                                    Sprite otherSprite = allSprites.get(j);
+                                    if (otherSprite.getId() != clientId) {
+                                        if (otherSprite.getX() >= sprite.getX() - 16 && otherSprite.getX() <= sprite.getX() + 16 && otherSprite.getY() >= sprite.getY() - 9 && otherSprite.getY() <= sprite.getY() + 9) {
+                                            double adjustedPosX = 640 + (otherSprite.getX() - sprite.getX()) * scaledWidth;
+                                            double adjustedPosY = 360 + (otherSprite.getY() - sprite.getY()) * scaledHeight;
+
+                                            filteredSprites.add(new Sprite(otherSprite.getId(), adjustedPosX, adjustedPosY));
+                                        }
                                     }
                                 }
 
-                                MessageObject message = new MessageObject(filteredParticles, otherSprites);
+                                MessageObject message = new MessageObject(filteredParticles, filteredSprites);
 
                                 // serialize filtered particles
                                 Gson gson = new Gson();
