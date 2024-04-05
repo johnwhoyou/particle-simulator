@@ -1,27 +1,15 @@
 # Problem Set #2: Particle Simulator
 
 ## About the Project
-This project aims to apply distributed computing concepts by implementing a concurrently programmed particle physics simulator. To achieve this, a multithreaded C++ application was developed to showcase an interface that can allow users to render particles into the simulation. The application makes use of the Dear ImGui library for its graphical user interface, as well as SDL2 for its rendering functionalities.
+This project aims to apply distributed computing concepts by implementing a concurrently programmed particle physics simulator. To achieve this, a multithreaded C++ application was developed to showcase an interface allowing users to render particles into the simulation. The application uses the Java Swing library for its graphical user interface and rendering. For server-client communication, the application implements a hybrid TCP/UDP approach wherein events such as sprite and particle movement are sent through UDP protocol. However, to check for active client connections, TCP protocol is used through a heartbeat mechanism.
 
-The application has two modes that the user can toggle between: Developer Mode and Explorer Mode.
-
-The main features of the application's Developer Mode include adding a single particle, batch adding particles with varying spawn points, batch adding particles with varying angles, and batch adding particles with varying velocities. Through these features, users will be able to perform the entire simulation on a 1280 x 720 canvas, witnessing the particles' movements as they collide against the edges of the canvas.
-
-On the other hand, the application's Explorer Mode allows the user to explore the simulation environment by controlling the movement of a sprite using the keyboard or on-screen arrow buttons. The sprite can be moved in all of the four cardinal directions, and a zoomed in 33 x 19 grid serves as the sprite's periphery. Particles or edges that fall within this periphery are rendered until they go out of view.
+The server application is in Developer mode allowing a user to add a single particle, batch-adding particles with varying spawn points, batch-adding particles with varying angles, and batch-adding particles with varying velocities.
 
 ## How to Run the Project
 1. Clone the repository to your local machine.
-2. Ensure that you have CMake installed (at least version 3.14).
-3. Ensure that you have the `vcpkg` package manager installed in your Visual Studio environment. This can be checked using the Visual Studio installer.
-4. Enter the command `vcpkg install` to install the following dependencies required by the project:
-	- imgui
-	- SDL2
-	- SDL2-Image
-	- libpng
-	- zlib
-5. Once the project is open in VS, open a Developer Powershell terminal and enter the command `vcpkg integrate install` to enable library linking.
-6. Build the project.
-7. Run the project by running the `Main.cpp` file or the `ParticleSimulatorApp` executable that will appear on the Startup Item dropdown. Make sure to use the Local Machine x64-Debug configuration.
+2. Ensure that you have Java JDK 19 or earlier.
+3. Ensure that `gson-2.10.1.jar` is listed as a dependency. To check, go to File > Project Settings > Modules > particle-simulator > Dependencies.
+6. Build and run the project.
 
 ## Important Note
-The source code for the C++ Client and Java Server can be found in separate branches. The C++ Client is in branch client, while the Java Server is in branch server. 
+The source code for the C++ Client is found in `client` branch.
