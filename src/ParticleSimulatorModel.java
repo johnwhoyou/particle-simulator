@@ -73,8 +73,9 @@ public class ParticleSimulatorModel {
                         sprites.get(i).moveRight();
                         break;
                 }
-
+                isSpriteFound = true;
             }
+            i++;
         }
     }
 
