@@ -10,7 +10,7 @@ public class Sprite {
     private transient int id; //Sprite ID
     private double x, y; //Position of Sprite
     private final int WIDTH = 30;   //Change to scaled value
-    private final int HEIGHT = 40;  //Change to scaled value
+    private final int HEIGHT = 30;  //Change to scaled value
     private transient final double STEP = 5;
     private transient BufferedImage img;
 
