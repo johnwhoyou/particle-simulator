@@ -1,18 +1,5 @@
 # Problem Set #2: Particle Simulator
 
-## TO-DO
-Server
-- [x] remove walls - ibz
-- [x] accept connections from clients continuously - ibz
-- [x] create sprite classes - shaun
-- [x] spawn/render sprites on screen when clients connect - shaun
-- [x] make sprites disappear when client disconnect - shaun
-- [x] assign client IDs to new clients - shaun
-- [x] receive sprite location/data from client - ibz
-- [x] fixing boundaries of sprite movement (right and bottom) - shaun
-- [x] send filtered particle data to clients - ibz
-- [x] send other sprite data to clients - ibz
-
 ## About the Project
 This project aims to apply distributed computing concepts by implementing a concurrently programmed particle physics simulator. To achieve this, a multithreaded C++ application was developed to showcase an interface that can allow users to render particles into the simulation. The application makes use of the Dear ImGui library for its graphical user interface, as well as SDL2 for its rendering functionalities.
 
@@ -26,15 +13,15 @@ On the other hand, the application's Explorer Mode allows the user to explore th
 1. Clone the repository to your local machine.
 2. Ensure that you have CMake installed (at least version 3.14).
 3. Ensure that you have the `vcpkg` package manager installed in your Visual Studio environment. This can be checked using the Visual Studio installer.
-4. Once the project is open in VS, open a Developer Powershell terminal and enter the command `vcpkg integrate install` to enable library linking.
-5. Enter the command `vcpkg install` to install the following dependencies required by the project:
+4. Enter the command `vcpkg install` to install the following dependencies required by the project:
 	- imgui
 	- SDL2
 	- SDL2-Image
 	- libpng
 	- zlib
+5. Once the project is open in VS, open a Developer Powershell terminal and enter the command `vcpkg integrate install` to enable library linking.
 6. Build the project.
 7. Run the project by running the `Main.cpp` file or the `ParticleSimulatorApp` executable that will appear on the Startup Item dropdown. Make sure to use the Local Machine x64-Debug configuration.
 
 ## Important Note
-The single-threaded and multi-threaded implementations of the project can be found in separate branches. The single-threaded version is in branch main, while the other is in branch multithreaded.
+The source code for the C++ Client and Java Server can be found in separate branches. The C++ Client is in branch client, while the Java Server is in branch server. 
