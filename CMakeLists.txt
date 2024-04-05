@@ -54,6 +54,9 @@ target_link_libraries(ParticleSimulatorApp PRIVATE
     ParticleSimulator
 )
 
+find_package(RapidJSON CONFIG REQUIRED)
+target_link_libraries(ParticleSimulatorApp PRIVATE rapidjson)
+
 # Copy DLLs to the output directory
 #add_custom_command(TARGET ParticleSimulator POST_BUILD
 #	COMMAND ${CMAKE_COMMAND} -E copy_if_different

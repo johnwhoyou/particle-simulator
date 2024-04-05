@@ -2,12 +2,14 @@
 #define NETWORKMANAGER_H
 
 #include "SDL_net.h"
-#include "json.hpp"
 #include <string>
 #include <thread>
 #include <iostream>
 #include <atomic>
 #include <chrono>
+#include <rapidjson/document.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/writer.h>
 
 class NetworkManager {
 public:
@@ -29,6 +31,7 @@ private:
 
     void heartbeat();
     void listen();
+    void processReceivedData(const std::string& receivedData);
 };
 
 #endif // NETWORKMANAGER_H

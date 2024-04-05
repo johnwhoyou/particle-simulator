@@ -7,8 +7,6 @@ std::atomic<bool> isRunning{false};
 
 const int PACKET_SIZE = 512;
 const int CLIENT_PORT = 9000;
-const int HEARTBEAT_INTERVAL = 1000;
-
 
 NetworkManager::NetworkManager(const std::string& serverIP, Uint16 serverTCPPort, Uint16 serverUDPPort) : tcpSocket(nullptr), udpSocket(nullptr) {
     if (SDLNet_Init() == -1) {
@@ -89,9 +87,6 @@ void NetworkManager::heartbeat() {
             std::cerr << "Heartbeat failed, no response from server" << std::endl;
             break;
         }
-
-
-        //std::this_thread::sleep_for(std::chrono::milliseconds(HEARTBEAT_INTERVAL));
     }
 }
 
@@ -124,8 +119,46 @@ void NetworkManager::listen() {
         if (SDLNet_UDP_Recv(udpSocket, packet)) {
             std::string receivedMessage(reinterpret_cast<char*>(packet->data), packet->len);
             std::cout << "Received message from server: " << receivedMessage << std::endl;
+            processReceivedData(receivedMessage);
         }
 
         SDLNet_FreePacket(packet);
+    }
+}
+
+void NetworkManager::processReceivedData(const std::string& receivedData) {
+    rapidjson::Document document;
+    document.Parse(receivedData.c_str());
+
+    if (document.HasParseError()) {
+        std::cerr << "Error parsing received JSON data" << std::endl;
+        return;
+    }
+
+    if (document.HasMember("particles") && document["particles"].IsArray()) {
+        const rapidjson::Value& particlesArray = document["particles"];
+        for (rapidjson::SizeType i = 0; i < particlesArray.Size(); ++i) {
+            const rapidjson::Value& particleObject = particlesArray[i];
+            if (particleObject.IsObject()) {
+                double x = particleObject["x"].GetDouble();
+                double y = particleObject["y"].GetDouble();
+                double radius = particleObject["radius"].GetDouble();
+                // Create or update particle objects based on the received data
+                // ...
+            }
+        }
+    }
+
+    if (document.HasMember("sprites") && document["sprites"].IsArray()) {
+        const rapidjson::Value& spritesArray = document["sprites"];
+        for (rapidjson::SizeType i = 0; i < spritesArray.Size(); ++i) {
+            const rapidjson::Value& spriteObject = spritesArray[i];
+            if (spriteObject.IsObject()) {
+                double x = spriteObject["x"].GetDouble();
+                double y = spriteObject["y"].GetDouble();
+                // Create or update sprite objects based on the received data
+                // ...
+            }
+        }
     }
 }
