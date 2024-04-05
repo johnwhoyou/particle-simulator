@@ -162,8 +162,6 @@ void MainGUI::displayBottomDetails(double frameRate) {
 	ImGui::SameLine();
 	ImGui::Dummy(ImVec2(16, 0));
 	ImGui::SameLine();
-	ImGui::Text("Particle Count: %zu", simulation->getParticles().size());
-	ImGui::SameLine();
 	ImGui::Dummy(ImVec2(16, 0));
 
 
@@ -173,11 +171,6 @@ void MainGUI::displayBottomDetails(double frameRate) {
 	ImGui::Dummy(ImVec2(16, 0));
 	
 
-	ImGui::SameLine();
-	if (ImGui::Button("Reset")) {
-		simulation->clearParticles();
-		simulation->resetSprite();
-	}
 
 	ImGui::SetWindowFontScale(1.5f);
 
