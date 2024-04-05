@@ -31,7 +31,7 @@ public class ParticleSimulatorController implements ActionListener {
     private final int SERVER_PORT = 8000;
     private final int SERVER_PORT_2 = 3000;
     private final int CLIENT_PORT = 9000;
-    private final int HEARTBEAT_TIMEOUT = 10000; // 5 seconds
+    private final int HEARTBEAT_TIMEOUT = 1000; // 5 seconds
     DatagramSocket serverSocket;
 
 
@@ -86,10 +86,11 @@ public class ParticleSimulatorController implements ActionListener {
                     System.out.println("New client connected.");
                     //System.out.println(clientSocket.getPort());
                     int newClientId = clientIdCounter++;
-                    model.addSprite(newClientId);
+
                     ClientHandler clientHandler = new ClientHandler(clientSocket, newClientId);
 
                     clients.add(clientHandler);
+                    model.addSprite(newClientId);
                     new Thread(clientHandler).start();
                 }
             } catch (Exception e) {
@@ -151,7 +152,7 @@ public class ParticleSimulatorController implements ActionListener {
                 System.out.println("Client disconnected: " + clientSocket.getInetAddress());
                 model.removeSprite(this.clientId);
                 clients.remove(this); // Remove the client handler from the list when the client disconnects
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }
     }   
@@ -226,7 +227,7 @@ public class ParticleSimulatorController implements ActionListener {
                 double scaledHeight = 720.0 / 19.0;
 
                 // Create a thread pool to manage threads for each client
-                ExecutorService clientExecutor = Executors.newFixedThreadPool(clients.size());
+                ExecutorService clientExecutor = Executors.newFixedThreadPool(3);
 
                 while (true) {
                     for (int i = 0; i < clients.size(); i++) {
