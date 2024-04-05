@@ -157,7 +157,7 @@ void MainGUI::displayBottomDetails(double frameRate) {
 	ImGui::SameLine();
 	ImGui::Dummy(ImVec2(16, 0));
 	ImGui::SameLine();
-	ImGui::Text("Particle Count: %zu", simulation->getParticles().size());
+	ImGui::Text("Particle Count: %zu", simulation->getClientParticles().size());
 	ImGui::SameLine();
 	ImGui::Dummy(ImVec2(16, 0));
 
