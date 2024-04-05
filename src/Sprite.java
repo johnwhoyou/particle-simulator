@@ -49,7 +49,7 @@ public class Sprite {
             y += STEP;
         }
         else{
-            y = 720;
+            y = 720 + (HEIGHT / 2);
         }
     }
 
@@ -58,7 +58,7 @@ public class Sprite {
             y -= STEP;
         }
         else{
-            y = 0;
+            y = 0 + (HEIGHT / 2);
         }
     }
 
@@ -67,7 +67,7 @@ public class Sprite {
             x -= STEP;
         }
         else{
-            x = 0;
+            x = 0 - (WIDTH / 2);
         }
     }
 
@@ -76,7 +76,7 @@ public class Sprite {
             x += STEP;
         }
         else{
-            x = 1280;
+            x = 1280 - (WIDTH / 2);
         }
     }
 
