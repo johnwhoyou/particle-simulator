@@ -1,22 +1,9 @@
 # Problem Set #2: Particle Simulator
 
-## TO-DO
-Client
-- [X] connect to server - carlo
-- [X] send own sprite data to server - carlo
-- [X] receive other sprite data from server - carlo
-- [X] receive filtered particle data from server - carlo
-- [X] render the filtered particles - aless
-- [ ] render the other sprites - aless
-
 ## About the Project
-This project aims to apply distributed computing concepts by implementing a concurrently programmed particle physics simulator. To achieve this, a multithreaded C++ application was developed to showcase an interface that can allow users to render particles into the simulation. The application makes use of the Dear ImGui library for its graphical user interface, as well as SDL2 for its rendering functionalities.
+This project aims to apply distributed computing concepts by implementing a concurrently programmed particle physics simulator. To achieve this, a multithreaded C++ application was developed to showcase an interface that can allow users to render particles into the simulation. The application makes use of the Dear ImGui library for its graphical user interface, as well as SDL2 for its rendering functionalities. For client-server communication, the application implements a hybrid TCP/UDP approach.
 
-The application has two modes that the user can toggle between: Developer Mode and Explorer Mode.
-
-The main features of the application's Developer Mode include adding a single particle, batch adding particles with varying spawn points, batch adding particles with varying angles, and batch adding particles with varying velocities. Through these features, users will be able to perform the entire simulation on a 1280 x 720 canvas, witnessing the particles' movements as they collide against the edges of the canvas.
-
-On the other hand, the application's Explorer Mode allows the user to explore the simulation environment by controlling the movement of a sprite using the keyboard or on-screen arrow buttons. The sprite can be moved in all of the four cardinal directions, and a zoomed in 33 x 19 grid serves as the sprite's periphery. Particles or edges that fall within this periphery are rendered until they go out of view.
+The client application is always in Explorer Mode allowing the user to explore the simulation environment by controlling the movement of a sprite using the keyboard or on-screen arrow buttons. The sprite can be moved in all of the four cardinal directions, and a zoomed in 33 x 19 grid serves as the sprite's periphery. Particles or edges that fall within this periphery are rendered until they go out of view.
 
 ## How to Run the Project
 1. Clone the repository to your local machine.
@@ -29,8 +16,10 @@ On the other hand, the application's Explorer Mode allows the user to explore th
 	- SDL2-Image
 	- libpng
 	- zlib
+ 	- SDL-net
+  	- RapidJSON
 6. Build the project.
 7. Run the project by running the `Main.cpp` file or the `ParticleSimulatorApp` executable that will appear on the Startup Item dropdown. Make sure to use the Local Machine x64-Debug configuration.
 
 ## Important Note
-The single-threaded and multi-threaded implementations of the project can be found in separate branches. The single-threaded version is in branch main, while the other is in branch multithreaded.
+The server application is in branch `server` this is required to be running before executing the client application.
