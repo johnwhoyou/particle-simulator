@@ -222,12 +222,12 @@ public class ParticleSimulatorController implements ActionListener {
                     List<Sprite> allSprites = model.getSprites();
                     List<Particle> allParticles = model.getParticles();
                     for (int i = 0; i < allSprites.size(); i++) {
-                        final int clientId = i;
+                        final int clientIndex = i;
                         clientExecutor.submit(() -> {
                             try {
                                 DatagramSocket socket = new DatagramSocket();
 
-                                Sprite sprite = allSprites.get(clientId);
+                                Sprite sprite = allSprites.get(clientIndex);
                                 List<Particle> filteredParticles = new ArrayList<>();
 
                                 for (Particle particle : allParticles) {
@@ -242,7 +242,7 @@ public class ParticleSimulatorController implements ActionListener {
 
                                 for(int j = 0; j < allSprites.size(); j++) {
                                     Sprite otherSprite = allSprites.get(j);
-                                    if (otherSprite.getId() != clientId) {
+                                    if (j != clientIndex) {
                                         if (otherSprite.getX() >= sprite.getX() - 16 && otherSprite.getX() <= sprite.getX() + 16 && otherSprite.getY() >= sprite.getY() - 9 && otherSprite.getY() <= sprite.getY() + 9) {
                                             double adjustedPosX = 640 + (otherSprite.getX() - sprite.getX()) * scaledWidth;
                                             double adjustedPosY = 360 + (otherSprite.getY() - sprite.getY()) * scaledHeight;
@@ -260,7 +260,7 @@ public class ParticleSimulatorController implements ActionListener {
                                 byte[] sendData = jsonString.getBytes();
 
                                 // send filtered particles to clients
-                                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, clients.get(clientId).getClientAddress(), CLIENT_PORT);
+                                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, clients.get(clientIndex).getClientAddress(), CLIENT_PORT);
                                 socket.send(sendPacket);
                                 //System.out.println(jsonString);
 
