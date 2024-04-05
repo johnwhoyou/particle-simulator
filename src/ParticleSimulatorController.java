@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.*;
@@ -28,8 +27,8 @@ public class ParticleSimulatorController implements ActionListener {
     private final ExecutorService receiveExecutor;
     private final ExecutorService connectionExecutor;
 
-    private final int SERVER_PORT = 8000;
-    private final int SERVER_PORT_2 = 3000;
+    private final int SERVER_UDP_PORT = 8000;
+    private final int SERVER_TCP_PORT = 3000;
     private final int CLIENT_PORT = 9000;
     private final int HEARTBEAT_TIMEOUT = 1000; // 5 seconds
     DatagramSocket serverSocket;
@@ -58,7 +57,6 @@ public class ParticleSimulatorController implements ActionListener {
         startRendering();
         startAcceptingConnections();
         startReceivingData();
-        //startSendingData();
 
         System.out.println("Server is running...");
 
@@ -80,7 +78,7 @@ public class ParticleSimulatorController implements ActionListener {
 
         Runnable acceptingConnTask = () -> {
             try {
-                ServerSocket serverSocket = new ServerSocket(SERVER_PORT_2);
+                ServerSocket serverSocket = new ServerSocket(SERVER_TCP_PORT);
                 while (true) {
                     Socket clientSocket = serverSocket.accept();
                     System.out.println("New client connected.");
@@ -136,8 +134,6 @@ public class ParticleSimulatorController implements ActionListener {
                 while (true) {
                     out.println("HEARTBEAT");
                     String response = in.readLine();
-                    //System.out.println("response received");
-                    //System.out.println(response);
                     if (response == null || !response.equals("HEARTBEAT")) {
                         System.out.println("Client disconnected: " + clientSocket.getInetAddress());
                         break;
@@ -161,15 +157,11 @@ public class ParticleSimulatorController implements ActionListener {
  
         Runnable receivingTask = () -> {
             try {
-                serverSocket = new DatagramSocket(SERVER_PORT);
+                serverSocket = new DatagramSocket(SERVER_UDP_PORT);
                 byte[] receiveData = new byte[512];
                 while (true) {
-                    // receive sprite locations
-                    // if address is not yet in list, then add it to the clients array
-                    // if address has note sent a packet in a while, disconnect it
                     DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
                     serverSocket.receive(receivePacket);
-                    System.out.println(receivePacket.getAddress());
 
                     String receivedMessage = new String(receivePacket.getData(), 0, receivePacket.getLength());
                     InetAddress receiveAddress = receivePacket.getAddress();
@@ -185,12 +177,6 @@ public class ParticleSimulatorController implements ActionListener {
                     }
 
                     model.moveSpriteWithIndex(clientIndex, receivedMessage);
-
-                    // get client id of the received packet
-                    // get direction of the received packet
-                    // model.moveSprite(clientId, direction)
-
-                    System.out.println("Received from client: " + receivedMessage);
                     receiveData = new byte[512];
                 }
             } catch (Exception e) {
@@ -219,91 +205,28 @@ public class ParticleSimulatorController implements ActionListener {
         return true;
     }
 
-    public void startSendingData() {
-        Runnable sendingTask = () -> {
-            try {
-                DatagramSocket socket = new DatagramSocket();
-                double scaledWidth = 1280.0 / 33.0;
-                double scaledHeight = 720.0 / 19.0;
-
-                // Create a thread pool to manage threads for each client
-                ExecutorService clientExecutor = Executors.newFixedThreadPool(3);
-
-                while (true) {
-                    for (int i = 0; i < clients.size(); i++) {
-                        final int clientId = i;
-                        clientExecutor.submit(() -> {
-                            try {
-                                Sprite sprite = model.getSprites().get(clientId);
-                                List<Particle> filteredParticles = new ArrayList<>();
-                                for (Particle particle : model.getParticles()) {
-                                    if (particle.getX() >= sprite.getX() - 16 && particle.getX() <= sprite.getX() + 16 && particle.getY() >= sprite.getY() - 9 && particle.getY() <= sprite.getY() + 9) {
-                                        double adjustedPosX = 640 + (particle.getX() - sprite.getX()) * scaledWidth;
-                                        double adjustedPosY = 360 + (particle.getY() - sprite.getY()) * scaledHeight;
-                                        filteredParticles.add(new Particle(adjustedPosX, adjustedPosY));
-                                    }
-                                }
-
-                                List<Sprite> otherSprites = new ArrayList<>();
-                                List<Sprite> allSprites = model.getSprites();
-                                for (int j = 0; j < allSprites.size(); j++) {
-                                    if (j != clientId) {
-                                        otherSprites.add(allSprites.get(j));
-                                    }
-                                }
-
-                                MessageObject message = new MessageObject(filteredParticles, otherSprites);
-
-                                // serialize filtered particles
-                                Gson gson = new Gson();
-                                String jsonString = gson.toJson(message);
-                                byte[] sendData = jsonString.getBytes();
-
-                                // send filtered particles to clients
-                                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, clients.get(clientId).getClientAddress(), CLIENT_PORT);
-                                socket.send(sendPacket);
-                                //System.out.println(jsonString);
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        });
-                    }
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        };
-
-        sendExecutor.submit(sendingTask);
-    }
-    
-
     public void startComputation() {
         double deltaTime = 1.0 / framesPerSecond;
-        double scaledWidth = 1280.0 / 33.0;
-        double scaledHeight = 720.0 / 19.0;
+        double scaledWidth = 1280 / 33;
+        double scaledHeight = 720 / 19;
         ExecutorService clientExecutor = Executors.newFixedThreadPool(3);
 
         // Define the simulation task
         Runnable computationTask = () -> {
             while (true) {
                 try {
-                    semaphore.acquire();
-                    model.moveParticles(deltaTime);
-                    semaphore.release();
-
-                    for (int i = 0; i < clients.size(); i++) {
+                    List<Sprite> allSprites = model.getSprites();
+                    List<Particle> allParticles = model.getParticles();
+                    for (int i = 0; i < allSprites.size(); i++) {
                         final int clientId = i;
                         clientExecutor.submit(() -> {
                             try {
                                 DatagramSocket socket = new DatagramSocket();
 
-                                Sprite sprite = model.getSprites().get(clientId);
+                                Sprite sprite = allSprites.get(clientId);
                                 List<Particle> filteredParticles = new ArrayList<>();
 
-                                for (Particle particle : model.getParticles()) {
+                                for (Particle particle : allParticles) {
                                     if (particle.getX() >= sprite.getX() - 16 && particle.getX() <= sprite.getX() + 16 && particle.getY() >= sprite.getY() - 9 && particle.getY() <= sprite.getY() + 9) {
                                         double adjustedPosX = 640 + (particle.getX() - sprite.getX()) * scaledWidth;
                                         double adjustedPosY = 360 + (particle.getY() - sprite.getY()) * scaledHeight;
@@ -312,9 +235,9 @@ public class ParticleSimulatorController implements ActionListener {
                                 }
 
                                 List<Sprite> otherSprites = new ArrayList<>();
-                                List<Sprite> allSprites = model.getSprites();
+
                                 for (int j = 0; j < allSprites.size(); j++) {
-                                    if (j != clientId) {
+                                    if (allSprites.get(j).getId() != clientId) {
                                         otherSprites.add(allSprites.get(j));
                                     }
                                 }
@@ -336,6 +259,10 @@ public class ParticleSimulatorController implements ActionListener {
                             }
                         });
                     }
+
+                    semaphore.acquire();
+                    model.moveParticles(deltaTime);
+                    semaphore.release();
 
                     Thread.sleep((long) (deltaTime * 1000)); // Sleep to control the simulation speed
                 } catch (InterruptedException e) {
