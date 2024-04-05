@@ -2,8 +2,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.logging.Logger;
-
 import javax.imageio.*;
 
 public class Sprite {
@@ -26,8 +24,6 @@ public class Sprite {
             img = ImageIO.read(new FileInputStream("res/sprite.png"));
         }
         catch(IOException e){
-            Logger logger = java.util.logging.Logger.getLogger(this.getClass().getName());
-            logger.info("IOException"+ e);
         }
         return img;
     }
@@ -49,7 +45,7 @@ public class Sprite {
             y += STEP;
         }
         else{
-            y = 720 + (HEIGHT / 2);
+            y = 720;
         }
     }
 
@@ -58,7 +54,7 @@ public class Sprite {
             y -= STEP;
         }
         else{
-            y = 0 + (HEIGHT / 2);
+            y = 0;
         }
     }
 
@@ -67,7 +63,7 @@ public class Sprite {
             x -= STEP;
         }
         else{
-            x = 0 - (WIDTH / 2);
+            x = 0;
         }
     }
 
@@ -76,7 +72,7 @@ public class Sprite {
             x += STEP;
         }
         else{
-            x = 1280 - (WIDTH / 2);
+            x = 1280;
         }
     }
 
@@ -88,6 +84,6 @@ public class Sprite {
     public void draw(Graphics g) {
         //scale to be fixed
         double adjustedY = ParticleSimulatorController.CANVAS_HEIGHT - y;
-        g.drawImage(this.img, (int) this.x - 5, (int) adjustedY, WIDTH, HEIGHT,  null);
+        g.drawImage(this.img, (int) this.x - (WIDTH / 2), (int) adjustedY + (HEIGHT / 2), WIDTH, HEIGHT,  null);
     }
 }
