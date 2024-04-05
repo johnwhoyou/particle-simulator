@@ -166,12 +166,12 @@ void MainGUI::displayBottomDetails(double frameRate) {
 	ImGui::SameLine();
 	ImGui::Dummy(ImVec2(16, 0));
 
-	if (spawnedSprite) {
-		ImGui::SameLine();
-		ImGui::Text("Sprite Position: (%.2f, %.2f)", simulation->getSprite().getX(), simulation->getSprite().getY());
-		ImGui::SameLine();
-		ImGui::Dummy(ImVec2(16, 0));
-	}
+
+	ImGui::SameLine();
+	ImGui::Text("Sprite Position: (%.2f, %.2f)", simulation->getSprite().getX(), simulation->getSprite().getY());
+	ImGui::SameLine();
+	ImGui::Dummy(ImVec2(16, 0));
+	
 
 	ImGui::SameLine();
 	if (ImGui::Button("Reset")) {
