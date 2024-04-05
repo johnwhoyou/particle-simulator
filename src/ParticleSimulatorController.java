@@ -147,11 +147,14 @@ public class ParticleSimulatorController implements ActionListener {
                 clientSocket.close();
                 model.removeSprite(this.clientId);
                 clients.remove(this); // Remove the client handler from the list when the client disconnects
-            } catch (IOException | InterruptedException e) {
+            } catch (Exception e) {
+                System.out.println("Client disconnected: " + clientSocket.getInetAddress());
+                model.removeSprite(this.clientId);
+                clients.remove(this); // Remove the client handler from the list when the client disconnects
                 e.printStackTrace();
             }
         }
-    }
+    }   
 
     public void startReceivingData() {
  
